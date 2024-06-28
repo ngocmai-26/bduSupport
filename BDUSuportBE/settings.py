@@ -85,7 +85,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'bduSuport.User'
+# AUTH_USER_MODEL = 'bduSuport.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
