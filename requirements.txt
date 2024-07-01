@@ -1,0 +1,7 @@
+django
+djangorestframework
+drf-yasg
+django-filter
+mysqlclient
+pillow
+python-decouple

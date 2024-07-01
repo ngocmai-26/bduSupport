@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
+
+from bduSuport.validations.create_account import CreateAccountValidator
 from ..models.account_model import Account
 from ..serializers.account_serializer import AccountSerializer
 from rest_framework.pagination import PageNumberPagination
@@ -22,11 +24,22 @@ class AccountViewSet(viewsets.ViewSet):
         return paginator.get_paginated_response(serializer.data)
 
     def create(self, request):
-        serializer = AccountSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        validate = CreateAccountValidator(data=request.data)
+
+        if not validate.is_valid():
+            return Response(validate.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        validated_data = validate.validated_data
+
+        account = Account(**validated_data)
+
+        account.save()
+
+        if account.id is None:
+            return Response(500)
+        
+        return Response(200)
+
 
     def retrieve(self, request, pk=None):
         try:

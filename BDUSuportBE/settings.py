@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'bduSuport.apps.BdusuportConfig',
     'rest_framework',
     'django_filters',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -87,8 +88,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bduSuportdb',
         'USER' : 'root',
-        'PASSWORD': '',
-        'HOST':''
+        'PASSWORD': '123123',
+        'HOST': '127.0.0.1'
     }
 }
 
