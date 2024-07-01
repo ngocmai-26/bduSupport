@@ -4,5 +4,10 @@ from ..models.notification_model import Notification
 class NotificationSerializer(ModelSerializer):
     class Meta: 
         model = Notification
-        fields = ['id', 'title', 'content', 'trainingLocation', 'tuition', 'benchmark', 'year', 'image', 'account']
+        fields = ['id', 'title', 'content', 'type', 'is_active',  'image', 'account']
+        
+class NotificationIsActiveSerializer(ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['is_active']
         
