@@ -1,6 +1,7 @@
 from django.db import models
 
 class Major(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     industryCode = models.CharField(max_length=255)
     targets = models.CharField(max_length=255)

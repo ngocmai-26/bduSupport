@@ -29,15 +29,15 @@ schema_view = get_schema_view(
 
 
 router = DefaultRouter()
-router.register('academic_level_view', AcademicLevelViewSet, basename='academic_level_view')
-router.register('account_view', AccountViewSet, basename='account_view')
-router.register('admission_registration_view', AdmissionRegistrationViewSet, basename='admission_registration_view')
-router.register('evaluation_method_view', EvaluationMethodViewSet, basename='evaluation_method_view')
-router.register('major_view', MajorViewSet, basename='major_view')
-router.register('new_view', NewViewSet, basename='new_view')
-router.register('notification_view', NotificationViewSet, basename='notification_view')
-router.register('result_view', ResultViewSet, basename='result_view')
-router.register('student_view', StudentsViewSet, basename='student_view')
+router.register('academic_level', AcademicLevelViewSet, basename='academic_level')
+router.register('account', AccountViewSet, basename='account')
+router.register('admission_registration', AdmissionRegistrationViewSet, basename='admission_registration')
+router.register('evaluation_method', EvaluationMethodViewSet, basename='evaluation_method')
+router.register('major', MajorViewSet, basename='major')
+router.register('new', NewViewSet, basename='new')
+router.register('notification', NotificationViewSet, basename='notification')
+router.register('result', ResultViewSet, basename='result')
+router.register('student', StudentsViewSet, basename='student')
 
 urlpatterns = [
     path('api/', include(router.urls)),

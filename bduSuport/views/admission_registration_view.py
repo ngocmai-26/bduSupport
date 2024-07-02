@@ -23,17 +23,18 @@ class AdmissionRegistrationViewSet(viewsets.ViewSet):
 
     def create(self, request):
         serializer = AdmissionRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        if not serializer.is_valid():
             return Response({
-                'status': 'Admission registration created successfully',
-                'data': serializer.data
-            }, status=status.HTTP_201_CREATED)
+                'status': 'Error',
+                'message': 'Failed to create admission registration',
+                'errors': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer.save()
         return Response({
-            'status': 'Error',
-            'message': 'Failed to create admission registration',
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            'status': 'Admission registration created successfully',
+            'data': serializer.data
+        }, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
         try:
@@ -60,17 +61,41 @@ class AdmissionRegistrationViewSet(viewsets.ViewSet):
             }, status=status.HTTP_404_NOT_FOUND)
 
         serializer = AdmissionRegistrationSerializer(admission_registration, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        if not serializer.is_valid():
             return Response({
-                'status': 'Admission registration updated successfully',
-                'data': serializer.data
-            })
+                'status': 'Error',
+                'message': 'Failed to update admission registration',
+                'errors': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
         return Response({
-            'status': 'Error',
-            'message': 'Failed to update admission registration',
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            'status': 'Admission registration updated successfully',
+            'data': serializer.data
+        })
+        
+    def patch(self, request, pk=None):
+        try:
+            admission_registration = AdmissionRegistration.objects.get(pk=pk)
+        except AdmissionRegistration.DoesNotExist:
+            return Response({
+                'status': 'Error',
+                'message': 'Admission registration not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = AdmissionRegistrationSerializer(admission_registration, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response({
+                'status': 'Error',
+                'message': 'Failed to patch admission registration',
+                'errors': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        return Response({
+            'status': 'Admission registration patched successfully',
+            'data': serializer.data
+        })
 
     def destroy(self, request, pk=None):
         try:

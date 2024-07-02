@@ -5,6 +5,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from ..models.academic_level_model import AcademicLevel
 from ..serializers.academic_level_serializer import AcademicLevelSerializer
+from bduSuport.validations.academic_validate.create_academic import CreateAcademicValidator
+from bduSuport.validations.academic_validate.update_academic import UpdateAcademicValidator
+from bduSuport.validations.academic_validate.patch_academic import PatchAcademicValidator
 
 class AcademicLevelViewSet(viewsets.ViewSet):
     # Thêm các filter backend
@@ -22,18 +25,22 @@ class AcademicLevelViewSet(viewsets.ViewSet):
         return paginator.get_paginated_response(serializer.data)
 
     def create(self, request):
-        serializer = AcademicLevelSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({
-                'status': 'Academic level created successfully',
-                'data': serializer.data
-            }, status=status.HTTP_201_CREATED)
+        validator = CreateAcademicValidator(data=request.data)
+        if not validator.is_valid():
+            return Response(validator.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        validated_data = validator.validated_data
+
+        academic_level = AcademicLevel.objects.create(**validated_data)
+
+        if not academic_level.id:
+            return Response({'message': 'Failed to create academic level'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        serializer = AcademicLevelSerializer(academic_level)
         return Response({
-            'status': 'Error',
-            'message': 'Failed to create academic level',
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            'status': 'Academic level created successfully',
+            'data': serializer.data
+        }, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
         try:
@@ -59,18 +66,49 @@ class AcademicLevelViewSet(viewsets.ViewSet):
                 'message': 'Academic level not found'
             }, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = AcademicLevelSerializer(academic_level, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({
-                'status': 'Academic level updated successfully',
-                'data': serializer.data
-            })
+        validator = UpdateAcademicValidator(data=request.data)
+        if not validator.is_valid():
+            return Response(validator.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        validated_data = validator.validated_data
+
+        serializer = AcademicLevelSerializer(academic_level, data=validated_data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
         return Response({
-            'status': 'Error',
-            'message': 'Failed to update academic level',
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            'status': 'Academic level updated successfully',
+            'data': serializer.data
+        })
+        
+    def patch(self, request, pk=None):
+        try:
+            academic_level = AcademicLevel.objects.get(pk=pk)
+        except AcademicLevel.DoesNotExist:
+            return Response({
+                'status': 'Error',
+                'message': 'Academic level not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        validator = PatchAcademicValidator(instance=academic_level, data=request.data, partial=True)
+        if not validator.is_valid():
+            return Response(validator.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        validator.validate_image(request.FILES)  # Gọi validate_image từ validator để kiểm tra hình ảnh
+
+        validated_data = validator.validated_data
+
+        serializer = AcademicLevelSerializer(academic_level, data=validated_data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        return Response({
+            'status': 'Academic level patched successfully',
+            'data': serializer.data
+        })
 
     def destroy(self, request, pk=None):
         try:

@@ -3,6 +3,7 @@ from .academic_level_model import AcademicLevel
 from .major_model import Major
 
 class Students(models.Model):
+    id = models.AutoField(primary_key=True)
     fullName = models.CharField(max_length=255)
     gender = models.IntegerField(default=0)
     dateOfBirth = models.DateField()
