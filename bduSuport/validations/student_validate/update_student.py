@@ -3,9 +3,8 @@ import datetime
 from rest_framework import serializers
 from ...models.academic_level_model import AcademicLevel
 from ...models.major_model import Major
-from .create_student import CreateStudentValidator
 
-class UpdateStudentValidator(CreateStudentValidator):
+class UpdateStudentValidator(serializers.Serializer):
     fullName = serializers.CharField(max_length=255, required=False)
     gender = serializers.IntegerField(default=0)
     dateOfBirth = serializers.DateField(required=False)

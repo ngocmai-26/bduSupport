@@ -6,7 +6,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from bduSuport.validations.account_validate.create_account import CreateAccountValidator
 from bduSuport.validations.account_validate.update_account import UpdateAccountValidator
-from bduSuport.validations.account_validate.patch_account import PatchAccountValidator
 from ..models.account_model import Account
 from ..serializers.account_serializer import AccountSerializer
 
@@ -29,14 +28,23 @@ class AccountViewSet(viewsets.ViewSet):
             return Response(validate.errors, status=status.HTTP_400_BAD_REQUEST)
         
         validated_data = validate.validated_data
-
-        account = Account(**validated_data)
-        account.save()
-
-        if account.id is None:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        return Response(status=status.HTTP_201_CREATED)
+        email = validated_data.get('email')
+        
+        if Account.objects.filter(email=email).exists():
+            return Response({"message": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            account = Account(**validated_data)
+            account.save() 
+            
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        if account.id is None:
+            return Response({"error": "Failed to create account."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response({"message": "Account created successfully", "account_id": account.id}, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
         try:
@@ -66,24 +74,6 @@ class AccountViewSet(viewsets.ViewSet):
         serializer.save()
         return Response(serializer.data)
     
-    def partial_update(self, request, pk=None):
-        try:
-            account = Account.objects.get(pk=pk)
-        except Account.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        validate = PatchAccountValidator(data=request.data, partial=True)
-        if not validate.is_valid():
-            return Response(validate.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        validated_data = validate.validated_data
-
-        serializer = AccountSerializer(account, data=validated_data, partial=True)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer.save()
-        return Response(serializer.data)
     
     def destroy(self, request, pk=None):
         try:

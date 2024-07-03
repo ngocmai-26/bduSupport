@@ -6,6 +6,6 @@ class CreateEvaluationValidator(serializers.Serializer):
     
     def validate_name(self, value):
         
-        if not re.match(r'^[a-zA-Z0-9 ]+$', value):
+        if not re.match(r'^[\w\s\p{L}\p{M}]+$', value):
             raise serializers.ValidationError("Name must only contain alphanumeric characters and spaces.")
         return value

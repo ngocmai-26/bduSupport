@@ -5,3 +5,6 @@ django-filter
 mysqlclient
 pillow
 python-decouple
+pyjwt
+bcrypt
+django-redis

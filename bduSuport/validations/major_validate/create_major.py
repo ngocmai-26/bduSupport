@@ -13,18 +13,18 @@ class CreateMajorValidator(serializers.Serializer):
     trainingLocation = serializers.CharField(max_length=255, required=True)
     
     def validate_name(self, value):
-        if not re.match(r'^[a-zA-Z0-9\s]+$', value):
-            raise serializers.ValidationError("Name can only contain letters, numbers, and spaces.")
+        if not re.match(r'^[\p{L}\p{N}\s]+$', value):
+            raise serializers.ValidationError("Tên chỉ được chứa các ký tự chữ cái, số, khoảng trắng, và dấu tiếng Việt.")
         return value
 
     def validate_industryCode(self, value):
         if not re.match(r'^[A-Z0-9]+$', value):
-            raise serializers.ValidationError("Industry code can only contain uppercase letters and numbers.")
+            raise serializers.ValidationError("Mã ngành chỉ được chứa các chữ cái in hoa và số.")
         return value
 
     def validate_combination(self, value):
         if not re.match(r'^[A-Za-z0-9,]+$', value):
-            raise serializers.ValidationError("Combination can only contain letters, numbers, and commas.")
+            raise serializers.ValidationError("Combination chỉ được chứa chữ cái, số, và dấu phẩy.")
         return value
 
     def validate_year(self, value):

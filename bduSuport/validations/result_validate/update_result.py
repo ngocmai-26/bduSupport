@@ -3,9 +3,8 @@ from rest_framework import serializers
 from ...models.students_model import Students
 from ...models.evaluation_method_model import EvaluationMethod
 from ...models.admission_registration_model import AdmissionRegistration
-from .create_result import CreateResultValidator
 
-class UpdateResultValidator(CreateResultValidator):
+class UpdateResultValidator(serializers.Serializer):
     subject = serializers.CharField(max_length=255, required=True)
     score = serializers.FloatField(required=True)
     student = serializers.PrimaryKeyRelatedField(

@@ -7,7 +7,6 @@ from ..models.major_model import Major
 from ..serializers.major_serializer import MajorSerializer
 from bduSuport.validations.major_validate.create_major import CreateMajorValidator
 from bduSuport.validations.major_validate.update_major import UpdateMajorValidator
-from bduSuport.validations.major_validate.patch_major import PatchMajorValidator
 
 class MajorViewSet(viewsets.ViewSet):
 
@@ -84,30 +83,6 @@ class MajorViewSet(viewsets.ViewSet):
             'data': serializer.data
         })
         
-    def patch(self, request, pk=None):
-        try:
-            major = Major.objects.get(pk=pk)
-        except Major.DoesNotExist:
-            return Response({
-                'status': 'Error',
-                'message': 'Major not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-
-        validator = PatchMajorValidator(data=request.data, partial=True)
-        if not validator.is_valid():
-            return Response(validator.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        validated_data = validator.validated_data
-        serializer = MajorSerializer(major, data=validated_data, partial=True)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer.save()
-        return Response({
-            'status': 'Major partially updated successfully',
-            'data': serializer.data
-        })
-
     def destroy(self, request, pk=None):
         try:
             queryset = Major.objects.get(pk=pk)

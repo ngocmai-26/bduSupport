@@ -1,8 +1,7 @@
 import re
 from rest_framework import serializers
-from .create_major import CreateMajorValidator
 
-class UpdateMajorValidator(CreateMajorValidator):
+class UpdateMajorValidator(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     industryCode = serializers.CharField(max_length=255)
     targets = serializers.CharField(max_length=255)

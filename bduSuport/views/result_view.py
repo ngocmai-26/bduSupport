@@ -6,7 +6,6 @@ from ..models.result_model import Result
 from ..serializers.result_serializer import ResultSerializer
 from bduSuport.validations.result_validate.create_result import CreateResultValidator
 from bduSuport.validations.result_validate.update_result import UpdateResultValidator
-from bduSuport.validations.result_validate.patch_result import PatchResultValidator
 
 class ResultViewSet(viewsets.ModelViewSet):
 
@@ -91,34 +90,6 @@ class ResultViewSet(viewsets.ModelViewSet):
             'data': serializer.data
         })
         
-    def patch(self, request, pk=None):
-        try:
-            result = Result.objects.get(pk=pk)
-        except Result.DoesNotExist:
-            return JsonResponse({
-                "message": "Result not found."
-            }, status=status.HTTP_404_NOT_FOUND)
-
-        validator = PatchResultValidator(data=request.data)
-        if not validator.is_valid():
-            return JsonResponse({
-                'status': 'Error',
-                'message': 'Failed to patch result',
-                'errors': validator.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        validated_data = validator.validated_data
-
-        for key, value in validated_data.items():
-            setattr(result, key, value)
-        result.save()
-
-        serializer = ResultSerializer(result)
-        return JsonResponse({
-            'status': 'Result patched successfully',
-            'data': serializer.data
-        })
-
     def destroy(self, request, pk=None):
         try:
             result = Result.objects.get(pk=pk)

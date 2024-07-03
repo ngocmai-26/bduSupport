@@ -8,7 +8,6 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import ValidationError
 from bduSuport.validations.new_validate.create_new import CreateNewValidator
-from bduSuport.validations.new_validate.patch_new import PatchNewValidator
 from bduSuport.validations.new_validate.update_new import UpdateNewValidator
 # Create your views here.
 
@@ -72,26 +71,7 @@ class NewViewSet(viewsets.ViewSet):
         serializer.save()
         return Response(serializer.data)
 
-    def patch(self, request, pk=None):
-        try:
-            instance = New.objects.get(pk=pk)
-        except New.DoesNotExist:
-            return Response({'detail': 'New object not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        validator = PatchNewValidator(instance, data=request.data, partial=True)
-        if not validator.is_valid():
-            return Response(validator.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        # validator.validate_image(request.FILES) 
-
-        validated_data = validator.validated_data
-        serializer = NewSerializer(instance, data=validated_data, partial=True)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        serializer.save()
-        return Response(serializer.data)
-
+    
     def destroy(self, request, pk=None):
         try:
             queryset = New.objects.get(pk=pk)

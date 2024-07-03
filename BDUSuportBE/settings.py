@@ -77,6 +77,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'BDUSuportBE.wsgi.application'
 
 
@@ -92,6 +94,25 @@ DATABASES = {
         'HOST': ''
     }
 }
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis-17242.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com:17242',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': 'A5KpcStYeMddsyU3oUrSCwaHQWpqORJw',  
+        }
+    }
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587  
+EMAIL_USE_TLS = True  
+EMAIL_HOST_USER = '20050013@student.bdu.edu.vn'
+EMAIL_HOST_PASSWORD = 'xjhtrjiogwsgrtgw'
 
 # AUTH_USER_MODEL = 'bduSuport.User'
 

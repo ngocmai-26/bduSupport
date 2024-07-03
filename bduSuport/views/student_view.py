@@ -6,7 +6,6 @@ from rest_framework.pagination import PageNumberPagination
 from ..serializers.student_serializer import StudentsSerializer
 from bduSuport.validations.student_validate.create_student import CreateStudentValidator
 from bduSuport.validations.student_validate.update_student import UpdateStudentValidator
-from bduSuport.validations.student_validate.patch_student import PatchStudentValidator
 
 class StudentsViewSet(viewsets.ModelViewSet):
 
@@ -97,40 +96,6 @@ class StudentsViewSet(viewsets.ModelViewSet):
             'data': serializer.data
         })
         
-    def patch(self, request, pk=None):
-        try:
-            student = Students.objects.get(pk=pk)
-        except Students.DoesNotExist:
-            return Response({
-                'status': 'Error',
-                'message': 'Student not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-
-        validate = PatchStudentValidator(data=request.data, partial=True)
-        if not validate.is_valid():
-            return Response({
-                'status': 'Error',
-                'message': 'Failed to patch student',
-                'errors': validate.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        validated_data = validate.validated_data
-
-        serializer = StudentsSerializer(student, data=validated_data, partial=True)
-        if not serializer.is_valid():
-            return Response({
-                'status': 'Error',
-                'message': 'Failed to patch student',
-                'errors': serializer.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer.save()
-        return Response({
-            'status': 'Success',
-            'message': 'Student patched successfully',
-            'data': serializer.data
-        })
-
     def destroy(self, request, pk=None):
         try:
             student = Students.objects.get(pk=pk)

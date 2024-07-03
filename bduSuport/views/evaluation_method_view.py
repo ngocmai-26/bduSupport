@@ -7,7 +7,6 @@ from ..models.evaluation_method_model import EvaluationMethod
 from ..serializers.evaluation_method_serializer import EvaluationMethodSerializer
 from bduSuport.validations.evaluation_method_validate.create_evaluation import CreateEvaluationValidator
 from bduSuport.validations.evaluation_method_validate.update_evaluation import UpdateEvaluationValidator
-from bduSuport.validations.evaluation_method_validate.patch_evaluation import PatchEvaluationValidator
 
 class EvaluationMethodViewSet(viewsets.ViewSet):
 
@@ -96,38 +95,7 @@ class EvaluationMethodViewSet(viewsets.ViewSet):
             'data': serializer.data
         })
         
-    def patch(self, request, pk=None):
-        try:
-            evaluation_method = EvaluationMethod.objects.get(pk=pk)
-        except EvaluationMethod.DoesNotExist:
-            return Response({
-                'status': 'Error',
-                'message': 'Evaluation method not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-
-        validator = PatchEvaluationValidator(data=request.data, partial=True)
-        if not validator.is_valid():
-            return Response({
-                'status': 'Error',
-                'message': 'Failed to patch evaluation method',
-                'errors': validator.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        validated_data = validator.validated_data
-        serializer = EvaluationMethodSerializer(evaluation_method, data=validated_data, partial=True)
-        if not serializer.is_valid():
-            return Response({
-                'status': 'Error',
-                'message': 'Failed to patch evaluation method',
-                'errors': serializer.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer.save()
-        return Response({
-            'status': 'Evaluation method patched successfully',
-            'data': serializer.data
-        })
-
+    
     def destroy(self, request, pk=None):
         try:
             evaluation_method = EvaluationMethod.objects.get(pk=pk)

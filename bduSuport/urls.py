@@ -9,6 +9,7 @@ from .views.new_view import NewViewSet
 from .views.notification_view import NotificationViewSet
 from .views.result_view import ResultViewSet
 from .views.student_view import StudentsViewSet
+from .views.auth_view import AuthViewSet
 from rest_framework.routers import DefaultRouter
 from django.urls import path
 from rest_framework import permissions
@@ -29,6 +30,7 @@ schema_view = get_schema_view(
 
 
 router = DefaultRouter()
+router.register('auth', AuthViewSet, basename='auth')
 router.register('academic_level', AcademicLevelViewSet, basename='academic_level')
 router.register('account', AccountViewSet, basename='account')
 router.register('admission_registration', AdmissionRegistrationViewSet, basename='admission_registration')
