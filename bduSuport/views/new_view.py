@@ -11,11 +11,7 @@ from bduSuport.validations.new_validate.create_new import CreateNewValidator
 from bduSuport.validations.new_validate.update_new import UpdateNewValidator
 # Create your views here.
 
-class NewViewSet(viewsets.ViewSet):
-    filter_backends = [ SearchFilter, OrderingFilter]
-    search_fields = ['title'] 
-    ordering_fields = ['id', 'title', 'type']  
-
+class NewView(viewsets.ViewSet):
     def list(self, request):
         queryset = New.objects.all()
         search_query = request.query_params.get('search')

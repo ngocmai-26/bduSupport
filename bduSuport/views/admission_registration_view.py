@@ -6,13 +6,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from ..models.admission_registration_model import AdmissionRegistration
 from ..serializers.admission_registration_serializer import AdmissionRegistrationSerializer
 
-class AdmissionRegistrationViewSet(viewsets.ViewSet):
-
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['status', 'applied_date']  
-    search_fields = ['applicant_name']  
-    ordering_fields = ['applicant_name', 'applied_date']  
-
+class AdmissionRegistrationView(viewsets.ViewSet):
     def list(self, request):
         queryset = AdmissionRegistration.objects.all()
 

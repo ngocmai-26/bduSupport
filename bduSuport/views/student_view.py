@@ -7,15 +7,7 @@ from ..serializers.student_serializer import StudentsSerializer
 from bduSuport.validations.student_validate.create_student import CreateStudentValidator
 from bduSuport.validations.student_validate.update_student import UpdateStudentValidator
 
-class StudentsViewSet(viewsets.ModelViewSet):
-
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['major'] 
-    search_fields = ['name', 'student_id'] 
-    ordering_fields = ['name', 'year']  
-    ordering = ['name']  
-    
-    
+class StudentsView(viewsets.ViewSet):
     def list(self, request):
         queryset = Students.objects.all()
 

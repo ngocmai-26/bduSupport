@@ -5,7 +5,7 @@ from ..models.notification_model import Notification
 from ..serializers.notification_serializer import NotificationSerializer, NotificationIsActiveSerializer
 
 
-class NotificationViewSet(viewsets.ViewSet):
+class NotificationView(viewsets.ViewSet):
     def list(self, request):
         queryset = Notification.objects.all()
         serializer = NotificationSerializer(queryset, many=True)

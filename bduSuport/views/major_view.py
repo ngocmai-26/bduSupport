@@ -8,13 +8,7 @@ from ..serializers.major_serializer import MajorSerializer
 from bduSuport.validations.major_validate.create_major import CreateMajorValidator
 from bduSuport.validations.major_validate.update_major import UpdateMajorValidator
 
-class MajorViewSet(viewsets.ViewSet):
-
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['industryCode', 'year']  
-    search_fields = ['name'] 
-    ordering_fields = ['name', 'year'] 
-
+class MajorView(viewsets.ViewSet):
     def list(self, request):
         queryset = Major.objects.all()
 

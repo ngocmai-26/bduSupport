@@ -9,10 +9,7 @@ from bduSuport.validations.account_validate.update_account import UpdateAccountV
 from ..models.account_model import Account
 from ..serializers.account_serializer import AccountSerializer
 
-class AccountViewSet(viewsets.ViewSet):
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['email']
-
+class AccountView(viewsets.ViewSet):
     def list(self, request):
         queryset = Account.objects.all()
 

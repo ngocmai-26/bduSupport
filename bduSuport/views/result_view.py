@@ -7,14 +7,7 @@ from ..serializers.result_serializer import ResultSerializer
 from bduSuport.validations.result_validate.create_result import CreateResultValidator
 from bduSuport.validations.result_validate.update_result import UpdateResultValidator
 
-class ResultViewSet(viewsets.ModelViewSet):
-
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
-    filterset_fields = ['student', 'subject', 'grade']  
-    search_fields = ['student__name', 'subject__name'] 
-    ordering_fields = ['grade', 'date'] 
-    ordering = ['date'] 
-
+class ResultView(viewsets.ViewSet):
     def list(self, request):
         queryset = Result.objects.all()
 

@@ -8,13 +8,7 @@ from ..serializers.academic_level_serializer import AcademicLevelSerializer
 from bduSuport.validations.academic_validate.create_academic import CreateAcademicValidator
 from bduSuport.validations.academic_validate.update_academic import UpdateAcademicValidator
 
-class AcademicLevelViewSet(viewsets.ViewSet):
-    # Thêm các filter backend
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['degree_type']  
-    search_fields = ['name']  
-    ordering_fields = ['name', 'degree_type']  
-
+class AcademicLevelView(viewsets.ViewSet):
     def list(self, request):
         queryset = AcademicLevel.objects.all()
 

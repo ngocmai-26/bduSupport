@@ -1,16 +1,16 @@
 
 from django.urls import path, include
-from .views.academic_level_view import AcademicLevelViewSet
-from .views.account_view import AccountViewSet
-from .views.admission_registration_view import AdmissionRegistrationViewSet
-from .views.evaluation_method_view import EvaluationMethodViewSet
-from .views.major_view import MajorViewSet
-from .views.new_view import NewViewSet
-from .views.notification_view import NotificationViewSet
-from .views.result_view import ResultViewSet
-from .views.student_view import StudentsViewSet
-from .views.auth_view import AuthViewSet
-from rest_framework.routers import DefaultRouter
+from .views.academic_level_view import AcademicLevelView
+from .views.account_view import AccountView
+from .views.admission_registration_view import AdmissionRegistrationView
+from .views.evaluation_method_view import EvaluationMethodView
+from .views.major_view import MajorView
+from .views.new_view import NewView
+from .views.notification_view import NotificationView
+from .views.result_view import ResultView
+from .views.student_view import StudentsView
+from .views.auth_view import AuthView
+from rest_framework.routers import SimpleRouter
 from django.urls import path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -29,17 +29,17 @@ schema_view = get_schema_view(
 )
 
 
-router = DefaultRouter()
-router.register('auth', AuthViewSet, basename='auth')
-router.register('academic_level', AcademicLevelViewSet, basename='academic_level')
-router.register('account', AccountViewSet, basename='account')
-router.register('admission_registration', AdmissionRegistrationViewSet, basename='admission_registration')
-router.register('evaluation_method', EvaluationMethodViewSet, basename='evaluation_method')
-router.register('major', MajorViewSet, basename='major')
-router.register('new', NewViewSet, basename='new')
-router.register('notification', NotificationViewSet, basename='notification')
-router.register('result', ResultViewSet, basename='result')
-router.register('student', StudentsViewSet, basename='student')
+router = SimpleRouter(trailing_slash=False)
+router.register('auth', AuthView, basename='auth')
+router.register('academic_level', AcademicLevelView, basename='academic_level')
+router.register('account', AccountView, basename='account')
+router.register('admission_registration', AdmissionRegistrationView, basename='admission_registration')
+router.register('evaluation_method', EvaluationMethodView, basename='evaluation_method')
+router.register('major', MajorView, basename='major')
+router.register('new', NewView, basename='new')
+router.register('notification', NotificationView, basename='notification')
+router.register('result', ResultView, basename='result')
+router.register('student', StudentsView, basename='student')
 
 urlpatterns = [
     path('api/', include(router.urls)),

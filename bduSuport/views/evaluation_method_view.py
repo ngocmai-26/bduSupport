@@ -8,13 +8,7 @@ from ..serializers.evaluation_method_serializer import EvaluationMethodSerialize
 from bduSuport.validations.evaluation_method_validate.create_evaluation import CreateEvaluationValidator
 from bduSuport.validations.evaluation_method_validate.update_evaluation import UpdateEvaluationValidator
 
-class EvaluationMethodViewSet(viewsets.ViewSet):
-
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['type', 'year'] 
-    search_fields = ['name'] 
-    ordering_fields = ['name', 'year'] 
-
+class EvaluationMethodView(viewsets.ViewSet):
     def list(self, request):
         queryset = EvaluationMethod.objects.all()
 
