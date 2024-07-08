@@ -1,5 +1,5 @@
 from django.db import models
-from .account_model import Account
+from .account import Account
 
 class Notification(models.Model):
     id = models.AutoField(primary_key=True)

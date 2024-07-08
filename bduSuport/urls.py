@@ -1,7 +1,7 @@
 
 from django.urls import path, include
 from .views.academic_level_view import AcademicLevelView
-from .views.account_view import AccountView
+from .views.account import AccountView
 from .views.admission_registration_view import AdmissionRegistrationView
 from .views.evaluation_method_view import EvaluationMethodView
 from .views.major_view import MajorView

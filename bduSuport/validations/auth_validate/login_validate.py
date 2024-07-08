@@ -1,7 +1,7 @@
 import re
 import bcrypt
 from rest_framework import serializers
-from ...models.account_model import Account
+from ...models.account import Account
 
 
 class LoginRequestValidator(serializers.Serializer):

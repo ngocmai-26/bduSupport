@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bduSuport.apps.BdusuportConfig',
+    'bduSuport',
     'rest_framework',
     'django_filters',
     'drf_yasg'
@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bduSuportdb',
         'USER' : 'root',
-        'PASSWORD': '',
+        'PASSWORD': '123123',
         'HOST': ''
     }
 }
@@ -114,7 +114,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = '20050013@student.bdu.edu.vn'
 EMAIL_HOST_PASSWORD = 'xjhtrjiogwsgrtgw'
 
-# AUTH_USER_MODEL = 'bduSuport.User'
+AUTH_USER_MODEL = 'bduSuport.Account'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
