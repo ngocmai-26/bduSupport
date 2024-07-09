@@ -8,3 +8,4 @@ python-decouple
 pyjwt
 bcrypt
 django-redis
+djangorestframework-simplejwt

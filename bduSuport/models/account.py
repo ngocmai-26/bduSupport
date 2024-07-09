@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.base_user import BaseUserManager
 
 # Định nghĩa Enum cho trạng thái tài khoản
 class AccountStatus(models.TextChoices):
@@ -17,7 +18,7 @@ class Account(AbstractBaseUser):
         db_table = "account"
 
     id = models.AutoField(primary_key=True)
-    email = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(unique=True, null=False)
     phone = models.CharField(max_length=15)
     status = models.CharField(max_length=20, choices=AccountStatus.choices)
     role = models.CharField(max_length=20, choices=AccountRole.choices)
@@ -25,3 +26,5 @@ class Account(AbstractBaseUser):
     updated_at = models.DateTimeField(auto_now=True)
     
     USERNAME_FIELD = "email"
+
+    objects = BaseUserManager()
