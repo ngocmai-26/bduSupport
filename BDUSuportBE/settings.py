@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'bduSuport',
     'rest_framework',
     'django_filters',
-    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -60,6 +60,9 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'bduSuport.middlewares.custom_jwt_authentication.CustomJWTAuthentication'
+    ]
 }
 
 TEMPLATES = [
@@ -192,4 +195,14 @@ SIMPLE_JWT = {
 
     'TOKEN_OBTAIN_SERIALIZER': 'bduSuport.serializers.custom_token_obtain_pair_serializer.CustomTokenObtainPairSerializer',
     'TOKEN_REFRESH_SERIALIZER': 'bduSuport.serializers.custom_token_refresh_serializer.CustomTokenRefreshSerializer'
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
 }

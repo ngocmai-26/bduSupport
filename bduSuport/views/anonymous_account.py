@@ -14,7 +14,9 @@ from ..serializers.account_serializer import AccountSerializer
 
 from drf_yasg.utils import swagger_auto_schema
 
-class AccountView(viewsets.ViewSet):
+class AnonymousAccountView(viewsets.ViewSet):
+    authentication_classes = ()
+
     def list(self, request):
         queryset = Account.objects.all()
 

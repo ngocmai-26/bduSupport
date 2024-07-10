@@ -1,20 +1,22 @@
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 
 from django.urls import path, include
-from .views.academic_level_view import AcademicLevelView
-from .views.account import AccountView
-from .views.admission_registration_view import AdmissionRegistrationView
-from .views.evaluation_method_view import EvaluationMethodView
-from .views.major_view import MajorView
-from .views.new_view import NewView
-from .views.notification_view import NotificationView
-from .views.result_view import ResultView
-from .views.student_view import StudentsView
-from .views.login import TokenPairView
+
 from rest_framework.routers import SimpleRouter
-from django.urls import path
 from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
+
+from bduSuport.views.new_view import NewView
+from bduSuport.views.health import HealthView
+from bduSuport.views.login import TokenPairView
+from bduSuport.views.anonymous_account import AnonymousAccountView
+from bduSuport.views.major_view import MajorView
+from bduSuport.views.result_view import ResultView
+from bduSuport.views.student_view import StudentsView
+from bduSuport.views.notification_view import NotificationView
+from bduSuport.views.academic_level_view import AcademicLevelView
+from bduSuport.views.evaluation_method_view import EvaluationMethodView
+from bduSuport.views.admission_registration_view import AdmissionRegistrationView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -30,21 +32,22 @@ schema_view = get_schema_view(
 
 
 router = SimpleRouter(trailing_slash=False)
-router.register('academic_level', AcademicLevelView, basename='academic_level')
-router.register('account', AccountView, basename='account')
-router.register('admission_registration', AdmissionRegistrationView, basename='admission_registration')
-router.register('evaluation_method', EvaluationMethodView, basename='evaluation_method')
-router.register('major', MajorView, basename='major')
 router.register('new', NewView, basename='new')
-router.register('notification', NotificationView, basename='notification')
+router.register('major', MajorView, basename='major')
+router.register('health', HealthView, basename='health')
 router.register('result', ResultView, basename='result')
+router.register('account', AnonymousAccountView, basename='account')
 router.register('student', StudentsView, basename='student')
+router.register('notification', NotificationView, basename='notification')
+router.register('academic-level', AcademicLevelView, basename='academic_level')
+router.register('evaluation-method', EvaluationMethodView, basename='evaluation_method')
+router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
 
 urls = router.urls + [
    path('login', TokenPairView.as_view(), name='token_obtain_pair'),
 ]
 
 urlpatterns = [
-   path('api/', include(urls)),
+   path('apis/', include(urls)),
    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
