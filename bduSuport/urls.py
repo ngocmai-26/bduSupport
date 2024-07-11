@@ -6,6 +6,7 @@ from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 from rest_framework import permissions
 
+from bduSuport.views.mini_app_auth import MiniAppAuth
 from bduSuport.views.new_view import NewView
 from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
@@ -36,15 +37,16 @@ router.register('new', NewView, basename='new')
 router.register('major', MajorView, basename='major')
 router.register('health', HealthView, basename='health')
 router.register('result', ResultView, basename='result')
-router.register('account', AnonymousAccountView, basename='account')
 router.register('student', StudentsView, basename='student')
+router.register('backoffice/account', AnonymousAccountView, basename='backoffice_account')
 router.register('notification', NotificationView, basename='notification')
 router.register('academic-level', AcademicLevelView, basename='academic_level')
+router.register('miniapp/auth', MiniAppAuth, basename='account_miniapp_auth')
 router.register('evaluation-method', EvaluationMethodView, basename='evaluation_method')
 router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
 
 urls = router.urls + [
-   path('login', TokenPairView.as_view(), name='token_obtain_pair'),
+   path('backoffice/login', TokenPairView.as_view(), name='backoffice_token_obtain_pair'),
 ]
 
 urlpatterns = [
