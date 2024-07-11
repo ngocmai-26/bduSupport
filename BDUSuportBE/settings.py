@@ -26,8 +26,9 @@ SECRET_KEY = 'django-insecure-c2z3fdbpliz52-5d=gm=6)=u)4ue=0@s)zcqm=mj=okkrc)=fb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -40,11 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'bduSuport',
+    'corsheaders',
     'rest_framework',
-    'django_filters',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -92,11 +95,11 @@ WSGI_APPLICATION = 'BDUSuportBE.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bduSuportdb',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'bdusupportdb',
         'USER' : 'root',
-        'PASSWORD': '123123',
-        'HOST': ''
+        'PASSWORD': 'QCGTZ1i9jTyl5I54REmfVyjCfPmxSPOc',
+        'HOST': 'dpg-cq7la2eehbks73918kk0-a.singapore-postgres.render.com'
     }
 }
 
