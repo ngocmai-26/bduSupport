@@ -9,3 +9,4 @@ pyjwt
 bcrypt
 django-redis
 djangorestframework-simplejwt
+whitenoise
