@@ -34,4 +34,4 @@ class ConstructorView(viewsets.ViewSet):
 
     def __get_college_exam_groups(self):
         groups = CollegeExamGroup.objects.filter(deleted_at=None)
-        return CollegeExamGroupSerializer(groups, many=True, fields=["id", "code", "name"]).data
+        return CollegeExamGroupSerializer(groups, many=True, fields=["id", "code", "name", "subjects"]).data
