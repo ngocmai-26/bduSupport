@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from django.core.cache import cache
 from ..models.account import Account
 
-class CustomJWTAuthentication(BaseAuthentication):
+class BackofficeAuthentication(BaseAuthentication):
     def authenticate(self, request):
         try:
             bearer_token = request.headers.get("Authorization", None)
@@ -24,5 +24,5 @@ class CustomJWTAuthentication(BaseAuthentication):
             
             return (account, token)
         except Exception as e:
-            print(f"CustomJWTAuthentication.authenticate err={e}")
+            print(f"BackofficeAuthentication.authenticate err={e}")
             raise AuthenticationFailed("Verify token failed!")

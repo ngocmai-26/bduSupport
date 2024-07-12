@@ -1,9 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
-from ..models.academic_level_model import AcademicLevel
+from ..models.academic_level import AcademicLevel
 from ..serializers.academic_level_serializer import AcademicLevelSerializer
 from bduSuport.validations.academic_validate.create_academic import CreateAcademicValidator
 from bduSuport.validations.academic_validate.update_academic import UpdateAcademicValidator

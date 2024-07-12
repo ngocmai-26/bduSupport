@@ -10,7 +10,7 @@ class AccountStatus(models.TextChoices):
 
 class AccountRole(models.TextChoices):
     ADMIN = "admin"
-    NORMAL = "normal"
+    ROOT = "root"
 
 class Account(AbstractBaseUser):
     class Meta:

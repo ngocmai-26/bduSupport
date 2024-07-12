@@ -1,7 +1,7 @@
 import re
 import datetime
 from rest_framework import serializers
-from ...models.academic_level_model import AcademicLevel
+from ...models.academic_level import AcademicLevel
 from ...models.major_model import Major
 
 class UpdateStudentValidator(serializers.Serializer):

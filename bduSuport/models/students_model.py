@@ -1,5 +1,5 @@
 from django.db import models
-from .academic_level_model import AcademicLevel
+from .academic_level import AcademicLevel
 from .major_model import Major
 
 class Students(models.Model):

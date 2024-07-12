@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
-from ..models.academic_level_model import AcademicLevel
+from ..models.academic_level import AcademicLevel
 
 class AcademicLevelSerializer(ModelSerializer):
     class Meta: 
         model = AcademicLevel
-        fields = ['id', 'name']
+        fields ="__all__"

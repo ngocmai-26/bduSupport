@@ -6,18 +6,14 @@ from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 from rest_framework import permissions
 
-from bduSuport.views.mini_app_auth import MiniAppAuth
-from bduSuport.views.new_view import NewView
+from bduSuport.views.account_management import AccountManagementView
+from bduSuport.views.admin_account import AdminAccountView
 from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
-from bduSuport.views.anonymous_account import AnonymousAccountView
-from bduSuport.views.major_view import MajorView
-from bduSuport.views.result_view import ResultView
-from bduSuport.views.student_view import StudentsView
-from bduSuport.views.notification_view import NotificationView
-from bduSuport.views.academic_level_view import AcademicLevelView
-from bduSuport.views.evaluation_method_view import EvaluationMethodView
-from bduSuport.views.admission_registration_view import AdmissionRegistrationView
+from bduSuport.views.subject import SubjectView
+from bduSuport.views.mini_app_auth import MiniAppAuth
+from bduSuport.views.constructor import ConstructorView
+from bduSuport.views.root import RootView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -33,17 +29,13 @@ schema_view = get_schema_view(
 
 
 router = SimpleRouter(trailing_slash=False)
-router.register('new', NewView, basename='new')
-router.register('major', MajorView, basename='major')
 router.register('health', HealthView, basename='health')
-router.register('result', ResultView, basename='result')
-router.register('student', StudentsView, basename='student')
-router.register('backoffice/account', AnonymousAccountView, basename='backoffice_account')
-router.register('notification', NotificationView, basename='notification')
-router.register('academic-level', AcademicLevelView, basename='academic_level')
+router.register('subject', SubjectView, basename='subject')
 router.register('miniapp/auth', MiniAppAuth, basename='account_miniapp_auth')
-router.register('evaluation-method', EvaluationMethodView, basename='evaluation_method')
-router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
+router.register('init', ConstructorView, basename='constructor')
+router.register('super-admin', RootView, basename='super_admin')
+router.register('backoffice/accounts', AccountManagementView, basename='account_management')
+router.register('backoffice/admin/accounts', AdminAccountView, basename='backoffice_admin_account')
 
 urls = router.urls + [
    path('backoffice/login', TokenPairView.as_view(), name='backoffice_token_obtain_pair'),

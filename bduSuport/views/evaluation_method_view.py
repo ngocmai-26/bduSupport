@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from ..models.evaluation_method_model import EvaluationMethod
+from ..models.evaluation_method import EvaluationMethod
 from ..serializers.evaluation_method_serializer import EvaluationMethodSerializer
 from bduSuport.validations.evaluation_method_validate.create_evaluation import CreateEvaluationValidator
 from bduSuport.validations.evaluation_method_validate.update_evaluation import UpdateEvaluationValidator

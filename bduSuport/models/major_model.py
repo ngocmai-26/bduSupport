@@ -11,6 +11,3 @@ class Major(models.Model):
     benchmark = models.CharField(max_length=255) 
     tuition = models.CharField(max_length=255)
     trainingLocation = models.CharField(max_length=255)
-    
-    def __str__(self):
-        return self.name

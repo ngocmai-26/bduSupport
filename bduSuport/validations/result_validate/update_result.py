@@ -1,7 +1,7 @@
 import re
 from rest_framework import serializers
 from ...models.students_model import Students
-from ...models.evaluation_method_model import EvaluationMethod
+from ...models.evaluation_method import EvaluationMethod
 from ...models.admission_registration_model import AdmissionRegistration
 
 class UpdateResultValidator(serializers.Serializer):
