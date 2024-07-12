@@ -15,7 +15,7 @@ from bduSuport.middlewares.permissions.is_root import IsRoot
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
 
 from bduSuport.models.account import Account, AccountRole, AccountStatus
-from bduSuport.validations.account_validate.create_account import CreateAccountValidator
+from bduSuport.validations.create_backoffice_account import CreateBackofficeAccountValidator
 
 
 class RootView(viewsets.ViewSet):
@@ -23,10 +23,10 @@ class RootView(viewsets.ViewSet):
     permission_classes = (IsRoot, )
 
     @action(methods=["POST"], detail=False, url_path="accounts")
-    @swagger_auto_schema(request_body=CreateAccountValidator)
+    @swagger_auto_schema(request_body=CreateBackofficeAccountValidator)
     def create_account(self, request):
         try:
-            validate = CreateAccountValidator(data=request.data)
+            validate = CreateBackofficeAccountValidator(data=request.data)
 
             if not validate.is_valid():
                 return Response(validate.errors, status=status.HTTP_400_BAD_REQUEST)

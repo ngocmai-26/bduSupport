@@ -5,17 +5,17 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from bduSuport.services.otp import OtpService
-from bduSuport.validations.auth_validate.verify_validate import VerifyRequestValidator
 from bduSuport.models.account import Account, AccountStatus
+from bduSuport.validations.verify_backoffice_account import BackofficeVerifyAccountValidator
 
 class AdminAccountView(viewsets.ViewSet):
     otp_service = OtpService()
 
     @action(methods=["POST"], detail=False, url_path="verify")
-    @swagger_auto_schema(request_body=VerifyRequestValidator)
+    @swagger_auto_schema(request_body=BackofficeVerifyAccountValidator)
     def verify_account(self, request):
         try:
-            validate = VerifyRequestValidator(data=request.data)
+            validate = BackofficeVerifyAccountValidator(data=request.data)
 
             if not validate.is_valid():
                 return Response(validate.errors, status=status.HTTP_400_BAD_REQUEST)

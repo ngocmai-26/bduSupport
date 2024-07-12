@@ -1,9 +1,8 @@
 import re
-import bcrypt
 from rest_framework import serializers
 
 
-class CreateAccountValidator(serializers.Serializer):
+class CreateBackofficeAccountValidator(serializers.Serializer):
     email = serializers.EmailField(required=True)
     phone = serializers.CharField(required=False)
     password = serializers.CharField(required=True)

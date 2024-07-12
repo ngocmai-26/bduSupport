@@ -8,6 +8,7 @@ from rest_framework import permissions
 
 from bduSuport.views.account_management import AccountManagementView
 from bduSuport.views.admin_account import AdminAccountView
+from bduSuport.views.college_exam_group import CollegeExamGroupView
 from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
 from bduSuport.views.subject import SubjectView
@@ -31,6 +32,7 @@ schema_view = get_schema_view(
 router = SimpleRouter(trailing_slash=False)
 router.register('health', HealthView, basename='health')
 router.register('subject', SubjectView, basename='subject')
+router.register('college-exam-group', CollegeExamGroupView, basename='college_exam_group')
 router.register('miniapp/auth', MiniAppAuth, basename='account_miniapp_auth')
 router.register('init', ConstructorView, basename='constructor')
 router.register('super-admin', RootView, basename='super_admin')

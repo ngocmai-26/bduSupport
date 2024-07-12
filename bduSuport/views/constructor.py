@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
 
 from bduSuport.models.academic_level import AcademicLevel
+from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.models.evaluation_method import EvaluationMethod
 from bduSuport.serializers.academic_level_serializer import AcademicLevelSerializer
 from bduSuport.serializers.evaluation_method_serializer import EvaluationMethodSerializer
@@ -27,4 +28,8 @@ class ConstructorView(viewsets.ViewSet):
     
     def __get_academic_levels(self):
         methods = AcademicLevel.objects.all()
+        return AcademicLevelSerializer(methods, many=True).data
+
+    def __get_college_exam_groups(self):
+        methods = CollegeExamGroup.objects.all()
         return AcademicLevelSerializer(methods, many=True).data

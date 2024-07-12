@@ -3,7 +3,7 @@ from rest_framework.response import Response
 class RestResponse():
     content_type = "application/json"
 
-    def __init__(self, data: dict = None, code: str = "success", message: str = "", status: int = 200) -> None:
+    def __init__(self, data: dict = None, code: str = "", message: str = "", status: int = 200) -> None:
         self.__data = data
         self.__message = message
         self.__code = code
