@@ -13,5 +13,5 @@ class AccountSerializer(ModelSerializer):
         
         super().__init__(*args, **kwargs)
         
-        for field in exclude + list(existing - fields):
+        for field in exclude + list(set(existing) - set(fields)):
             self.fields.pop(field, None)

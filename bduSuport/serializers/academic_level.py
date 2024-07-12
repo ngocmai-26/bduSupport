@@ -1,11 +1,10 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+from ..models.academic_level import AcademicLevel
 
-from bduSuport.models.subject import Subject
-
-class SubjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subject
-        fields = "__all__"
+class AcademicLevelSerializer(ModelSerializer):
+    class Meta: 
+        model = AcademicLevel
+        fields ="__all__"
 
     def __init__(self, *args, **kwargs):
         existing = set(self.fields.keys())

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from bduSuport.models.college_exam_group import CollegeExamGroup
+from bduSuport.serializers.subject_serializer import SubjectSerializer
 
 class CollegeExamGroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,5 +15,8 @@ class CollegeExamGroupSerializer(serializers.ModelSerializer):
         
         super().__init__(*args, **kwargs)
         
-        for field in exclude + list(existing - fields):
+        for field in exclude + list(set(existing) - set(fields)):
             self.fields.pop(field, None)
+
+
+    subjects = SubjectSerializer(many=True)
