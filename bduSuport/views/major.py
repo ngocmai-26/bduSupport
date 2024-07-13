@@ -5,6 +5,7 @@ from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
 
 from bduSuport.helpers.response import RestResponse
+from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
 from bduSuport.models.major import Major
 from bduSuport.serializers.major_serializer import MajorSerializer
 from bduSuport.validations.create_major import CreateMajorValidator
