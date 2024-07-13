@@ -1,3 +1,5 @@
+import decimal
+import math
 from rest_framework import serializers
 
 from bduSuport.models.college_exam_group import CollegeExamGroup
@@ -13,7 +15,16 @@ class CreateMajorValidator(serializers.Serializer):
     )
     description = serializers.CharField()
     year = serializers.IntegerField(min_value=0)
-    benchmark_30 = serializers.DecimalField(max_digits=4, decimal_places=2, min_value=0, max_value=30)
+    benchmark_30 = serializers.FloatField(min_value=0.00, max_value=30.00)
     benchmark_competency_assessment_exam = serializers.IntegerField(min_value=0)
     tuition_fee = serializers.IntegerField(min_value=0)
     training_location = serializers.CharField()
+
+    def validate_benchmark_30(self, value: float):
+        s = str(value)
+        _, decimal_places = s.split(".")
+
+        if len(decimal_places) > 2:
+            raise serializers.ValidationError("invalid_benchmark_30_value")
+        
+        return value

@@ -27,10 +27,10 @@ class CollegeExamGroupView(viewsets.ViewSet):
                 group.save()
                 group.subjects.set(subjects)
 
-            return RestResponse(status=status.HTTP_200_OK)
+            return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             print(f"SubjectView.create exc={e}")
-            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def list(self, request):
         try:

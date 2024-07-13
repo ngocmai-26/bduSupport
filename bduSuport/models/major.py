@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from bduSuport.models.college_exam_group import CollegeExamGroup
 
@@ -13,7 +13,7 @@ class Major(models.Model):
     college_exam_groups  = models.ManyToManyField(CollegeExamGroup, through="bduSuport.MajorM2MCollegeExamGroup", related_name="majors")
     description = models.CharField(max_length=255)
     year = models.IntegerField(validators=[MinValueValidator(0)])
-    benchmark_30 = models.DecimalField(max_digits=4, decimal_places=2)
+    benchmark_30 = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(30)])
     benchmark_competency_assessment_exam = models.IntegerField(validators=[MinValueValidator(0)])
     tuition_fee = models.IntegerField(validators=[MinValueValidator(0)])
     training_location = models.CharField(max_length=255)

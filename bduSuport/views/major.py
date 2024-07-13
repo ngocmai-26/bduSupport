@@ -15,7 +15,7 @@ class MajorView(viewsets.ViewSet):
             validate = CreateMajorValidator(data=request.data)
 
             if not validate.is_valid():
-                return Response(data=validate.errors, status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
             
             with transaction.atomic():
                 _data = validate.validated_data
@@ -24,10 +24,10 @@ class MajorView(viewsets.ViewSet):
                 major.save()
                 major.college_exam_groups.set(college_exam_groups)
 
-            return RestResponse(status=status.HTTP_200_OK)
+            return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             print(f"SubjectView.create exc={e}")
-            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def list(self, request):
         try:
