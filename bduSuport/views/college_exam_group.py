@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
 
+from bduSuport.helpers.response import RestResponse
 from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
+from bduSuport.serializers.college_exam_group import CollegeExamGroupSerializer
 from bduSuport.validations.create_college_exam_group import CreateCollegeExamGroupValidator
 
 class CollegeExamGroupView(viewsets.ViewSet):
@@ -25,7 +27,16 @@ class CollegeExamGroupView(viewsets.ViewSet):
                 group.save()
                 group.subjects.set(subjects)
 
-            return Response(status=status.HTTP_200_OK)
+            return RestResponse(status=status.HTTP_200_OK)
         except Exception as e:
             print(f"SubjectView.create exc={e}")
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def list(self, request):
+        try:
+            subjects = CollegeExamGroup.objects.filter(deleted_at=None)
+            data = CollegeExamGroupSerializer(subjects, many=True).data
+            return RestResponse(data=data, status=status.HTTP_200_OK).response
+        except Exception as e:
+            print(f"SubjectView.list exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

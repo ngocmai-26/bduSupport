@@ -1,6 +1,6 @@
 from django.db import models
 from .academic_level import AcademicLevel
-from .major_model import Major
+from .major import Major
 
 class Students(models.Model):
     id = models.AutoField(primary_key=True)

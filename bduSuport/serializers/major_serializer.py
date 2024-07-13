@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from ..models.major_model import Major
+from ..models.major import Major
 
 class MajorSerializer(ModelSerializer):
     class Meta: 

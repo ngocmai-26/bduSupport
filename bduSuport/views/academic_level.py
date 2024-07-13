@@ -24,3 +24,12 @@ class AcademicLevelView(viewsets.ViewSet):
         except Exception as e:
             print(f"AcademicLevelView.create exc={e}")
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    def list(self, request):
+        try:
+            subjects = AcademicLevel.objects.filter(deleted_at=None)
+            data = AcademicLevelSerializer(subjects, many=True).data
+            return RestResponse(data=data, status=status.HTTP_200_OK).response
+        except Exception as e:
+            print(f"SubjectView.list exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
