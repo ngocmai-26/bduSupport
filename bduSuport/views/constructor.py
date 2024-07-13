@@ -26,7 +26,7 @@ class ConstructorView(viewsets.ViewSet):
         
     def __get_evaluation_methods(self):
         methods = EvaluationMethod.objects.all()
-        return EvaluationMethodSerializer(methods, many=True, fields=["id", "name"]).data
+        return EvaluationMethodSerializer(methods, many=True, fields=["code", "name"]).data
     
     def __get_academic_levels(self):
         levels = AcademicLevel.objects.all()

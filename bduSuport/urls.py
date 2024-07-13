@@ -14,7 +14,7 @@ from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
 from bduSuport.views.subject import SubjectView
 from bduSuport.views.mini_app_auth import MiniAppAuth
-from bduSuport.views.mini_appconstructor import ConstructorView
+from bduSuport.views.constructor import ConstructorView
 from bduSuport.views.root import RootView
 
 schema_view = get_schema_view(
