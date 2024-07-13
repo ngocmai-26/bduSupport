@@ -18,5 +18,4 @@ class CollegeExamGroupSerializer(serializers.ModelSerializer):
         for field in exclude + list(set(existing) - set(fields)):
             self.fields.pop(field, None)
 
-
     subjects = SubjectSerializer(many=True)

@@ -1,13 +1,22 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
+from bduSuport.models.college_exam_group import CollegeExamGroup
+
 class Major(models.Model):
+    class Meta:
+        db_table = "major"
+        
     code = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=255)
-    expected_target = models.CharField(max_length=255)
-    college_exam_groups  = models.ManyToManyField()
+    expected_target = models.IntegerField(validators=[MinValueValidator(0)])
+    college_exam_groups  = models.ManyToManyField(CollegeExamGroup, through="bduSuport.MajorM2MCollegeExamGroup", related_name="majors")
     description = models.CharField(max_length=255)
     year = models.IntegerField(validators=[MinValueValidator(0)])
-    benchmark = models.CharField(max_length=255) 
-    tuition = models.CharField(max_length=255)
+    benchmark_30 = models.DecimalField(max_digits=4, decimal_places=2)
+    benchmark_competency_assessment_exam = models.IntegerField(validators=[MinValueValidator(0)])
+    tuition_fee = models.IntegerField(validators=[MinValueValidator(0)])
     training_location = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, default=None)
