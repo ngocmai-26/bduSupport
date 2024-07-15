@@ -1,10 +1,18 @@
-import decimal
-import math
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from bduSuport.models.college_exam_group import CollegeExamGroup
+from bduSuport.models.major import Major
 
 class CreateMajorValidator(serializers.Serializer):
+    class Meta:
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Major.objects.all(),
+                fields=['code', 'year']
+            )
+        ]
+
     code = serializers.CharField()
     name = serializers.CharField()
     expected_target = serializers.IntegerField(min_value=0)

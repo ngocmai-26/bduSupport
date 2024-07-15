@@ -6,9 +6,11 @@ from bduSuport.helpers.response import RestResponse
 from bduSuport.models.academic_level import AcademicLevel
 from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.models.evaluation_method import EvaluationMethod
+from bduSuport.models.major import Major
 from bduSuport.serializers.academic_level import AcademicLevelSerializer
 from bduSuport.serializers.college_exam_group import CollegeExamGroupSerializer
 from bduSuport.serializers.evaluation_method_serializer import EvaluationMethodSerializer
+from bduSuport.serializers.major_serializer import MajorSerializer
 
 class ConstructorView(viewsets.ViewSet):
     @action(methods=["GET"], detail=False, url_path="registration-form")
@@ -17,7 +19,8 @@ class ConstructorView(viewsets.ViewSet):
             data = {
                 "evaluation_methods": self.__get_evaluation_methods(),
                 "academic_levels": self.__get_academic_levels(),
-                "college_exam_groups": self.__get_college_exam_groups()
+                "college_exam_groups": self.__get_college_exam_groups(),
+                "majors": self.__get_majors(),
             }
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
@@ -34,4 +37,8 @@ class ConstructorView(viewsets.ViewSet):
 
     def __get_college_exam_groups(self):
         groups = CollegeExamGroup.objects.filter(deleted_at=None)
-        return CollegeExamGroupSerializer(groups, many=True, fields=["id", "code", "name", "subjects"]).data
+        return CollegeExamGroupSerializer(groups, many=True, fields=["id", "code", "name"]).data
+    
+    def __get_majors(self):
+        majors = Major.objects.filter(deleted_at=None)
+        return MajorSerializer(majors, many=True, fields=["code", "name"]).data

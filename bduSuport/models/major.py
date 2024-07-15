@@ -6,13 +6,15 @@ from bduSuport.models.college_exam_group import CollegeExamGroup
 class Major(models.Model):
     class Meta:
         db_table = "major"
-        
-    code = models.CharField(max_length=10, primary_key=True)
+        unique_together = ["code", "year"]
+    
+    id = models.AutoField(primary_key=True)
+    code = models.CharField(max_length=10, db_index=True)
     name = models.CharField(max_length=255)
     expected_target = models.IntegerField(validators=[MinValueValidator(0)])
     college_exam_groups  = models.ManyToManyField(CollegeExamGroup, through="bduSuport.MajorM2MCollegeExamGroup", related_name="majors")
     description = models.CharField(max_length=255)
-    year = models.IntegerField(validators=[MinValueValidator(0)])
+    year = models.IntegerField(db_index=True, validators=[MinValueValidator(0)])
     benchmark_30 = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(30)])
     benchmark_competency_assessment_exam = models.IntegerField(validators=[MinValueValidator(0)])
     tuition_fee = models.IntegerField(validators=[MinValueValidator(0)])

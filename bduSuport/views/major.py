@@ -12,7 +12,7 @@ from bduSuport.validations.create_major import CreateMajorValidator
 from bduSuport.validations.update_major import UpdateMajorValidator
 
 class MajorView(viewsets.ViewSet):
-    authentication_classes = (BackofficeAuthentication, )
+    # authentication_classes = (BackofficeAuthentication, )
     
     @swagger_auto_schema(request_body=CreateMajorValidator)
     def create(self, request):
