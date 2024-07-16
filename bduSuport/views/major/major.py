@@ -38,8 +38,8 @@ class MajorView(viewsets.ViewSet):
         
     def list(self, request):
         try:
-            subjects = Major.objects.filter(deleted_at=None)
-            data = MajorSerializer(subjects, many=True).data
+            majors = Major.objects.filter(deleted_at=None)
+            data = MajorSerializer(majors, many=True).data
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
             print(f"MajorView.list exc={e}")

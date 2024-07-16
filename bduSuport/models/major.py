@@ -22,7 +22,7 @@ class Major(models.Model):
     tuition_fee = models.IntegerField(validators=[MinValueValidator(0)])
     training_location = models.CharField(max_length=255)
     academic_level = models.ForeignKey(AcademicLevel, on_delete=models.CASCADE, related_name="majors")
-    evaluation_methods = models.ManyToManyField(EvaluationMethod, related_name="evaluation_methods")
+    evaluation_methods = models.ManyToManyField(EvaluationMethod, related_name="majors")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, default=None)
