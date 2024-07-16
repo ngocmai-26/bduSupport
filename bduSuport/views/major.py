@@ -12,7 +12,7 @@ from bduSuport.validations.create_major import CreateMajorValidator
 from bduSuport.validations.update_major import UpdateMajorValidator
 
 class MajorView(viewsets.ViewSet):
-    authentication_classes = (BackofficeAuthentication, )
+    # authentication_classes = (BackofficeAuthentication, )
     
     @swagger_auto_schema(request_body=CreateMajorValidator)
     def create(self, request):
@@ -25,9 +25,11 @@ class MajorView(viewsets.ViewSet):
             with transaction.atomic():
                 _data = validate.validated_data
                 college_exam_groups = _data.pop("college_exam_groups")
+                evaluation_methods = _data.pop("evaluation_methods")
                 major = Major(**_data)
                 major.save()
                 major.college_exam_groups.set(college_exam_groups)
+                major.evaluation_methods.set(evaluation_methods)
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
@@ -70,6 +72,7 @@ class MajorView(viewsets.ViewSet):
                     major = Major.objects.get(code=pk, deleted_at=None)
                     _data = validate.validated_data
                     college_exam_groups = _data.pop("college_exam_groups", None)
+                    evaluation_methods = _data.pop("evaluation_methods")
 
                     for k, v in _data.items():
                         setattr(major, k, v)
@@ -78,6 +81,9 @@ class MajorView(viewsets.ViewSet):
                     
                     if college_exam_groups is not None:
                         major.college_exam_groups.set(college_exam_groups)
+
+                    if evaluation_methods is not None:
+                        major.evaluation_methods.set(evaluation_methods)
 
                 except Major.DoesNotExist:
                     return RestResponse(status=status.HTTP_404_NOT_FOUND).response

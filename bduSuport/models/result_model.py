@@ -1,6 +1,6 @@
 from django.db import models
-from .admission_registration_model import AdmissionRegistration
-from .students_model import Students
+from .admission_registration import AdmissionRegistration
+from .student import Students
 from .evaluation_method import EvaluationMethod
 
 class Result(models.Model):

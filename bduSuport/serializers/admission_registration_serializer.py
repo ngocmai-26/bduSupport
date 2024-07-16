@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from ..models.admission_registration_model import AdmissionRegistration
+from ..models.admission_registration import AdmissionRegistration
 
 class AdmissionRegistrationSerializer(ModelSerializer):
     class Meta: 
