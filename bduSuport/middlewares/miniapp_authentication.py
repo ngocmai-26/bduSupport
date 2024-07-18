@@ -12,7 +12,7 @@ class MiniAppAuthentication(BaseAuthentication):
                 raise NotAuthenticated("Missing token!")
             
             token = bearer_token.replace("Bearer ", "")
-            session_data = cache.get(f"mini_app_session:*:access:{token}", default=None)
+            session_data = cache.get(f"mini_app_session:access:{token}", default=None)
 
             if session_data is None:
                 raise AuthenticationFailed("Verify token failed!")

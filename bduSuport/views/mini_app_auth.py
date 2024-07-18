@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
 
 from bduSuport.configs.zalo_api import ZALO_USER_INFO_API
+from bduSuport.helpers.response import RestResponse
 from bduSuport.models.mini_app_user import MiniAppUser
 from bduSuport.validations.create_mini_app_session import CreateMiniAppSessionValidator
 
@@ -21,7 +22,7 @@ class MiniAppAuth(viewsets.ViewSet):
             validate = CreateMiniAppSessionValidator(data=request.data)
 
             if not validate.is_valid():
-                return Response(data=validate.errors, status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
             
             _data = validate.validated_data
             access_token = _data["token"]
@@ -37,7 +38,7 @@ class MiniAppAuth(viewsets.ViewSet):
             resp_data = resp.json()
 
             if resp_data["error"] != 0:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST).response
             
             user_id = resp_data["id"]
             user_name = resp_data["name"]
@@ -45,14 +46,14 @@ class MiniAppAuth(viewsets.ViewSet):
 
             if not self.__create_mini_app_user(user_id, user_name, user_avatar_url):
                 print(f"MiniAppAuth.__create_mini_app_user create user {user_id} failed")
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
             
             self.__create_access_token(user_id, access_token)
 
-            return Response(status=status.HTTP_200_OK)
+            return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             print(f"MiniAppAuth.register_session exc={e}")
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def __create_mini_app_user(self, user_id, user_name, user_avatar_url):
         try:
@@ -79,10 +80,10 @@ class MiniAppAuth(viewsets.ViewSet):
             return False
         
     def __create_access_token(self, mini_app_user_id, mini_app_token):
-        cache.delete(f"mini_app_session:{mini_app_user_id}:access:*")
+        cache.delete(f"mini_app_session:access:*")
 
         cache.set(
-            f"mini_app_session:{mini_app_user_id}:access:{mini_app_token}", 
+            f"mini_app_session:access:{mini_app_token}", 
             {"user_id": mini_app_user_id},
             7*24*60*60
         )
