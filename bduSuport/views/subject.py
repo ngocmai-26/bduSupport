@@ -4,7 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.subject import Subject
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
-from bduSuport.serializers.subject_serializer import SubjectSerializer
+from bduSuport.serializers.subject import SubjectSerializer
 
 class SubjectView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )

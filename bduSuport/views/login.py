@@ -18,12 +18,12 @@ class TokenPairView(TokenObtainPairView):
         try:
             response = super().post(request, *args, **kwargs)
         
-            return Response(
-                {
+            return RestResponse(
+                data={
                     **response.data
                 },
-                status.HTTP_200_OK
-            )
+                status=status.HTTP_200_OK
+            ).response
         except serializers.ValidationError:
             return RestResponse(message="Dữ liệu đầu vào không hợp lệ!", status=status.HTTP_400_BAD_REQUEST).response
         except UnVerifiedException as e:

@@ -14,7 +14,7 @@ class Major(models.Model):
     code = models.CharField(max_length=10, db_index=True)
     name = models.CharField(max_length=255)
     expected_target = models.IntegerField(validators=[MinValueValidator(0)])
-    college_exam_groups  = models.ManyToManyField(CollegeExamGroup, through="bduSuport.MajorM2MCollegeExamGroup", related_name="majors")
+    college_exam_groups = models.ManyToManyField(CollegeExamGroup, through="bduSuport.MajorM2MCollegeExamGroup", related_name="majors")
     description = models.CharField(max_length=255)
     year = models.IntegerField(db_index=True, validators=[MinValueValidator(0)])
     benchmark_30 = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(30)])

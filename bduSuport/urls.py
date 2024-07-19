@@ -10,6 +10,7 @@ from bduSuport.views.academic_level.academic_level import AcademicLevelView
 from bduSuport.views.academic_level.miniapp_academic_level import MiniappAcademicLevelView
 from bduSuport.views.account_management import AccountManagementView
 from bduSuport.views.admin_account import AdminAccountView
+from bduSuport.views.admission_registration import AdmissionRegistrationView
 from bduSuport.views.college_exam_group import CollegeExamGroupView
 from bduSuport.views.evaluation_method import EvaluationMethodView
 from bduSuport.views.health import HealthView
@@ -42,6 +43,7 @@ router.register('miniapp/academic-levels', MiniappAcademicLevelView, basename='m
 router.register('miniapp/majors', MiniappMajorView, basename='miniapp_majors')
 router.register('academic-levels', AcademicLevelView, basename='academic_level')
 router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method')
+router.register('miniapp/admission-registration', AdmissionRegistrationView, basename='admission_registration')
 router.register('init', ConstructorView, basename='constructor')
 router.register('super-admin', RootView, basename='super_admin')
 router.register('miniapp/auth', MiniAppAuth, basename='account_miniapp_auth')

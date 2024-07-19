@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 from django.conf import settings
 from django.core.mail import send_mail
 
+from bduSuport.helpers.response import RestResponse
 from bduSuport.services.otp import OtpService
 from bduSuport.services.mail import EmailService
 
@@ -29,12 +30,12 @@ class RootView(viewsets.ViewSet):
             validate = CreateBackofficeAccountValidator(data=request.data)
 
             if not validate.is_valid():
-                return Response(validate.errors, status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(validate.errors, status=status.HTTP_400_BAD_REQUEST).response
             
             validated_data = validate.validated_data
             
             if Account.objects.filter(email=validated_data["email"]).exists():
-                return Response({"message": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(data={"message": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST).response
             
             _password: str = validated_data.pop("password")
 
@@ -45,10 +46,10 @@ class RootView(viewsets.ViewSet):
             account.save() 
                 
             if account.id is None:
-                return Response({"error": "Failed to create account."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return RestResponse(message="Failed to create account.", status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
             
-            return Response({"message": "Account created successfully", "account_id": account.id}, status=status.HTTP_201_CREATED)
+            return RestResponse(message="Account created successfully", status=status.HTTP_201_CREATED).response
         except Exception as e:
             print(e)
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return RestResponse(data={"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
 

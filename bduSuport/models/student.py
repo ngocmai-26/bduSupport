@@ -3,6 +3,9 @@ from .academic_level import AcademicLevel
 from .major import Major
 
 class Student(models.Model):
+    class Meta:
+        db_table = "student"
+        
     id = models.AutoField(primary_key=True)
     fullname = models.CharField(max_length=255)
     gender = models.BooleanField()

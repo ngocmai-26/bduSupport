@@ -4,6 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from bduSuport.helpers.response import RestResponse
 from bduSuport.services.otp import OtpService
 from bduSuport.models.account import Account, AccountStatus
 from bduSuport.validations.verify_backoffice_account import BackofficeVerifyAccountValidator
@@ -18,28 +19,28 @@ class AdminAccountView(viewsets.ViewSet):
             validate = BackofficeVerifyAccountValidator(data=request.data)
 
             if not validate.is_valid():
-                return Response(validate.errors, status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
             
             validated_data = validate.validated_data
             email = validated_data["email"]
             otp = validated_data["otp"]
             
             if self.otp_service.verify_otp("verify_account", email, otp):
-                return Response({"message": "Verification failed!"}, status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(data={"message": "Verification failed!"}, status=status.HTTP_400_BAD_REQUEST).response
 
             try:
                 account = Account.objects.get(email=email)
                 
                 if account.status != AccountStatus.UNVERIFIED:
-                    return Response({"message": "Invalid account status!"}, status=status.HTTP_400_BAD_REQUEST) 
+                    return RestResponse(data={"message": "Invalid account status!"}, status=status.HTTP_400_BAD_REQUEST).response
             
                 account.status = AccountStatus.ACTIVATED
                 account.save(update_fields=["status"])
 
-                return Response(status=status.HTTP_200_OK)
+                return RestResponse(status=status.HTTP_200_OK).response
             except:
-                return Response(validate.errors, status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
 
         except Exception as e:
             print(e)
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return RestResponse(data={"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

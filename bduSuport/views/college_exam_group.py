@@ -18,7 +18,7 @@ class CollegeExamGroupView(viewsets.ViewSet):
             validate = CreateCollegeExamGroupValidator(data=request.data)
 
             if not validate.is_valid():
-                return Response(data=validate.errors, status=status.HTTP_400_BAD_REQUEST)
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
             
             with transaction.atomic():
                 _data = validate.validated_data

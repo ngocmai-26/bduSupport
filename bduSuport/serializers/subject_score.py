@@ -1,11 +1,10 @@
 from rest_framework import serializers
 
-from bduSuport.models.college_exam_group import CollegeExamGroup
-from bduSuport.serializers.subject import SubjectSerializer
+from bduSuport.models.subject_score import SubjectScore
 
-class CollegeExamGroupSerializer(serializers.ModelSerializer):
+class SubjectScoreSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CollegeExamGroup
+        model = SubjectScore
         fields = "__all__"
 
     def __init__(self, *args, **kwargs):
@@ -18,4 +17,11 @@ class CollegeExamGroupSerializer(serializers.ModelSerializer):
         for field in exclude + list(set(existing) - set(fields)):
             self.fields.pop(field, None)
 
-    subjects = SubjectSerializer(many=True)
+    def validate_score(self, value: float):
+        s = str(value)
+        _, decimal_places = s.split(".")
+
+        if len(decimal_places) > 2:
+            raise serializers.ValidationError("invalid_score_value")
+        
+        return value

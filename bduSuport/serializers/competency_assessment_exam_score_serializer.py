@@ -1,11 +1,10 @@
 from rest_framework import serializers
 
-from bduSuport.models.college_exam_group import CollegeExamGroup
-from bduSuport.serializers.subject import SubjectSerializer
+from bduSuport.models.competency_assessment_exam_score import CompetencyAssessmentExamScore
 
-class CollegeExamGroupSerializer(serializers.ModelSerializer):
+class CompetencyAssessmentExamScoreSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CollegeExamGroup
+        model = CompetencyAssessmentExamScore
         fields = "__all__"
 
     def __init__(self, *args, **kwargs):
@@ -17,5 +16,3 @@ class CollegeExamGroupSerializer(serializers.ModelSerializer):
         
         for field in exclude + list(set(existing) - set(fields)):
             self.fields.pop(field, None)
-
-    subjects = SubjectSerializer(many=True)
