@@ -68,7 +68,7 @@ class SubmitAdmissionRegistration(serializers.Serializer):
                 raise serializers.ValidationError("has_invalid_or_lack_of_grades_for_subject")
 
             for _k, _v in v.items():
-                if (_k == 12 and _v != {0}) or (_k in (10, 11) and _v != {1, 2}):
+                if (_k == 12 and _v != {1}) or (_k in (10, 11) and _v != {1, 2}):
                     raise serializers.ValidationError("has_invalid_or_lack_of_semester")
             
             valid_subjects.remove(k)

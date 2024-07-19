@@ -14,3 +14,4 @@ gunicorn
 psycopg2
 django-cors-headers
 requests
+firebase_admin

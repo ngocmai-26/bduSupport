@@ -210,3 +210,5 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+FIREBASE_ACCOUNT_CERTIFICATE = "firebase_cert"
