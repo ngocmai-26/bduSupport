@@ -15,7 +15,7 @@ from bduSuport.serializers.admission_registration_serializer import AdmissionReg
 from bduSuport.validations.submit_admission_registration import SubmitAdmissionRegistration
 
 class AdmissionRegistrationManagementView(viewsets.ViewSet):
-    authentication_classes = (BackofficeAuthentication, )
+    # authentication_classes = (BackofficeAuthentication, )
 
     def list(self, request):
         try:
