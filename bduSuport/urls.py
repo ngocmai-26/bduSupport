@@ -20,6 +20,7 @@ from bduSuport.views.major.major import MajorView
 from bduSuport.views.major.miniapp_major import MiniappMajorView
 from bduSuport.views.news.miniapp_news import MiniappNewsView
 from bduSuport.views.news.news_menegement import NewsManagementView
+from bduSuport.views.news.news_type_management import NewsTypeManagementView
 from bduSuport.views.subject import SubjectView
 from bduSuport.views.mini_app_auth import MiniAppAuth
 from bduSuport.views.constructor import ConstructorView
@@ -51,14 +52,15 @@ miniap_router.register('academic-levels', AcademicLevelView, basename='academic_
 miniap_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
 miniap_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
 
-backoffice_router.register('majors', MajorView, basename='major')
-backoffice_router.register('subjects', SubjectView, basename='subject')
+backoffice_router.register('majors', MajorView, basename='major_management')
+backoffice_router.register('subjects', SubjectView, basename='subject_management')
 backoffice_router.register('super-admin', RootView, basename='super_admin')
 backoffice_router.register('news', NewsManagementView, basename='news_management')
 backoffice_router.register('accounts', AccountManagementView, basename='account_management')
+backoffice_router.register('news-types', NewsTypeManagementView, basename='news_type_management')
 backoffice_router.register('admin/accounts', AdminAccountView, basename='backoffice_admin_account')
-backoffice_router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method')
-backoffice_router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group')
+backoffice_router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method_management')
+backoffice_router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group_management')
 backoffice_router.register('admission-registration', AdmissionRegistrationManagementView, basename='admission_registration_management')
 
 backoffice_urls = backoffice_router.urls + [
@@ -66,8 +68,8 @@ backoffice_urls = backoffice_router.urls + [
 ]
 
 urlpatterns = [
+   path('apis/', include(health_router.urls)),
    path('apis/backoffice/', include(backoffice_urls)),
    path('apis/miniapp/', include(miniap_router.urls)),
-   path('apis/', include(health_router.urls)),
    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

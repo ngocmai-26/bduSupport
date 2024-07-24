@@ -1,6 +1,7 @@
 from django.db import models
 
 from bduSuport.models.account import Account
+from bduSuport.models.news_type import NewsType
 
 class News(models.Model):
     class Meta:
@@ -10,6 +11,7 @@ class News(models.Model):
     title = models.CharField(max_length=255)
     link = models.URLField()
     image = models.URLField()
+    type = models.ForeignKey(NewsType, on_delete=models.CASCADE, related_name="news")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True)
