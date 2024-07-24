@@ -1,6 +1,7 @@
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import NotAuthenticated, AuthenticationFailed
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import TokenError
 from django.core.cache import cache
 from ..models.account import Account
 
@@ -13,8 +14,11 @@ class BackofficeAuthentication(BaseAuthentication):
         
         token = bearer_token.replace("Bearer ", "")
 
-        user_id = AccessToken(token=token).payload.get("user_id", None)
-        jti = AccessToken(token=token).payload["jti"]
+        try:
+            user_id = AccessToken(token=token).payload.get("user_id", None)
+            jti = AccessToken(token=token).payload["jti"]
+        except TokenError:
+            raise AuthenticationFailed("Verify token failed!")
 
         if not bool(cache.has_key(f"session:{user_id}:access:{jti}")):
             raise AuthenticationFailed("Verify token failed!")
