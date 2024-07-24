@@ -8,7 +8,7 @@ from bduSuport.serializers.new_serializer import NewsSerializer
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
 
 class MiniappNewsView(viewsets.ViewSet):
-    # authentication_classes = (MiniAppAuthentication, )
+    authentication_classes = (MiniAppAuthentication, )
 
     @swagger_auto_schema(manual_parameters=[openapi.Parameter("type", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)])
     def list(self, request):
