@@ -14,7 +14,7 @@ from bduSuport.models.admission_registration import AdmissionRegistration
 from bduSuport.models.competency_assessment_exam_score import CompetencyAssessmentExamScore
 
 class AdmissionRegistrationView(viewsets.ViewSet):
-    # authentication_classes = (MiniAppAuthentication, )
+    authentication_classes = (MiniAppAuthentication, )
     
     @swagger_auto_schema(request_body=SubmitAdmissionRegistration)
     def create(self, request):

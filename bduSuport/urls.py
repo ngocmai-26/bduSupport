@@ -37,32 +37,37 @@ schema_view = get_schema_view(
    authentication_classes=()
 )
 
+health_router = SimpleRouter(trailing_slash=False)
+miniap_router = SimpleRouter(trailing_slash=False)
+backoffice_router = SimpleRouter(trailing_slash=False)
 
-router = SimpleRouter(trailing_slash=False)
+health_router.register('health', HealthView, basename='health')
 
-router.register('majors', MajorView, basename='major')
-router.register('health', HealthView, basename='health')
-router.register('subjects', SubjectView, basename='subject')
-router.register('init', ConstructorView, basename='constructor')
-router.register('super-admin', RootView, basename='super_admin')
-router.register('miniapp/news', MiniappNewsView, basename='miniapp_news')
-router.register('news', NewsManagementView, basename='news_management')
-router.register('miniapp/auth', MiniAppAuth, basename='account_miniapp_auth')
-router.register('miniapp/majors', MiniappMajorView, basename='miniapp_majors')
-router.register('academic-levels', AcademicLevelView, basename='academic_level')
-router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method')
-router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group')
-router.register('backoffice/accounts', AccountManagementView, basename='account_management')
-router.register('backoffice/admin/accounts', AdminAccountView, basename='backoffice_admin_account')
-router.register('miniapp/academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
-router.register('miniapp/admission-registration', AdmissionRegistrationView, basename='admission_registration')
-router.register('backoffice/admission-registration', AdmissionRegistrationManagementView, basename='admission_registration_management')
+miniap_router.register('init', ConstructorView, basename='constructor')
+miniap_router.register('news', MiniappNewsView, basename='miniapp_news')
+miniap_router.register('auth', MiniAppAuth, basename='account_miniapp_auth')
+miniap_router.register('majors', MiniappMajorView, basename='miniapp_majors')
+miniap_router.register('academic-levels', AcademicLevelView, basename='academic_level')
+miniap_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
+miniap_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
 
-urls = router.urls + [
-   path('backoffice/login', TokenPairView.as_view(), name='backoffice_token_obtain_pair'),
+backoffice_router.register('majors', MajorView, basename='major')
+backoffice_router.register('subjects', SubjectView, basename='subject')
+backoffice_router.register('super-admin', RootView, basename='super_admin')
+backoffice_router.register('news', NewsManagementView, basename='news_management')
+backoffice_router.register('accounts', AccountManagementView, basename='account_management')
+backoffice_router.register('admin/accounts', AdminAccountView, basename='backoffice_admin_account')
+backoffice_router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method')
+backoffice_router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group')
+backoffice_router.register('admission-registration', AdmissionRegistrationManagementView, basename='admission_registration_management')
+
+backoffice_urls = backoffice_router.urls + [
+   path('login', TokenPairView.as_view(), name='backoffice_token_obtain_pair'),
 ]
 
 urlpatterns = [
-   path('apis/', include(urls)),
+   path('apis/backoffice/', include(backoffice_urls)),
+   path('apis/miniapp/', include(miniap_router.urls)),
+   path('apis/', include(health_router.urls)),
    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
