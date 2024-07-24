@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import viewsets, status
 from rest_framework.parsers import MultiPartParser
 from drf_yasg.utils import swagger_auto_schema
@@ -8,6 +9,7 @@ from bduSuport.helpers.response import RestResponse
 from bduSuport.serializers.new_serializer import NewsSerializer
 from bduSuport.validations.create_news import CreateNewsValidator
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
+from bduSuport.validations.update_news import UpdateNewsValidator
 
 class NewsManagementView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
@@ -33,5 +35,47 @@ class NewsManagementView(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"SubjectView.create exc={e}")
+            print(f"NewsManagementView.create exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+    
+    @swagger_auto_schema(request_body=UpdateNewsValidator)
+    def update(self, request, pk):
+        try:
+            validate = UpdateNewsValidator(data=request.data)
+
+            if not validate.is_valid():
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+            
+            try:
+                news = News.objects.get(id=pk)
+            except News.DoesNotExist:
+                return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
+            
+            _data = validate.validated_data
+
+            if "image" in _data:
+                _data["image"] = self.image_storage_provider.upload_image(_data.pop("image"))
+            
+            for k, v in _data.items():
+                setattr(news, k, v)
+            
+            news.save(update_fields=list(_data.keys()))
+
+            return RestResponse(status=status.HTTP_200_OK).response
+        except Exception as e:
+            print(f"NewsManagementView.update exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    def destroy(self, request, pk):
+        try:
+            try:
+                news = News.objects.get(id=pk)
+                news.deleted_at = datetime.datetime.now()
+                news.save(update_fields=["deleted_at"])
+                
+                return RestResponse(status=status.HTTP_200_OK).response 
+            except News.DoesNotExist:
+                return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
+        except Exception as e:
+            print(f"NewsManagementView.detroy exc={e}")
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
