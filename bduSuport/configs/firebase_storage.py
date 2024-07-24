@@ -5,6 +5,6 @@ cred = credentials.Certificate(settings.FIREBASE_ACCOUNT_CERTIFICATE)
 initialize_app(
     cred, 
     {
-        "storageBucket": "vticket-1ccb9.appspot.com"
+        "storageBucket": "selina-d8690.appspot.com"
     }
 )
