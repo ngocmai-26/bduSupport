@@ -10,7 +10,8 @@ from bduSuport.views.academic_level.academic_level import AcademicLevelView
 from bduSuport.views.academic_level.miniapp_academic_level import MiniappAcademicLevelView
 from bduSuport.views.account_management import AccountManagementView
 from bduSuport.views.admin_account import AdminAccountView
-from bduSuport.views.admission_registration import AdmissionRegistrationView
+from bduSuport.views.admission_registration.admission_registration import AdmissionRegistrationView
+from bduSuport.views.admission_registration.admission_registration_management import AdmissionRegistrationManagementView
 from bduSuport.views.college_exam_group import CollegeExamGroupView
 from bduSuport.views.evaluation_method import EvaluationMethodView
 from bduSuport.views.health import HealthView
@@ -53,8 +54,9 @@ router.register('evaluation-methods', EvaluationMethodView, basename='evaluation
 router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group')
 router.register('backoffice/accounts', AccountManagementView, basename='account_management')
 router.register('backoffice/admin/accounts', AdminAccountView, basename='backoffice_admin_account')
-router.register('miniapp/academic-levels', MiniappAcademicLevelView, basename='miniapp_academic-levels')
+router.register('miniapp/academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
 router.register('miniapp/admission-registration', AdmissionRegistrationView, basename='admission_registration')
+router.register('backoffice/admission-registration', AdmissionRegistrationManagementView, basename='admission_registration_management')
 
 urls = router.urls + [
    path('backoffice/login', TokenPairView.as_view(), name='backoffice_token_obtain_pair'),
