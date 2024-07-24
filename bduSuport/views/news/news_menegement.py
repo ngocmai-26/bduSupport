@@ -37,6 +37,16 @@ class NewsManagementView(viewsets.ViewSet):
         except Exception as e:
             print(f"NewsManagementView.create exc={e}")
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    def list(self, request):
+        try:
+            news = News.objects.filter(deleted_at=None).order_by("created_at")
+            data = NewsSerializer(news, many=True).data
+
+            return RestResponse(data=data, status=status.HTTP_200_OK).response
+        except Exception as e:
+            print(f"NewsManagementView.list exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
     
     @swagger_auto_schema(request_body=UpdateNewsValidator)
     def update(self, request, pk):
