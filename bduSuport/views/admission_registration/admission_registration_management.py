@@ -15,7 +15,17 @@ from bduSuport.serializers.admission_registration_serializer import AdmissionReg
 from bduSuport.validations.submit_admission_registration import SubmitAdmissionRegistration
 
 class AdmissionRegistrationManagementView(viewsets.ViewSet):
-    # authentication_classes = (BackofficeAuthentication, )
+    authentication_classes = (BackofficeAuthentication, )
+
+    def list(self, request):
+        try:
+            registrations = AdmissionRegistration.objects.filter(recalled_at=None)
+            data = AdmissionRegistrationSerializer(registrations, many=True).data
+
+            return RestResponse(data=data, status=status.HTTP_200_OK).response 
+        except Exception as e:
+            print(f"AdmissionRegistrationManagementView.list exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
 
     def retrieve(self, request, pk):
         try:
@@ -23,6 +33,7 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
                 registration = AdmissionRegistration.objects.get(id=pk)
                 data = AdmissionRegistrationSerializer(registration).data
                 return RestResponse(data=data, status=status.HTTP_200_OK).response 
+            
             except AdmissionRegistration.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
         except Exception as e:
