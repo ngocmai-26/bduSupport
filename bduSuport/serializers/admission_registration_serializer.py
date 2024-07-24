@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models.admission_registration import AdmissionRegistration
+from bduSuport.models.admission_registration import AdmissionRegistration
 
 class AdmissionRegistrationSerializer(serializers.ModelSerializer):
     class Meta: 
