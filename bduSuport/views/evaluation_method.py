@@ -11,8 +11,8 @@ class EvaluationMethodView(viewsets.ViewSet):
     
     def list(self, request):
         try:
-            subjects = EvaluationMethod.objects.filter(deleted_at=None)
-            data = EvaluationMethodSerializer(subjects, many=True).data
+            methods = EvaluationMethod.objects.filter(deleted_at=None)
+            data = EvaluationMethodSerializer(methods, many=True).data
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
             print(f"SubjectView.list exc={e}")

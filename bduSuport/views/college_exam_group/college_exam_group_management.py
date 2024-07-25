@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -39,4 +40,25 @@ class CollegeExamGroupView(viewsets.ViewSet):
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
             print(f"SubjectView.list exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    def destroy(self, request, pk):
+        try:
+            try:
+                group = CollegeExamGroup.objects.get(id=pk, deleted_at=None)
+                majors = group.majors.filter(deleted_at=None)
+
+                if majors.exists():
+                    majors_name = ", ".join([f"'{major.name} ({major.code})'" for major in majors])
+                    message = f"Không thể xóa khối ngành vì các ngành {majors_name} đang tham chiếu đến khối ngành này."
+                    return RestResponse(status=status.HTTP_400_BAD_REQUEST, message=message).response
+                
+                group.deleted_at = datetime.now()
+                group.save(update_fields=["deleted_at"])
+                
+                return RestResponse(status=status.HTTP_200_OK).response
+            except CollegeExamGroup.DoesNotExist:
+                return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
+        except Exception as e:
+            print(f"SubjectView.destroy exc={e}")
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

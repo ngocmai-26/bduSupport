@@ -12,7 +12,7 @@ from bduSuport.views.account_management import AccountManagementView
 from bduSuport.views.admin_account import AdminAccountView
 from bduSuport.views.admission_registration.admission_registration import AdmissionRegistrationView
 from bduSuport.views.admission_registration.admission_registration_management import AdmissionRegistrationManagementView
-from bduSuport.views.college_exam_group import CollegeExamGroupView
+from bduSuport.views.college_exam_group.college_exam_group_management import CollegeExamGroupView
 from bduSuport.views.evaluation_method import EvaluationMethodView
 from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
@@ -21,7 +21,7 @@ from bduSuport.views.major.miniapp_major import MiniappMajorView
 from bduSuport.views.news.miniapp_news import MiniappNewsView
 from bduSuport.views.news.news_menegement import NewsManagementView
 from bduSuport.views.news.news_type_management import NewsTypeManagementView
-from bduSuport.views.subject import SubjectView
+from bduSuport.views.subject.subject_management import SubjectView
 from bduSuport.views.mini_app_auth import MiniAppAuth
 from bduSuport.views.constructor import ConstructorView
 from bduSuport.views.root import RootView
