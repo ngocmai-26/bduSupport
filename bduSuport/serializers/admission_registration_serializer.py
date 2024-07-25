@@ -32,10 +32,14 @@ class AdmissionRegistrationSerializer(serializers.ModelSerializer):
         return obj.major.academic_level.name
     
     def get_college_exam_group_name(self, obj: AdmissionRegistration):
-        return obj.college_exam_group.name
+        if obj.college_exam_group:
+            return obj.college_exam_group.name
+        return None
     
     def get_college_exam_group_code(self, obj: AdmissionRegistration):
-        return obj.college_exam_group.code
+        if obj.college_exam_group:
+            return obj.college_exam_group.code
+        return None
     
     def get_evaluation_method_name(self, obj: AdmissionRegistration):
         return obj.evaluation_method.name
