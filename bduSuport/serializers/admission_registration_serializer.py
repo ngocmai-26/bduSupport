@@ -15,6 +15,7 @@ class AdmissionRegistrationSerializer(serializers.ModelSerializer):
     college_exam_group_name = serializers.SerializerMethodField()
     college_exam_group_code = serializers.SerializerMethodField()
     evaluation_method_name = serializers.SerializerMethodField()
+    subject_scores = serializers.SerializerMethodField()
 
     def get_final_score(self, obj: AdmissionRegistration):
         return obj.final_score
@@ -43,3 +44,53 @@ class AdmissionRegistrationSerializer(serializers.ModelSerializer):
     
     def get_evaluation_method_name(self, obj: AdmissionRegistration):
         return obj.evaluation_method.name
+    
+    def get_subject_scores(self, obj):
+        scores = obj.subject_scores.values(
+            "score",
+            "subject__name",
+            "subject__id",
+            "grade",
+            "semester"
+        ).order_by("subject__id", "grade", "semester")
+
+        result = []
+
+        for item in scores:
+            subject_id = item["subject__id"]
+            subject_name = item["subject__name"]
+
+            subject_exists = False
+
+            for subject in result:
+                if subject["subject_id"] == subject_id:
+                    subject["scores"].append({
+                        "score": item["score"],
+                        "grade": item["grade"],
+                        "semester": item["semester"],
+                        "semester_name": {
+                            0: "Cả năm",
+                            1: "Kỳ 1",
+                            2: "Kỳ 2"
+                        }[item["semester"]]
+                    })
+                    subject_exists = True
+                    break
+            
+            if not subject_exists:
+                result.append({
+                    "subject_name": subject_name,
+                    "subject_id": subject_id,
+                    "scores": [{
+                        "score": item["score"],
+                        "grade": item["grade"],
+                        "semester": item["semester"],
+                        "semester_name": {
+                            0: "Cả năm",
+                            1: "Kỳ 1",
+                            2: "Kỳ 2"
+                        }[item["semester"]]
+                    }]
+                })
+
+        return result
