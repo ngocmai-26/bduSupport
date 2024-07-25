@@ -1,9 +1,10 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 from bduSuport.serializers.college_exam_group import CollegeExamGroupSerializer
+from bduSuport.serializers.evaluation_method_serializer import EvaluationMethodSerializer
 from ..models.major import Major
 
-class MajorSerializer(ModelSerializer):
+class MajorSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Major
         fields = "__all__"
@@ -19,5 +20,10 @@ class MajorSerializer(ModelSerializer):
             self.fields.pop(field, None)
 
     college_exam_groups = CollegeExamGroupSerializer(many=True)
+    evaluation_methods = EvaluationMethodSerializer(many=True)
+    academic_level_name = serializers.SerializerMethodField()
+
+    def get_academic_level_name(self, obj: Major):
+        return obj.academic_level.name
        
     
