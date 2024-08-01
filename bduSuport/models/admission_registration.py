@@ -17,13 +17,14 @@ class AdmissionRegistration(models.Model):
     major = models.ForeignKey(Major, on_delete=models.CASCADE, related_name="admission_registrations")
     college_exam_group = models.ForeignKey(CollegeExamGroup, on_delete=models.CASCADE, related_name="admission_registrations", null=True)
     student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name="admission_registration")
-    approve_by = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="admission_registration", null=True)
+    reviewed_by = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="admission_registration", null=True)
+    review_result = models.BooleanField(null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     recalled_at = models.DateTimeField(null=True)
 
     @property
     def is_approved(self):
-        return self.approve_by != None
+        return self.review_result
 
     @property
     def final_score(self):
