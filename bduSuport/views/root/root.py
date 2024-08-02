@@ -1,16 +1,9 @@
-import random
 from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework import viewsets, status
-from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from django.conf import settings
-from django.core.mail import send_mail
-
 from bduSuport.helpers.response import RestResponse
-from bduSuport.services.otp import OtpService
-from bduSuport.services.mail import EmailService
 
 from bduSuport.middlewares.permissions.is_root import IsRoot
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -52,4 +45,3 @@ class RootView(viewsets.ViewSet):
         except Exception as e:
             print(e)
             return RestResponse(data={"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
-

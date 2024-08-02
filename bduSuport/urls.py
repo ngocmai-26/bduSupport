@@ -21,10 +21,11 @@ from bduSuport.views.major.miniapp_major import MiniappMajorView
 from bduSuport.views.news.miniapp_news import MiniappNewsView
 from bduSuport.views.news.news_menegement import NewsManagementView
 from bduSuport.views.news.news_type_management import NewsTypeManagementView
+from bduSuport.views.root.backoffice_account_management import BackofficeAccountManagementView
 from bduSuport.views.subject.subject_management import SubjectView
 from bduSuport.views.mini_app_auth import MiniAppAuth
 from bduSuport.views.constructor import ConstructorView
-from bduSuport.views.root import RootView
+from bduSuport.views.root.root import RootView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -62,6 +63,7 @@ backoffice_router.register('academic-levels', AcademicLevelView, basename='acade
 backoffice_router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method_management')
 backoffice_router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group_management')
 backoffice_router.register('admission-registration', AdmissionRegistrationManagementView, basename='admission_registration_management')
+backoffice_router.register('super-admin/accounts/backoffice', BackofficeAccountManagementView, basename='backoffice_account_management')
 
 backoffice_urls = backoffice_router.urls + [
    path('login', TokenPairView.as_view(), name='backoffice_token_obtain_pair'),
