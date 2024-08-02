@@ -46,8 +46,12 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
             try:
                 registration = AdmissionRegistration.objects.get(id=pk)
 
-                if registration.is_reviewed:
+                if registration.is_reviewed or not registration.is_passed:
                     return RestResponse(status=status.HTTP_400_BAD_REQUEST).response 
+                
+                if validate.validated_data["is_approve"]:
+                    if registration.major.expected_target <= len(registration.major.admission_registrations.filter(review_status=ReviewStatusChoices.APPROVED)):
+                        return RestResponse(status=status.HTTP_400_BAD_REQUEST).response
                 
                 registration.reviewed_by = request.user
                 registration.review_status = ReviewStatusChoices.APPROVED if validate.validated_data["is_approve"] else ReviewStatusChoices.REJECTED
