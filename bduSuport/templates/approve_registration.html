@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Xét Duyệt Đơn Xét Tuyển Đại Học</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 20px;">
+
+    <h1 style="text-align: center; color: #2E8B57;">Xét Duyệt Đơn Xét Tuyển Đại Học</h1>
+    
+    <div style="border: 1px solid #ccc; padding: 20px; margin-bottom: 20px;">
+        <h2 style="color: #4682B4;">Thông Tin Sinh Viên</h2>
+        <p><strong>Họ và tên:</strong> {{ student.fullname }}</p>
+        <p><strong>Giới tính:</strong> {{ student.gender|yesno:"Nam,Nữ" }}</p>
+        <p><strong>Ngày sinh:</strong> {{ date_of_birth }}</p>
+        <p><strong>Số CMND:</strong> {{ student.citizen_id }}</p>
+        <p><strong>Email:</strong> {{ student.email }}</p>
+        <p><strong>Số điện thoại:</strong> {{ student.phone }}</p>
+        <p><strong>Địa chỉ:</strong> {{ student.address }}</p>
+        <p><strong>Thành phố:</strong> {{ student.city }}</p>
+        <p><strong>Trường THPT:</strong> {{ student.high_school }}</p>
+    </div>
+
+    <div style="border: 1px solid #ccc; padding: 20px; margin-bottom: 20px;">
+        <h2 style="color: #4682B4;">Thông Tin Đơn Đăng Ký</h2>
+        <p><strong>Ngành đăng ký:</strong> {{ admission_registration.major.name }}</p>
+        <p><strong>Phương thức xét tuyển:</strong> {{ admission_registration.evaluation_method.name }}</p>
+        <p><strong>Khối ngành xét tuyển:</strong> {{ admission_registration.college_exam_group.name }}</p>
+        <p><strong>Ngày tạo đơn:</strong> {{ created_at }}</p>
+        <p><strong>Tình trạng xét duyệt:</strong> Đã xét duyệt </p>
+    </div>
+
+    <div style="border: 1px solid #ccc; padding: 20px;">
+        <h2 style="color: #4682B4;">Kết Quả Xét Tuyển</h2>
+        <p><strong>Điểm xét tuyển:</strong> {{ admission_registration.final_score }}</p>
+        {% if is_approved %}
+            <p><strong>Kết quả xét tuyển</strong>: <strong style="color: #2c7b44;">Đạt</strong></p>
+        {% else %}
+            <p><strong>Kết quả xét tuyển</strong>: <strong style="color: #b50303;">Không đạt</strong></p>
+        {% endif %}
+    </div>
+
+</body>
+</html>
