@@ -30,12 +30,12 @@ class RootView(viewsets.ViewSet):
             validate = CreateBackofficeAccountValidator(data=request.data)
 
             if not validate.is_valid():
-                return RestResponse(validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             validated_data = validate.validated_data
             
             if Account.objects.filter(email=validated_data["email"]).exists():
-                return RestResponse(data={"message": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data={"message": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST, message="Email đã được sử dụng bởi một tài khoản khác!").response
             
             _password: str = validated_data.pop("password")
 

@@ -20,7 +20,7 @@ class NewsTypeManagementView(viewsets.ViewSet):
             validate = NewsTypeSerializer(data=request.data, fields=["name"])
 
             if not validate.is_valid():
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
             
@@ -28,7 +28,7 @@ class NewsTypeManagementView(viewsets.ViewSet):
             news_type.save()
 
             if news_type.id is None:
-                return RestResponse(status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi trong quá trình tạo loại tin tức!").response
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
@@ -51,7 +51,7 @@ class NewsTypeManagementView(viewsets.ViewSet):
             validate = NewsTypeSerializer(data=request.data, fields=["name"])
 
             if not validate.is_valid():
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             try:
                 news_type = NewsType.objects.get(id=pk, deleted_at=None)

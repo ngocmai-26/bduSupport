@@ -20,7 +20,7 @@ class MajorView(viewsets.ViewSet):
             validate = CreateMajorValidator(data=request.data)
 
             if not validate.is_valid():
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             with transaction.atomic():
                 _data = validate.validated_data
@@ -65,7 +65,7 @@ class MajorView(viewsets.ViewSet):
             validate = UpdateMajorValidator(data=request.data)
 
             if not validate.is_valid():
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             with transaction.atomic():
                 try:

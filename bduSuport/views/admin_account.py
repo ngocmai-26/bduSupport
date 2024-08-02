@@ -19,27 +19,27 @@ class AdminAccountView(viewsets.ViewSet):
             validate = BackofficeVerifyAccountValidator(data=request.data)
 
             if not validate.is_valid():
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu!").response
             
             validated_data = validate.validated_data
             email = validated_data["email"]
             otp = validated_data["otp"]
             
             if self.otp_service.verify_otp("verify_account", email, otp):
-                return RestResponse(data={"message": "Verification failed!"}, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="OTP không chính xác hoặc đã hết hạn!").response
 
             try:
                 account = Account.objects.get(email=email)
                 
                 if account.status != AccountStatus.UNVERIFIED:
-                    return RestResponse(data={"message": "Invalid account status!"}, status=status.HTTP_400_BAD_REQUEST).response
+                    return RestResponse(message="Không thể kích hoạt tài khoản đã được xác thực!", status=status.HTTP_400_BAD_REQUEST).response
             
                 account.status = AccountStatus.ACTIVATED
                 account.save(update_fields=["status"])
 
                 return RestResponse(status=status.HTTP_200_OK).response
             except:
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_404_NOT_FOUND).response
 
         except Exception as e:
             print(e)

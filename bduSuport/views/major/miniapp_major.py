@@ -25,7 +25,7 @@ class MiniappMajorView(viewsets.ViewSet):
             validate = MajorsFilter(data=request.query_params)
 
             if not validate.is_valid():
-                return RestResponse(status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
             majors = Major.objects.filter(Q(**_data))

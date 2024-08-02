@@ -38,7 +38,7 @@ class MiniAppAuth(viewsets.ViewSet):
             resp_data = resp.json()
 
             if resp_data["error"] != 0:
-                return RestResponse(status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi khi chúng tôi cố gắng kiểm tra tài khoản của bạn!").response
             
             user_id = resp_data["id"]
             user_name = resp_data["name"]

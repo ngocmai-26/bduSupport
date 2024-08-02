@@ -23,7 +23,7 @@ class AdmissionRegistrationView(viewsets.ViewSet):
             validate = SubmitAdmissionRegistration(data=request.data)
 
             if not validate.is_valid():
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
 

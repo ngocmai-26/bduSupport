@@ -22,7 +22,7 @@ class NewsManagementView(viewsets.ViewSet):
             validate = CreateNewsValidator(data=request.data)
 
             if not validate.is_valid():
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
             image_url = self.image_storage_provider.upload_image(_data.pop("image"))
@@ -31,7 +31,7 @@ class NewsManagementView(viewsets.ViewSet):
             news.save()
 
             if news.id is None:
-                return RestResponse(status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi trong quá trình tạo tin tức!").response
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
@@ -54,7 +54,7 @@ class NewsManagementView(viewsets.ViewSet):
             validate = UpdateNewsValidator(data=request.data)
 
             if not validate.is_valid():
-                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             try:
                 news = News.objects.get(id=pk)

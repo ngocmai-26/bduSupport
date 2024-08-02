@@ -11,4 +11,4 @@ class OtpService():
         return otp
     
     def verify_otp(self, purpose: str, email: str, otp: str) -> bool:
-        cache.get(f"{purpose}:account:{email}:otp:{otp}", None) is not None
+        return cache.get(f"{purpose}:account:{email}:otp:{otp}", None) is not None
