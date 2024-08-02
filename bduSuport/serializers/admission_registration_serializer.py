@@ -16,7 +16,7 @@ class AdmissionRegistrationSerializer(serializers.ModelSerializer):
     college_exam_group_code = serializers.SerializerMethodField()
     evaluation_method_name = serializers.SerializerMethodField()
     subject_scores = serializers.SerializerMethodField()
-    is_approved = serializers.SerializerMethodField()
+    is_reviewed = serializers.SerializerMethodField()
 
     def get_final_score(self, obj: AdmissionRegistration):
         return obj.final_score
@@ -46,8 +46,8 @@ class AdmissionRegistrationSerializer(serializers.ModelSerializer):
     def get_evaluation_method_name(self, obj: AdmissionRegistration):
         return obj.evaluation_method.name
     
-    def get_is_approved(self, obj):
-        return obj.is_approved
+    def get_is_reviewed(self, obj):
+        return obj.is_reviewed
     
     def get_subject_scores(self, obj):
         scores = obj.subject_scores.values(

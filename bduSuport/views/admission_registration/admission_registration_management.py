@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
-from bduSuport.models.admission_registration import AdmissionRegistration
+from bduSuport.models.admission_registration import AdmissionRegistration, ReviewStatusChoices
 from bduSuport.serializers.admission_registration_serializer import AdmissionRegistrationSerializer
 from bduSuport.validations.review_registration import ReviewRegistrationValidator
 
@@ -46,12 +46,12 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
             try:
                 registration = AdmissionRegistration.objects.get(id=pk)
 
-                if registration.is_approved:
+                if registration.is_reviewed:
                     return RestResponse(status=status.HTTP_400_BAD_REQUEST).response 
                 
                 registration.reviewed_by = request.user
-                registration.review_result = validate.validated_data["is_approve"]
-                registration.save(update_fields=["reviewed_by", "review_result"])
+                registration.review_status = ReviewStatusChoices.APPROVED if validate.validated_data["is_approve"] else ReviewStatusChoices.REJECTED
+                registration.save(update_fields=["reviewed_by", "review_status"])
 
                 return RestResponse(status=status.HTTP_200_OK).response 
             

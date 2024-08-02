@@ -7,6 +7,11 @@ from bduSuport.models.mini_app_user import MiniAppUser
 from .evaluation_method import EvaluationMethod, EvaluationMethods
 from bduSuport.models.student import Student
 
+class ReviewStatusChoices(models.TextChoices):
+    PENDING = "pending"
+    REJECTED = "rejected"
+    APPROVED = "approved"
+
 class AdmissionRegistration(models.Model):
     class Meta:
         db_table = "admission_registration"
@@ -18,13 +23,13 @@ class AdmissionRegistration(models.Model):
     college_exam_group = models.ForeignKey(CollegeExamGroup, on_delete=models.CASCADE, related_name="admission_registrations", null=True)
     student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name="admission_registration")
     reviewed_by = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="admission_registration", null=True)
-    review_result = models.BooleanField(null=True, default=None)
+    review_status = models.CharField(max_length=20, choices=ReviewStatusChoices.choices, default=ReviewStatusChoices.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
     recalled_at = models.DateTimeField(null=True)
 
     @property
-    def is_approved(self):
-        return self.review_result
+    def is_reviewed(self):
+        return self.reviewed_by != None
 
     @property
     def final_score(self):
