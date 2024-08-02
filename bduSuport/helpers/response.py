@@ -28,4 +28,4 @@ class RestResponse():
             400: "Yêu cầu thất bại!",
             200: "Thành công!",
             201: "Thành công!",
-        }
+        }.get(self.__status, "")
