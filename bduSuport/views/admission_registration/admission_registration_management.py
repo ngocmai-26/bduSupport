@@ -51,10 +51,10 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
                 if registration.is_reviewed:
                     return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đơn đăng ký này đã được xét duyệt!").response
                 
-                if not registration.is_passed:
-                    return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đơn đăng ký không đủ điều kiện xét duyệt!").response
-                
                 if validate.validated_data["is_approve"]:
+                    if not registration.is_passed:
+                        return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đơn đăng ký không đủ điều kiện xét duyệt!").response
+                    
                     if registration.major.expected_target <= len(registration.major.admission_registrations.filter(review_status=ReviewStatusChoices.APPROVED)):
                         return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã vượt chỉ tiêu tuyển sinh cho ngành này!").response
                 
