@@ -13,6 +13,7 @@ from bduSuport.views.admin_account import AdminAccountView
 from bduSuport.views.admission_registration.admission_registration import AdmissionRegistrationView
 from bduSuport.views.admission_registration.admission_registration_management import AdmissionRegistrationManagementView
 from bduSuport.views.college_exam_group.college_exam_group_management import CollegeExamGroupView
+from bduSuport.views.custom_refresh_token_view import CustomRefreshTokenView
 from bduSuport.views.evaluation_method import EvaluationMethodView
 from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
@@ -67,6 +68,7 @@ backoffice_router.register('super-admin/accounts/backoffice', BackofficeAccountM
 
 backoffice_urls = backoffice_router.urls + [
    path('login', TokenPairView.as_view(), name='backoffice_token_obtain_pair'),
+   path('refresh', CustomRefreshTokenView.as_view(), name='backoffice_token_refresh_token'),
 ]
 
 urlpatterns = [
