@@ -1,4 +1,8 @@
+from django.db.models import Q
+
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
@@ -7,15 +11,30 @@ from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
 from bduSuport.models.admission_registration import AdmissionRegistration, ReviewStatusChoices
 from bduSuport.serializers.admission_registration_serializer import AdmissionRegistrationSerializer
+from bduSuport.validations.list_admission_registration_filter import ListAdmissionRegistrationFilter
 from bduSuport.validations.review_registration import ReviewRegistrationValidator
 
 class AdmissionRegistrationManagementView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
     email_provider = EmailProvider()
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter("evaluation_method", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+            openapi.Parameter("major", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+            openapi.Parameter("college_exam_group", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+            openapi.Parameter("review_status", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, enum=ReviewStatusChoices.values),
+        ]
+    )
     def list(self, request):
         try:
-            registrations = AdmissionRegistration.objects.filter(recalled_at=None)
+            validate = ListAdmissionRegistrationFilter(data=request.query_params)
+
+            if not validate.is_valid():
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
+            
+            query_condition = Q(**validate.validated_data, recalled_at=None)
+            registrations = AdmissionRegistration.objects.filter(query_condition)
             data = AdmissionRegistrationSerializer(registrations, many=True).data
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response 
