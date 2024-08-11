@@ -1,6 +1,5 @@
 from datetime import datetime
 from rest_framework import viewsets, status
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
 

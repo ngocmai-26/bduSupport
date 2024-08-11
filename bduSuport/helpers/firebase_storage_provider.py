@@ -13,6 +13,7 @@ class FirebaseStorageProvider():
 
     def upload_image(self, file: InMemoryUploadedFile) -> str:
         try:
+            print(file)
             blob = self.__bucket.blob(f"{str(uuid4())}_{file.name}")
             blob.upload_from_file(file, content_type=file.content_type)
             blob.make_public()

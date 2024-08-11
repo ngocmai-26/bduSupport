@@ -98,10 +98,10 @@ WSGI_APPLICATION = 'BDUSuportBE.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bdusupportdb',
+        'NAME': 'bdusupportdb_ucmk',
         'USER' : 'root',
-        'PASSWORD': 'QCGTZ1i9jTyl5I54REmfVyjCfPmxSPOc',
-        'HOST': 'dpg-cq7la2eehbks73918kk0-a.singapore-postgres.render.com'
+        'PASSWORD': 'yyo3o45YeUTHHawVV8bLp9NCIryIrEZy',
+        'HOST': 'dpg-cqsd9oij1k6c73fjvtpg-a.singapore-postgres.render.com'
     }
 }
 

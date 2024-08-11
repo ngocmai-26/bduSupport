@@ -12,6 +12,8 @@ from bduSuport.views.account_management import AccountManagementView
 from bduSuport.views.admin_account import AdminAccountView
 from bduSuport.views.admission_registration.admission_registration import AdmissionRegistrationView
 from bduSuport.views.admission_registration.admission_registration_management import AdmissionRegistrationManagementView
+from bduSuport.views.business_recruiment.business_recruiment import BusinessRecruimentView
+from bduSuport.views.business_recruiment.business_recruiment_management import BusinessRecruimentManagementView
 from bduSuport.views.college_exam_group.college_exam_group_management import CollegeExamGroupView
 from bduSuport.views.custom_refresh_token_view import CustomRefreshTokenView
 from bduSuport.views.evaluation_method import EvaluationMethodView
@@ -50,6 +52,7 @@ miniap_router.register('init', ConstructorView, basename='constructor')
 miniap_router.register('news', MiniappNewsView, basename='miniapp_news')
 miniap_router.register('auth', MiniAppAuth, basename='account_miniapp_auth')
 miniap_router.register('majors', MiniappMajorView, basename='miniapp_majors')
+miniap_router.register('business-recruiments', BusinessRecruimentView, basename='business_recruiments')
 miniap_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
 miniap_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
 
@@ -63,6 +66,7 @@ backoffice_router.register('admin/accounts', AdminAccountView, basename='backoff
 backoffice_router.register('academic-levels', AcademicLevelView, basename='academic_level_management')
 backoffice_router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method_management')
 backoffice_router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group_management')
+backoffice_router.register('business-recruiments', BusinessRecruimentManagementView, basename='business_recruiments_management')
 backoffice_router.register('admission-registration', AdmissionRegistrationManagementView, basename='admission_registration_management')
 backoffice_router.register('super-admin/accounts/backoffice', BackofficeAccountManagementView, basename='backoffice_account_management')
 
