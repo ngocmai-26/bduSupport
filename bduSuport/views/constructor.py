@@ -11,6 +11,7 @@ from bduSuport.serializers.academic_level import AcademicLevelSerializer
 from bduSuport.serializers.college_exam_group import CollegeExamGroupSerializer
 from bduSuport.serializers.evaluation_method_serializer import EvaluationMethodSerializer
 from bduSuport.serializers.major_serializer import MajorSerializer
+from bduSuport.models.miniapp_role import MiniappRole
 
 class ConstructorView(viewsets.ViewSet):
     @action(methods=["GET"], detail=False, url_path="registration-form")
@@ -42,3 +43,27 @@ class ConstructorView(viewsets.ViewSet):
     def __get_majors(self):
         majors = Major.objects.filter(deleted_at=None)
         return MajorSerializer(majors, many=True, fields=["code", "name"]).data
+    
+    @action(methods=["GET"], detail=False, url_path="feedback-form")
+    def init_feedback_form(self, request):
+        try:
+            data = {
+                "role": [
+                    {
+                        "name": "Học sinh",
+                        "code": MiniappRole.STUDENT
+                    },
+                    {
+                        "name": "Phụ huynh",
+                        "code": MiniappRole.PARENT
+                    },
+                    {
+                        "name": "Cựu sinh viên",
+                        "code": MiniappRole.FORMER_STUDENT
+                    }
+                ],
+            }
+            return RestResponse(data=data, status=status.HTTP_200_OK).response
+        except Exception as e:
+            print(f"ConstructorView.init_feedback_form exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
