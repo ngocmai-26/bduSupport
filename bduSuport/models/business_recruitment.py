@@ -8,6 +8,7 @@ class BusinessRecruitment(models.Model):
 
     id = models.AutoField(primary_key=True)
     business_name = models.CharField(max_length=255)
+    post_url = models.URLField()
     job_title = models.CharField(max_length=255)
     summary = models.TextField()
     banner = models.URLField()

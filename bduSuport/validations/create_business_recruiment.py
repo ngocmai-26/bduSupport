@@ -5,3 +5,4 @@ class CreateBusinessRecruimentValidator(serializers.Serializer):
     job_title = serializers.CharField()
     summary = serializers.CharField()
     banner = serializers.ImageField()
+    post_url = serializers.URLField()
