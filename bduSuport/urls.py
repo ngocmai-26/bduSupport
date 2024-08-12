@@ -18,6 +18,7 @@ from bduSuport.views.college_exam_group.college_exam_group_management import Col
 from bduSuport.views.custom_refresh_token_view import CustomRefreshTokenView
 from bduSuport.views.evaluation_method import EvaluationMethodView
 from bduSuport.views.feedback.feedback import FeedbackView
+from bduSuport.views.feedback.feedback_management import FeedbackManagementView
 from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
 from bduSuport.views.major.major import MajorView
@@ -63,6 +64,7 @@ backoffice_router.register('majors', MajorView, basename='major_management')
 backoffice_router.register('subjects', SubjectView, basename='subject_management')
 backoffice_router.register('news', NewsManagementView, basename='news_management')
 backoffice_router.register('accounts', AccountManagementView, basename='account_management')
+backoffice_router.register('feedbacks', FeedbackManagementView, basename='feedback_management')
 backoffice_router.register('news-types', NewsTypeManagementView, basename='news_type_management')
 backoffice_router.register('admin/accounts', AdminAccountView, basename='backoffice_admin_account')
 backoffice_router.register('academic-levels', AcademicLevelView, basename='academic_level_management')
