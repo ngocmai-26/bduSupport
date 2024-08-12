@@ -17,6 +17,7 @@ from bduSuport.views.business_recruiment.business_recruiment_management import B
 from bduSuport.views.college_exam_group.college_exam_group_management import CollegeExamGroupView
 from bduSuport.views.custom_refresh_token_view import CustomRefreshTokenView
 from bduSuport.views.evaluation_method import EvaluationMethodView
+from bduSuport.views.feedback.feedback import FeedbackView
 from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
 from bduSuport.views.major.major import MajorView
@@ -52,6 +53,7 @@ miniap_router.register('init', ConstructorView, basename='constructor')
 miniap_router.register('news', MiniappNewsView, basename='miniapp_news')
 miniap_router.register('auth', MiniAppAuth, basename='account_miniapp_auth')
 miniap_router.register('majors', MiniappMajorView, basename='miniapp_majors')
+miniap_router.register('feedbacks', FeedbackView, basename='miniapp_feedback')
 miniap_router.register('business-recruiments', BusinessRecruimentView, basename='business_recruiments')
 miniap_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
 miniap_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
