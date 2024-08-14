@@ -1,6 +1,6 @@
 from django.db import models
 
-from bduSuport.models.account import Account
+from bduSuport.models.mini_app_user import MiniAppUser
 from bduSuport.models.miniapp_role import MiniappRole
 
 class Feedback(models.Model):
@@ -13,4 +13,4 @@ class Feedback(models.Model):
     feedbacker_role = models.CharField(max_length=50, choices=MiniappRole.choices)
     phone_number = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
-    creator = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="feedbacks")
+    creator = models.ForeignKey(MiniAppUser, on_delete=models.CASCADE, related_name="feedbacks")

@@ -6,11 +6,11 @@ from bduSuport.models.feedback import Feedback
 from bduSuport.serializers.feedback import FeedbackSerializer
 
 class FeedbackManagementView(viewsets.ViewSet):
-    authentication_classes = (BackofficeAuthentication, )
+    # authentication_classes = (BackofficeAuthentication, )
         
     def list(self, request):
         try:
-            feedbacks = Feedback.objects.filter(deleted_at=None).order_by("-created_at")
+            feedbacks = Feedback.objects.all().order_by("-created_at")
             data = FeedbackSerializer(feedbacks, many=True).data
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response
