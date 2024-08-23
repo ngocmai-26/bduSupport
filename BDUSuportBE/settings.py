@@ -95,34 +95,40 @@ WSGI_APPLICATION = 'BDUSuportBE.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DATABASE_ENGINE = config("DATABASE_ENGINE", "postgresql")
+DATABASE_NAME = config("DATABASE_NAME", "bdusupportdb_ucmk")
+DATABASE_USER = config("DATABASE_USER", "root")
+DATABASE_PASSWORD = config("DATABASE_PASSWORD", "yyo3o45YeUTHHawVV8bLp9NCIryIrEZy")
+DATABASE_HOST = config("DATABASE_HOST", "dpg-cqsd9oij1k6c73fjvtpg-a.singapore-postgres.render.com")
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bdusupportdb_ucmk',
-        'USER' : 'root',
-        'PASSWORD': 'yyo3o45YeUTHHawVV8bLp9NCIryIrEZy',
-        'HOST': 'dpg-cqsd9oij1k6c73fjvtpg-a.singapore-postgres.render.com'
+        'ENGINE': f'django.db.backends.{DATABASE_ENGINE}',
+        'NAME': DATABASE_NAME,
+        'USER' : DATABASE_USER,
+        'PASSWORD': DATABASE_PASSWORD,
+        'HOST': DATABASE_HOST
     }
 }
 
+REDIS_HOST = config("REDIS_HOST", "")
+REDIS_PORT = config("REDIS_PORT", "")
+REDIS_USERNAME = config("REDIS_USERNAME", "")
+REDIS_PASSWORD = config("REDIS_PASSWORD", "")
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis-17242.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com:17242',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'PASSWORD': 'A5KpcStYeMddsyU3oUrSCwaHQWpqORJw',  
-        }
+        'LOCATION': f'redis://{REDIS_USERNAME}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}',
     }
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587  
+EMAIL_HOST = config("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = config("EMAIL_PORT", 587)  
 EMAIL_USE_TLS = True  
-EMAIL_HOST_USER = '20050013@student.bdu.edu.vn'
-EMAIL_HOST_PASSWORD = 'xjhtrjiogwsgrtgw'
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", "")
 
 AUTH_USER_MODEL = 'bduSuport.Account'
 
@@ -161,7 +167,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_ROOT = '%s/coursesApp/static/' % BASE_DIR
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -214,3 +219,4 @@ SWAGGER_SETTINGS = {
 }
 
 FIREBASE_CERTIFICATE = config("FIREBASE_CERTIFICATE", "firebase_cert")
+FIREBASE_STORAGE_BUCKET_URL = config("FIREBASE_STORAGE_BUCKET_URL", "")

@@ -5,6 +5,6 @@ cred = credentials.Certificate(settings.FIREBASE_CERTIFICATE)
 initialize_app(
     cred, 
     {
-        "storageBucket": "selina-d8690.appspot.com"
+        "storageBucket": settings.FIREBASE_STORAGE_BUCKET_URL
     }
 )
