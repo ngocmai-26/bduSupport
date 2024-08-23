@@ -6,7 +6,7 @@ from bduSuport.models.feedback import Feedback
 from bduSuport.serializers.feedback import FeedbackSerializer
 
 class FeedbackManagementView(viewsets.ViewSet):
-    # authentication_classes = (BackofficeAuthentication, )
+    authentication_classes = (BackofficeAuthentication, )
         
     def list(self, request):
         try:
