@@ -1,0 +1,25 @@
+version: "3"
+services:
+  bdusupport_backend:
+    image: <image_url>
+    ports:
+      - 8000:8000
+    restart: always
+    environment:
+      - DATABASE_ENGINE="mysql"
+      - DATABASE_NAME=""
+      - DATABASE_USER=""
+      - DATABASE_PASSWORD=""
+      - DATABASE_HOST=""
+      - REDIS_HOST=""
+      - REDIS_PORT=""
+      - REDIS_USERNAME=""
+      - REDIS_PASSWORD=""
+      - EMAIL_HOST="smtp.gmail.com"
+      - EMAIL_PORT=587
+      - EMAIL_HOST_USER=""
+      - EMAIL_HOST_PASSWORD=""
+      - FIREBASE_CERTIFICATE="/run/secret/firebase_cert"
+      - FIREBASE_STORAGE_BUCKET_URL=""
+    volumes:
+      - <path_to_firebase_cert_on_host>:/run/secret/firebase_cert
