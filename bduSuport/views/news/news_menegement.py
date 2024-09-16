@@ -25,7 +25,10 @@ class NewsManagementView(viewsets.ViewSet):
                 return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
-            image_url = self.image_storage_provider.upload_image(_data.pop("image"))
+            image_url = ""
+            
+            if _data.pop("image", None):
+                image_url = self.image_storage_provider.upload_image(_data.pop("image"))
             
             news = News(**_data, author=request.user, deleted_at=None, image=image_url)
             news.save()

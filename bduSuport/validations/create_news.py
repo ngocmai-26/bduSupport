@@ -7,4 +7,4 @@ class CreateNewsValidator(serializers.ModelSerializer):
         model = News
         exclude = ["author", "deleted_at"]
 
-    image = serializers.ImageField()
+    image = serializers.ImageField(required=False, allow_null=True)
