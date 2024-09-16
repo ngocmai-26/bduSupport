@@ -31,7 +31,8 @@ class CreateMajorValidator(serializers.Serializer):
     training_location = serializers.CharField()
     academic_level = serializers.PrimaryKeyRelatedField(queryset=AcademicLevel.objects.filter(deleted_at=None))
     evaluation_methods = serializers.PrimaryKeyRelatedField(queryset=EvaluationMethod.objects.filter(deleted_at=None), many=True, allow_empty=False)
-
+    number_of_credits = serializers.IntegerField(min_value=0)
+    
     def validate_benchmark_30(self, value: float):
         s = str(value)
         _, decimal_places = s.split(".")

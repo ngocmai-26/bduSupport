@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
 
@@ -32,4 +33,18 @@ class AcademicLevelView(viewsets.ViewSet):
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
             print(f"SubjectView.list exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    def destroy(self, request, pk):
+        try:
+            try:
+                level = AcademicLevel.objects.get(code=pk)
+                level.deleted_at = datetime.datetime.now().date()
+                level.save(update_fields=["deleted_at"])
+            except AcademicLevel.DoesNotExist:
+                return RestResponse(status=status.HTTP_404_NOT_FOUND).response
+            
+            return RestResponse(status=status.HTTP_200_OK).response
+        except Exception as e:
+            print(f"AcademicLevelView.delete exc={e}")
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

@@ -1,3 +1,4 @@
+import datetime
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
 from rest_framework.parsers import MultiPartParser
@@ -43,4 +44,18 @@ class BusinessRecruimentManagementView(viewsets.ViewSet):
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
             print(f"BusinessRecruimentManagementView.list exc={e}")
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    def destroy(self, request, pk):
+        try:
+            try:
+                recruiment = BusinessRecruitment.objects.get(code=pk)
+                recruiment.deleted_at = datetime.datetime.now().date()
+                recruiment.save(update_fields=["deleted_at"])
+            except BusinessRecruitment.DoesNotExist:
+                return RestResponse(status=status.HTTP_404_NOT_FOUND).response
+            
+            return RestResponse(status=status.HTTP_200_OK).response
+        except Exception as e:
+            print(f"BusinessRecruitmentView.delete exc={e}")
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
