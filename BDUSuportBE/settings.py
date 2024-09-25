@@ -100,6 +100,7 @@ DATABASE_NAME = config("DATABASE_NAME", "mydatabase")
 DATABASE_USER = config("DATABASE_USER", "myuser")
 DATABASE_PASSWORD = config("DATABASE_PASSWORD", "mypassword")
 DATABASE_HOST = config("DATABASE_HOST", "bdusupport_mysql")
+DATABASE_PORT = config("DATABASE_PORT", 3306)
 
 DATABASES = {
     'default': {
@@ -108,7 +109,7 @@ DATABASES = {
         'USER' : DATABASE_USER,
         'PASSWORD': DATABASE_PASSWORD,
         'HOST': DATABASE_HOST,
-        'PORT': '3306',  # Sử dụng cổng nội bộ MySQL là 3306
+        'PORT': DATABASE_PORT,  # Sử dụng cổng nội bộ MySQL là 3306
     }
 }
 
