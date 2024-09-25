@@ -9,9 +9,9 @@ services:
     restart: always
     environment:
       - DATABASE_ENGINE=mysql
-      - DATABASE_NAME=mydatabase
-      - DATABASE_USER=myuser
-      - DATABASE_PASSWORD=mypassword
+      - DATABASE_NAME=bdusupport
+      - DATABASE_USERadmin
+      - DATABASE_PASSWORD=@YrMIZvx$_Y3(u
       - DATABASE_HOST=192.168.69.28
       - DATABASE_PORT=3306
       - REDIS_HOST=192.168.69.28
