@@ -95,11 +95,11 @@ WSGI_APPLICATION = 'BDUSuportBE.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASE_ENGINE = config("DATABASE_ENGINE", "postgresql")
-DATABASE_NAME = config("DATABASE_NAME", "bdusupportdb_ucmk")
-DATABASE_USER = config("DATABASE_USER", "root")
-DATABASE_PASSWORD = config("DATABASE_PASSWORD", "yyo3o45YeUTHHawVV8bLp9NCIryIrEZy")
-DATABASE_HOST = config("DATABASE_HOST", "dpg-cqsd9oij1k6c73fjvtpg-a.singapore-postgres.render.com")
+DATABASE_ENGINE = config("DATABASE_ENGINE", "mysql")
+DATABASE_NAME = config("DATABASE_NAME", "mydatabase")
+DATABASE_USER = config("DATABASE_USER", "myuser")
+DATABASE_PASSWORD = config("DATABASE_PASSWORD", "mypassword")
+DATABASE_HOST = config("DATABASE_HOST", "bdusupport_mysql")
 
 DATABASES = {
     'default': {
@@ -107,7 +107,8 @@ DATABASES = {
         'NAME': DATABASE_NAME,
         'USER' : DATABASE_USER,
         'PASSWORD': DATABASE_PASSWORD,
-        'HOST': DATABASE_HOST
+        'HOST': DATABASE_HOST,
+        'PORT': '3306',  # Sử dụng cổng nội bộ MySQL là 3306
     }
 }
 

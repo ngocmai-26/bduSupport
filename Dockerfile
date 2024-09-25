@@ -1,8 +1,11 @@
+# Sử dụng Ubuntu 20.04 làm base image
 FROM ubuntu:20.04
 
+# Thiết lập môi trường không tương tác và timezone
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
+# Cập nhật gói và cài đặt các gói cần thiết
 RUN apt-get update && apt-get install -y \
     python3-pip \
     python3-dev \
@@ -12,19 +15,27 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     tzdata
 
+# Tạo liên kết biểu tượng cho Python3 để sử dụng 'python' command
 RUN ln -s /usr/bin/python3 /usr/local/bin/python
 
+# Cập nhật pip lên phiên bản mới nhất
 RUN pip3 install --upgrade pip
 
-RUN mkdir /app
-WORKDIR /app
+# Tạo thư mục ứng dụng và đặt nó làm thư mục làm việc
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-COPY requirements.txt /app/
+# Copy file requirements.txt vào thư mục làm việc
+COPY requirements.txt /usr/src/app/
 
+# Cài đặt các thư viện yêu cầu từ requirements.txt
 RUN pip install -r requirements.txt
 
-COPY . /app
+# Copy toàn bộ mã nguồn dự án vào thư mục làm việc
+COPY . /usr/src/app
 
+# Mở cổng 8000 để chạy ứng dụng
 EXPOSE 8000
 
+# Command để chạy server Django
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
