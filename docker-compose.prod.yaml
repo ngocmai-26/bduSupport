@@ -14,7 +14,7 @@ services:
       - DATABASE_PASSWORD=@YrMIZvx$_Y3(u
       - DATABASE_HOST=192.168.69.28
       - DATABASE_PORT=3306
-      - REDIS_HOST=192.168.69.28
+      - REDIS_HOST=bdusupport_redis
       - REDIS_PORT=6380
       - REDIS_USERNAME=""
       - REDIS_PASSWORD=""
@@ -26,7 +26,13 @@ services:
       - FIREBASE_STORAGE_BUCKET_URL=gs://bdusupport.appspot.com
     volumes:
       - ./:/usr/src/app
-
+  bdusupport_redis:
+    image: redis:6.0
+    restart: always
+    ports:
+      - 6380:6380
+    volumes:
+      - redis_data:/data
 volumes:
   mysql_data:
   redis_data:
