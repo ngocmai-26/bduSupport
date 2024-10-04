@@ -9,10 +9,10 @@ services:
     restart: always
     environment:
       - DATABASE_ENGINE=mysql
-      - DATABASE_NAME=mydatabase
-      - DATABASE_USER=myuser
-      - DATABASE_PASSWORD=mypassword
-      - DATABASE_HOST=bdusupport_mysql
+      - DATABASE_NAME=bdusupport
+      - DATABASE_USERadmin
+      - DATABASE_PASSWORD=@YrMIZvx$_Y3(u
+      - DATABASE_HOST=192.168.69.28
       - DATABASE_PORT=3306
       - REDIS_HOST=bdusupport_redis
       - REDIS_PORT=6380
@@ -26,20 +26,6 @@ services:
       - FIREBASE_STORAGE_BUCKET_URL=gs://bdusupport.appspot.com
     volumes:
       - ./:/usr/src/app
-
-  bdusupport_mysql:
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_DATABASE: "mydatabase"
-      MYSQL_USER: "myuser"
-      MYSQL_PASSWORD: "mypassword"
-      MYSQL_ROOT_PASSWORD: "rootpassword"
-    ports:
-      - 3307:3306  # Cổng 3307 máy chủ ánh xạ tới 3306 container
-    volumes:
-      - mysql_data:/var/lib/mysql
-
   bdusupport_redis:
     image: redis:6.0
     restart: always
@@ -47,7 +33,6 @@ services:
       - 6380:6380
     volumes:
       - redis_data:/data
-
 volumes:
   mysql_data:
   redis_data:
