@@ -9,9 +9,9 @@ services:
     restart: always
     environment:
       - DATABASE_ENGINE=mysql
-      - DATABASE_NAME=mydatabase
-      - DATABASE_USER=myuser
-      - DATABASE_PASSWORD=mypassword
+      - DATABASE_NAME=bdusupport
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=bdusupport
       - DATABASE_HOST=bdusupport_mysql
       - DATABASE_PORT=3306
       - REDIS_HOST=bdusupport_redis
@@ -31,10 +31,10 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_DATABASE: "mydatabase"
-      MYSQL_USER: "myuser"
-      MYSQL_PASSWORD: "mypassword"
-      MYSQL_ROOT_PASSWORD: "rootpassword"
+      MYSQL_DATABASE: "bdusupport"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "bdusupport"
+      MYSQL_ROOT_PASSWORD: "bdusupport"
     ports:
       - 3307:3306
     volumes:
