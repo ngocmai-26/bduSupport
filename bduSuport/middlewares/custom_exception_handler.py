@@ -6,8 +6,9 @@ from bduSuport.helpers.response import RestResponse
 
 def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
+    print("custom_exception_handler response=", response, " exc=", exc, " context=", context)
 
-    if response.data is not None:
+    if response is not None and response.data is not None:
         if getattr(response.data.get("detail", None), "code", None) in ["authentication_failed", "not_authenticated"]:
             return RestResponse(code="invalid_session", status=status.HTTP_401_UNAUTHORIZED).response
 
