@@ -1,53 +1,25 @@
 version: "3"
 services:
   bdusupport_backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: <image_url>
     ports:
       - 8000:8000
     restart: always
     environment:
-      - DATABASE_ENGINE=mysql
-      - DATABASE_NAME=mydatabase
-      - DATABASE_USER=myuser
-      - DATABASE_PASSWORD=mypassword
-      - DATABASE_HOST=bdusupport_mysql
-      - DATABASE_PORT=3306
-      - REDIS_HOST=bdusupport_redis
-      - REDIS_PORT=6380
+      - DATABASE_ENGINE="mysql"
+      - DATABASE_NAME=""
+      - DATABASE_USER=""
+      - DATABASE_PASSWORD=""
+      - DATABASE_HOST=""
+      - REDIS_HOST=""
+      - REDIS_PORT=""
       - REDIS_USERNAME=""
       - REDIS_PASSWORD=""
-      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_HOST="smtp.gmail.com"
       - EMAIL_PORT=587
       - EMAIL_HOST_USER=""
       - EMAIL_HOST_PASSWORD=""
-      - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.json
-      - FIREBASE_STORAGE_BUCKET_URL=gs://bdusupport.appspot.com
+      - FIREBASE_CERTIFICATE="/run/secret/firebase_cert"
+      - FIREBASE_STORAGE_BUCKET_URL=""
     volumes:
-      - ./:/usr/src/app
-
-  bdusupport_mysql:
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_DATABASE: "mydatabase"
-      MYSQL_USER: "myuser"
-      MYSQL_PASSWORD: "mypassword"
-      MYSQL_ROOT_PASSWORD: "rootpassword"
-    ports:
-      - 3307:3306  # Cổng 3307 máy chủ ánh xạ tới 3306 container
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-  bdusupport_redis:
-    image: redis:6.0
-    restart: always
-    ports:
-      - 6380:6380
-    volumes:
-      - redis_data:/data
-
-volumes:
-  mysql_data:
-  redis_data:
+      - <path_to_firebase_cert_on_host>:/run/secret/firebase_cert
