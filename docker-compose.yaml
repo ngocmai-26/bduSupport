@@ -23,7 +23,7 @@ services:
       - EMAIL_HOST_USER=""
       - EMAIL_HOST_PASSWORD=""
       - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.json
-      - FIREBASE_STORAGE_BUCKET_URL=gs://bdusupport.appspot.com
+      - FIREBASE_STORAGE_BUCKET_URL=bdusupport.appspot.com
     volumes:
       - ./:/usr/src/app
   
