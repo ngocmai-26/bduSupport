@@ -229,7 +229,7 @@ LOGGING = {
     'handlers': {
         'logtail': {
             'class': 'logtail.LogtailHandler',
-            'source_token': "RBoHWYbFThGsSkXKkZwc9hKP",
+            'source_token': config("BETTERSTACK_LOG_TOKEN", ""),
         },
         "console": {
             "class": "logging.StreamHandler",
