@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
-    'bduSuport',
     'corsheaders',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'bduSuport',
 ]
 
 MIDDLEWARE = [
@@ -95,11 +95,11 @@ WSGI_APPLICATION = 'BDUSuportBE.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASE_ENGINE = config("DATABASE_ENGINE", "mysql")
-DATABASE_NAME = config("DATABASE_NAME", "mydatabase")
-DATABASE_USER = config("DATABASE_USER", "myuser")
-DATABASE_PASSWORD = config("DATABASE_PASSWORD", "mypassword")
-DATABASE_HOST = config("DATABASE_HOST", "bdusupport_mysql")
+DATABASE_ENGINE = config("DATABASE_ENGINE", "")
+DATABASE_NAME = config("DATABASE_NAME", "")
+DATABASE_USER = config("DATABASE_USER", "")
+DATABASE_PASSWORD = config("DATABASE_PASSWORD", "")
+DATABASE_HOST = config("DATABASE_HOST", "")
 DATABASE_PORT = config("DATABASE_PORT", 3306)
 
 DATABASES = {
@@ -109,7 +109,7 @@ DATABASES = {
         'USER' : DATABASE_USER,
         'PASSWORD': DATABASE_PASSWORD,
         'HOST': DATABASE_HOST,
-        'PORT': DATABASE_PORT,  # Sử dụng cổng nội bộ MySQL là 3306
+        'PORT': DATABASE_PORT,
     }
 }
 
@@ -222,3 +222,26 @@ SWAGGER_SETTINGS = {
 
 FIREBASE_CERTIFICATE = config("FIREBASE_CERTIFICATE", "firebase_cert.json")
 FIREBASE_STORAGE_BUCKET_URL = config("FIREBASE_STORAGE_BUCKET_URL", "")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": True,
+    'handlers': {
+        'logtail': {
+            'class': 'logtail.LogtailHandler',
+            'source_token': "RBoHWYbFThGsSkXKkZwc9hKP",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": [
+                "logtail",
+                "console"
+            ],
+            "level": "INFO",
+        },
+    },
+}

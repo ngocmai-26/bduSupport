@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from django.db import connection
 from django_redis import get_redis_connection
+import logging
 
 class HealthView(ViewSet):
     authentication_classes = ()
@@ -16,6 +17,7 @@ class HealthView(ViewSet):
             "main_database": self.__get_main_database_connection_info(),
             "cache_database": self.__get_redis_connection_info()
         }
+        logging.getLogger(__name__).info("HealthView.health data=%s", data)
         return Response(data=data, status=HTTP_200_OK)
     
     def __get_redis_connection_info(self):
