@@ -1,5 +1,6 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
+import logging
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
@@ -12,6 +13,7 @@ class FeedbackView(viewsets.ViewSet):
     @swagger_auto_schema(request_body=CreateFeedbackValidator)
     def create(self, request):
         try:
+            logging.getLogger().info("FeedbackView.create req=%s", request.data)
             validate = CreateFeedbackValidator(data=request.data)
 
             if not validate.is_valid():
@@ -25,5 +27,5 @@ class FeedbackView(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"FeedbackView.create exc={e}")
+            logging.getLogger().exception("FeedbackView.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

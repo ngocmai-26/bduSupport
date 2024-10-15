@@ -3,7 +3,6 @@ from rest_framework import status
 
 from bduSuport.helpers.response import RestResponse
 
-
 def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
 

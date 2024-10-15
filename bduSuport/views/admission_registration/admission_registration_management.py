@@ -1,4 +1,5 @@
 from django.db.models import Q
+import logging
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -28,6 +29,7 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
     )
     def list(self, request):
         try:
+            logging.getLogger().info("AdmissionRegistrationManagementView.list query_params=%s", request.query_params)
             validate = ListAdmissionRegistrationFilter(data=request.query_params)
 
             if not validate.is_valid():
@@ -39,11 +41,12 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response 
         except Exception as e:
-            print(f"AdmissionRegistrationManagementView.list exc={e}")
+            logging.getLogger().exception("AdmissionRegistrationManagementView.list exc=%s, params=%s", e, request.query_params)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
 
     def retrieve(self, request, pk):
         try:
+            logging.getLogger().info("AdmissionRegistrationManagementView.retrieve pk=%s", pk)
             try:
                 registration = AdmissionRegistration.objects.get(id=pk)
                 data = AdmissionRegistrationSerializer(registration).data
@@ -52,13 +55,14 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
             except AdmissionRegistration.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
         except Exception as e:
-            print(f"AdmissionRegistrationManagementView.retrieve exc={e}")
+            logging.getLogger().exception("AdmissionRegistrationManagementView.retrieve exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
     
     @swagger_auto_schema(request_body=ReviewRegistrationValidator)
     @action(methods=["POST"], detail=True, url_path="review")
     def approve(self, request, pk):
         try:
+            logging.getLogger().info("AdmissionRegistrationManagementView.approve pk=%s, req=%s", pk, request.data)
             validate = ReviewRegistrationValidator(data=request.data)
 
             if not validate.is_valid():
@@ -99,5 +103,5 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
             except AdmissionRegistration.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
         except Exception as e:
-            print(f"AdmissionRegistrationManagementView.approve exc={e}")
+            logging.getLogger().exception("AdmissionRegistrationManagementView.approve exc=%s, pk=%s, req=%s", e, pk, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

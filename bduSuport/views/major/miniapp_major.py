@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from django.db.models import Q
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
@@ -22,6 +23,7 @@ class MiniappMajorView(viewsets.ViewSet):
     ])
     def list(self, request):
         try:
+            logging.getLogger().info("MiniappMajorView.list query_params=%s", request.query_params)
             validate = MajorsFilter(data=request.query_params)
 
             if not validate.is_valid():
@@ -33,28 +35,30 @@ class MiniappMajorView(viewsets.ViewSet):
             
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"MiniappMajorView.list exc={e}")
+            logging.getLogger().exception("MiniappMajorView.list exc=%s, query_params=%s", e, request.query_params)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
 
     @action(methods=["GET"], detail=True, url_path="evaluation-methods")
-    def get_evaluation_methods_by_acadmic_major(self, request, pk):
+    def get_evaluation_methods_by_academic_major(self, request, pk):
         try:
+            logging.getLogger().info("MiniappMajorView.get_evaluation_methods_by_academic_major pk=%s", pk)
             methods = EvaluationMethod.objects.filter(majors__id=pk)
             data = EvaluationMethodSerializer(methods, many=True).data
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"MiniappMajorView.get_evaluation_methods_by_acadmic_major exc={e}")
+            logging.getLogger().exception("MiniappMajorView.get_evaluation_methods_by_academic_major exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     @action(methods=["GET"], detail=True, url_path="college-exam-groups")
-    def get_college_exam_groups_by_acadmic_major(self, request, pk):
+    def get_college_exam_groups_by_academic_major(self, request, pk):
         try:
             try:
+                logging.getLogger().info("MiniappMajorView.get_college_exam_groups_by_academic_major pk=%s", pk)
                 groups = Major.objects.get(id=pk).college_exam_groups.all()
                 data = CollegeExamGroupSerializer(groups, many=True).data
                 return RestResponse(data=data, status=status.HTTP_200_OK).response
             except Major.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response
         except Exception as e:
-            print(f"MiniappMajorView.get_college_exam_groups_by_acadmic_major exc={e}")
+            logging.getLogger().exception("MiniappMajorView.get_college_exam_groups_by_academic_major exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

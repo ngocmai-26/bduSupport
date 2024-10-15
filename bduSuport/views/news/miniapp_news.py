@@ -1,6 +1,7 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
+import logging
 
 from bduSuport.models.news import News
 from bduSuport.helpers.response import RestResponse
@@ -13,6 +14,7 @@ class MiniappNewsView(viewsets.ViewSet):
     @swagger_auto_schema(manual_parameters=[openapi.Parameter("type", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)])
     def list(self, request):
         try:
+            logging.getLogger().info("MiniappNewsView.list query_params=%s", request.query_params)
             news_type_filter = None
             
             if request.query_params.get("type", "").isdigit():
@@ -27,5 +29,5 @@ class MiniappNewsView(viewsets.ViewSet):
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"MiniappNewsView.list exc={e}")
+            logging.getLogger().exception("MiniappNewsView.list exc=%s, query_params=%s", e, request.query_params)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

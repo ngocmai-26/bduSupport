@@ -2,6 +2,7 @@ from datetime import datetime
 from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
+import logging
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.college_exam_group import CollegeExamGroup
@@ -15,6 +16,7 @@ class CollegeExamGroupView(viewsets.ViewSet):
     @swagger_auto_schema(request_body=CreateCollegeExamGroupValidator)
     def create(self, request):
         try:
+            logging.getLogger().info("CollegeExamGroupView.create req=%s", request.data)
             validate = CreateCollegeExamGroupValidator(data=request.data)
 
             if not validate.is_valid():
@@ -29,7 +31,7 @@ class CollegeExamGroupView(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"SubjectView.create exc={e}")
+            logging.getLogger().exception("SubjectView.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def list(self, request):
@@ -38,11 +40,12 @@ class CollegeExamGroupView(viewsets.ViewSet):
             data = CollegeExamGroupSerializer(subjects, many=True).data
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"SubjectView.list exc={e}")
+            logging.getLogger().exception("SubjectView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def destroy(self, request, pk):
         try:
+            logging.getLoggerinfo("SubjectView.destroy pk=%s", pk)
             try:
                 group = CollegeExamGroup.objects.get(id=pk, deleted_at=None)
                 majors = group.majors.filter(deleted_at=None)
@@ -59,5 +62,5 @@ class CollegeExamGroupView(viewsets.ViewSet):
             except CollegeExamGroup.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
         except Exception as e:
-            print(f"SubjectView.destroy exc={e}")
+            logging.getLogger().exception("SubjectView.destroy exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

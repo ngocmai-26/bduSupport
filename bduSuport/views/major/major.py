@@ -3,6 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
+import logging
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -17,6 +18,7 @@ class MajorView(viewsets.ViewSet):
     @swagger_auto_schema(request_body=CreateMajorValidator)
     def create(self, request):
         try:
+            logging.getLogger().info("MajorView.create req=%s", request.data)
             validate = CreateMajorValidator(data=request.data)
 
             if not validate.is_valid():
@@ -33,7 +35,7 @@ class MajorView(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"MajorView.create exc={e}")
+            logging.getLogger().exception("MajorView.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def list(self, request):
@@ -42,11 +44,12 @@ class MajorView(viewsets.ViewSet):
             data = MajorSerializer(majors, many=True).data
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"MajorView.list exc={e}")
+            logging.getLogger().exception("MajorView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def destroy(self, request, pk):
         try:
+            logging.getLogger().info("MajorView.destroy pk=%s", pk)
             try:
                 major = Major.objects.get(code=pk)
                 major.deleted_at = datetime.now().date()
@@ -56,12 +59,13 @@ class MajorView(viewsets.ViewSet):
             
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"MajorView.delete exc={e}")
+            logging.getLogger().exception("MajorView.destroy exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
     
     @swagger_auto_schema(request_body=UpdateMajorValidator)
     def update(self, request, pk):
         try:
+            logging.getLogger().info("MajorView.update pk=%s, req=%s", pk, request.data)
             validate = UpdateMajorValidator(data=request.data)
 
             if not validate.is_valid():
@@ -90,5 +94,5 @@ class MajorView(viewsets.ViewSet):
             
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"MajorView.update exc={e}")
+            logging.getLogger().exception("MajorView.update exc=%s, pk=%s, req=%s", e, pk, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

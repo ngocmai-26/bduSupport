@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+import logging
 
 from bduSuport.helpers.response import RestResponse
 
@@ -16,6 +17,7 @@ class BackofficeAccountManagementView(viewsets.ViewSet):
     @action(methods=["GET"], detail=True, url_path="lock")
     def lock_account(self, request, pk):
         try:
+            logging.getLogger().info("BackofficeAccountManagementView.lock_account pk=%s", pk)
             try:
                 account = Account.objects.get(id=pk)
                 
@@ -29,12 +31,13 @@ class BackofficeAccountManagementView(viewsets.ViewSet):
             except Account.DoesNotExist:
                 return RestResponse(message="Tài khoản không tồn tại!", status=status.HTTP_404_NOT_FOUND).response
         except Exception as e:
-            print(e)
+            logging.getLogger().exception("BackofficeAccountManagementView.lock_account exc=%s, pk=%s", e, pk)
             return RestResponse(data={"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     @action(methods=["GET"], detail=True, url_path="unlock")
     def unlock_account(self, request, pk):
         try:
+            logging.getLogger().info("BackofficeAccountManagementView.unlock_account pk=%s", pk)
             try:
                 account = Account.objects.get(id=pk)
                 
@@ -48,5 +51,5 @@ class BackofficeAccountManagementView(viewsets.ViewSet):
             except Account.DoesNotExist:
                 return RestResponse(message="Tài khoản không tồn tại!", status=status.HTTP_404_NOT_FOUND).response
         except Exception as e:
-            print(e)
+            logging.getLogger().exception("BackofficeAccountManagementView.unlock_account exc=%s, pk=%s", e, pk)
             return RestResponse(data={"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

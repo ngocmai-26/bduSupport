@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.academic_level import AcademicLevel
@@ -25,7 +26,7 @@ class ConstructorView(viewsets.ViewSet):
             }
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"ConstructorView.init_registration_form exc={e}")
+            logging.getLogger().exception("ConstructorView.init_registration_form exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def __get_evaluation_methods(self):
@@ -65,5 +66,5 @@ class ConstructorView(viewsets.ViewSet):
             }
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"ConstructorView.init_feedback_form exc={e}")
+            logging.getLogger().exception("ConstructorView.init_feedback_form exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

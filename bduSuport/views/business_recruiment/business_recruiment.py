@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+import logging
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.business_recruitment import BusinessRecruitment
@@ -15,5 +16,5 @@ class BusinessRecruimentView(viewsets.ViewSet):
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"BusinessRecruimentView.list exc={e}")
+            logging.getLogger().exception("BusinessRecruimentView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

@@ -3,6 +3,7 @@ from rest_framework import exceptions
 from rest_framework import serializers
 from rest_framework.request import Request
 from rest_framework_simplejwt.views import TokenObtainPairView
+import logging
 
 from bduSuport.errors.un_verified_exception import UnVerifiedException
 from bduSuport.helpers.response import RestResponse
@@ -15,9 +16,9 @@ class TokenPairView(TokenObtainPairView):
     
     def post(self, request: Request, *args, **kwargs):
         try:
-            print("TokenPairView.post request=", request.data)
+            logging.getLogger().info("TokenPairView.post req=%s", request.data)
             response = super().post(request, *args, **kwargs)
-            print("TokenPairView.post response=", response.data)
+            logging.getLogger().info("TokenPairView.post res=%s", response.data)
 
             return RestResponse(
                 data={
@@ -27,13 +28,16 @@ class TokenPairView(TokenObtainPairView):
             ).response
         except serializers.ValidationError:
             return RestResponse(message="Dữ liệu đầu vào không hợp lệ!", status=status.HTTP_400_BAD_REQUEST).response
+        
         except UnVerifiedException as _:
             _email = request.data["email"]
             _otp = self.otp_service.generate_otp(6, "verify_account", _email)
             self.__send_otp_mail(_email, _otp)
             return RestResponse(message="Tài khoản chưa được xác thực", code="account_unverify", status=status.HTTP_400_BAD_REQUEST).response
+        
         except exceptions.AuthenticationFailed as _:
             return RestResponse(message="Thông tin tài khoản không chính xác!", status=status.HTTP_400_BAD_REQUEST).response
+        
         except exceptions.PermissionDenied as _:
             return RestResponse(message="Tài khoản đã bị khóa!", status=status.HTTP_400_BAD_REQUEST).response
         

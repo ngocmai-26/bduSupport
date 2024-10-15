@@ -2,6 +2,7 @@ import datetime
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
 from rest_framework.parsers import MultiPartParser
+import logging
 
 from bduSuport.helpers.firebase_storage_provider import FirebaseStorageProvider
 from bduSuport.helpers.response import RestResponse
@@ -18,6 +19,7 @@ class BusinessRecruimentManagementView(viewsets.ViewSet):
     @swagger_auto_schema(request_body=CreateBusinessRecruimentValidator)
     def create(self, request):
         try:
+            logging.getLogger().info("BusinessRecruimentManagementView.create req=%s", request.data)
             validate = CreateBusinessRecruimentValidator(data=request.data)
 
             if not validate.is_valid():
@@ -33,7 +35,7 @@ class BusinessRecruimentManagementView(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"BusinessRecruimentManagementView.create exc={e}")
+            logging.getLogger().exception("BusinessRecruimentManagementView.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def list(self, request):
@@ -43,11 +45,12 @@ class BusinessRecruimentManagementView(viewsets.ViewSet):
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"BusinessRecruimentManagementView.list exc={e}")
+            logging.getLogger().exception("BusinessRecruimentManagementView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def destroy(self, request, pk):
         try:
+            logging.getLogger().info("BusinessRecruimentManagementView.create pk=%s", pk)
             try:
                 recruiment = BusinessRecruitment.objects.get(code=pk)
                 recruiment.deleted_at = datetime.datetime.now().date()
@@ -57,5 +60,5 @@ class BusinessRecruimentManagementView(viewsets.ViewSet):
             
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"BusinessRecruitmentView.delete exc={e}")
+            logging.getLogger().exception("BusinessRecruimentManagementView.list exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

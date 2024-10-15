@@ -1,4 +1,5 @@
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -20,6 +21,7 @@ class RootView(viewsets.ViewSet):
     @swagger_auto_schema(request_body=CreateBackofficeAccountValidator)
     def create_account(self, request):
         try:
+            logging.getLogger().info("RootView.create_account req=%s", request.data)
             validate = CreateBackofficeAccountValidator(data=request.data)
 
             if not validate.is_valid():
@@ -43,5 +45,5 @@ class RootView(viewsets.ViewSet):
             
             return RestResponse(message="Account created successfully", status=status.HTTP_201_CREATED).response
         except Exception as e:
-            print(e)
+            logging.getLogger().exception("RootView.create_account exc=%s, req=%s", e, request.data)
             return RestResponse(data={"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

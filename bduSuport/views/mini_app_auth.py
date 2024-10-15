@@ -6,6 +6,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 from bduSuport.configs.zalo_api import ZALO_USER_INFO_API
 from bduSuport.helpers.response import RestResponse
@@ -19,6 +20,7 @@ class MiniAppAuth(viewsets.ViewSet):
     @swagger_auto_schema(request_body=CreateMiniAppSessionValidator)
     def register_session(self, request):
         try:
+            logging.getLogger().info("MiniAppAuth.register_session req=%s", request.data)
             validate = CreateMiniAppSessionValidator(data=request.data)
 
             if not validate.is_valid():
@@ -33,7 +35,7 @@ class MiniAppAuth(viewsets.ViewSet):
                     "access_token": access_token
                 }
             )
-            print("MiniAppAuth.register_session get zalo user info resp=", resp.text)
+            logging.getLogger().info("MiniAppAuth.register_session get zalo user info resp=%s", resp.text)
 
             resp_data = resp.json()
 
@@ -45,7 +47,6 @@ class MiniAppAuth(viewsets.ViewSet):
             user_avatar_url = resp_data["picture"]["data"]["url"]
 
             if not self.__create_mini_app_user(user_id, user_name, user_avatar_url):
-                print(f"MiniAppAuth.__create_mini_app_user create user {user_id} failed")
                 return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
             
             self.__create_access_token(user_id, access_token)
@@ -61,7 +62,7 @@ class MiniAppAuth(viewsets.ViewSet):
                 user = MiniAppUser.objects.get(mini_app_user_id=user_id)
                 return True
             except MiniAppUser.DoesNotExist:
-                print("MiniAppAuth.__create_mini_app_user MiniAppUser.DoesNotExist")
+                logging.getLogger().error("MiniAppAuth.__create_mini_app_user DoesNotExist user_id=%s", user_id)
             
             user = MiniAppUser(
                 mini_app_user_id=user_id,
@@ -71,12 +72,12 @@ class MiniAppAuth(viewsets.ViewSet):
             user.save()
 
             if user.id is None:
-                print("MiniAppAuth.__create_mini_app_user create user failed")
+                logging.getLogger().error("MiniAppAuth.__create_mini_app_user create user failed user=%s", user)
                 return False
 
             return True
         except Exception as e:
-            print("MiniAppAuth.__create_mini_app_user exc=", e)
+            logging.getLogger().error("MiniAppAuth.__create_mini_app_user exc=%s, user=%s", e, user)
             return False
         
     def __create_access_token(self, mini_app_user_id, mini_app_token):

@@ -2,6 +2,7 @@ import datetime
 from rest_framework import viewsets, status
 from rest_framework.parsers import MultiPartParser
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 from bduSuport.helpers.firebase_storage_provider import FirebaseStorageProvider
 from bduSuport.models.news import News
@@ -19,6 +20,7 @@ class NewsManagementView(viewsets.ViewSet):
     @swagger_auto_schema(request_body=CreateNewsValidator)
     def create(self, request):
         try:
+            logging.getLogger().info("NewsManagementView.create req=%s", request.data)
             validate = CreateNewsValidator(data=request.data)
 
             if not validate.is_valid():
@@ -38,7 +40,7 @@ class NewsManagementView(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"NewsManagementView.create exc={e}")
+            logging.getLogger().exception("NewsManagementView.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def list(self, request):
@@ -48,12 +50,13 @@ class NewsManagementView(viewsets.ViewSet):
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"NewsManagementView.list exc={e}")
+            logging.getLogger().exception("NewsManagementView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
     
     @swagger_auto_schema(request_body=UpdateNewsValidator)
     def update(self, request, pk):
         try:
+            logging.getLogger().info("NewsManagementView.update req=%s", request.data)
             validate = UpdateNewsValidator(data=request.data)
 
             if not validate.is_valid():
@@ -76,11 +79,12 @@ class NewsManagementView(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"NewsManagementView.update exc={e}")
+            logging.getLogger().exception("NewsManagementView.update exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def destroy(self, request, pk):
         try:
+            logging.getLogger().info("NewsManagementView.destroy pk=%s", pk)
             try:
                 news = News.objects.get(id=pk)
                 news.deleted_at = datetime.datetime.now()
@@ -90,5 +94,5 @@ class NewsManagementView(viewsets.ViewSet):
             except News.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
         except Exception as e:
-            print(f"NewsManagementView.detroy exc={e}")
+            logging.getLogger().exception("NewsManagementView.destroy exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

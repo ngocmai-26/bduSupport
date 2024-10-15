@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -15,5 +16,5 @@ class EvaluationMethodView(viewsets.ViewSet):
             data = EvaluationMethodSerializer(methods, many=True).data
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"SubjectView.list exc={e}")
+            logging.getLogger().exception("SubjectView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

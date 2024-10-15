@@ -1,4 +1,5 @@
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -16,6 +17,7 @@ class AdminAccountView(viewsets.ViewSet):
     @swagger_auto_schema(request_body=BackofficeVerifyAccountValidator)
     def verify_account(self, request):
         try:
+            logging.getLogger().info("AdminAccountView.verify_account req=%s", request.data)
             validate = BackofficeVerifyAccountValidator(data=request.data)
 
             if not validate.is_valid():
@@ -38,9 +40,9 @@ class AdminAccountView(viewsets.ViewSet):
                 account.save(update_fields=["status"])
 
                 return RestResponse(status=status.HTTP_200_OK).response
-            except:
-                return RestResponse(data=validate.errors, status=status.HTTP_404_NOT_FOUND).response
+            except Account.DoesNotExist:
+                return RestResponse(status=status.HTTP_404_NOT_FOUND).response
 
         except Exception as e:
-            print(e)
+            logging.getLogger().exception("AdminAccountView.verify_account exc=%s, req=%s", e, request.data)
             return RestResponse(data={"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

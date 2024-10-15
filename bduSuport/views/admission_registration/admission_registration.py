@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from django.db import transaction, IntegrityError
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
@@ -19,6 +20,7 @@ class AdmissionRegistrationView(viewsets.ViewSet):
     @swagger_auto_schema(request_body=SubmitAdmissionRegistration)
     def create(self, request):
         try:
+            logging.getLogger().info("AdmissionRegistrationView.create req=%s", request.data)
             request.user = MiniAppUser.objects.get(id=1)
             validate = SubmitAdmissionRegistration(data=request.data)
 
@@ -67,7 +69,7 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"AdmissionRegistration.create exc={e}")
+            logging.getLogger().exception("AdmissionRegistration.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def __create_case_competency_assessment_exam_score(self, data, regisation) -> bool:
