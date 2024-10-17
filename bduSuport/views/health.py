@@ -6,6 +6,7 @@ from rest_framework.request import Request
 from django.db import connection
 from django_redis import get_redis_connection
 import logging
+from decouple import config
 
 class HealthView(ViewSet):
     authentication_classes = ()
@@ -15,7 +16,8 @@ class HealthView(ViewSet):
         data = {
             "base_url": request.build_absolute_uri(),
             "main_database": self.__get_main_database_connection_info(),
-            "cache_database": self.__get_redis_connection_info()
+            "cache_database": self.__get_redis_connection_info(),
+            "betterstack_log_token": config("BETTERSTACK_LOG_TOKEN", "")
         }
         logging.getLogger(__name__).info("HealthView.health data=%s", data)
         return Response(data=data, status=HTTP_200_OK)
