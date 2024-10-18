@@ -53,7 +53,7 @@ class MiniAppAuth(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            print(f"MiniAppAuth.register_session exc={e}")
+            logging.getLogger().exception("MiniAppAuth.register_session exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def __create_mini_app_user(self, user_id, user_name, user_avatar_url):

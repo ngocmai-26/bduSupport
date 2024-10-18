@@ -79,7 +79,7 @@ class AdmissionRegistrationView(viewsets.ViewSet):
 
             return score.id is not None
         except Exception as e:
-            print(f"AdmissionRegistration.__create_case_competency_assessment_exam_score exc={e}")
+            logging.getLogger().exception("AdmissionRegistration.__create_case_competency_assessment_exam_score exc=%s", e)
             return False
         
     def __create_case_5_semesters_of_high_school(self, data, regisation) -> bool:

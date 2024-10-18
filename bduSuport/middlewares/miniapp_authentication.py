@@ -2,6 +2,7 @@ from django.core.cache import cache
 from ..models.mini_app_user import MiniAppUser
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import NotAuthenticated, AuthenticationFailed
+import logging
 
 class MiniAppAuthentication(BaseAuthentication):
     def authenticate(self, request):
@@ -21,5 +22,5 @@ class MiniAppAuthentication(BaseAuthentication):
             
             return (user, token)
         except Exception as e:
-            print(f"MiniAppAuthentication.authenticate Exception={e}")
+            logging.getLogger().exception("MiniAppAuthentication.authenticate exc=%s", e)
             raise AuthenticationFailed("Verify token failed!")

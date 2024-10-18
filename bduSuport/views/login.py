@@ -50,5 +50,5 @@ class TokenPairView(TokenObtainPairView):
             
             self.email_service.send_simple_mail(subject, message, recipient_list)
         except Exception as e:
-            print(e)
+            logging.getLogger().exception("TokenPairView.__send_otp_mail exc=%s", e)
         
