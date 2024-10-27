@@ -1,5 +1,6 @@
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from drf_yasg.generators import OpenAPISchemaGenerator
 
 from django.urls import path, include
 
@@ -32,6 +33,12 @@ from bduSuport.views.mini_app_auth import MiniAppAuth
 from bduSuport.views.constructor import ConstructorView
 from bduSuport.views.root.root import RootView
 
+class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
+    def get_schema(self, request=None, public=False):
+        schema = super().get_schema(request, public)
+        schema.schemes = ["http", "https"]
+        return schema
+
 schema_view = get_schema_view(
    openapi.Info(
       title="VTicket",
@@ -39,6 +46,7 @@ schema_view = get_schema_view(
       description="VTicket",
       contact=openapi.Contact(email="ntthuan060102.work@gmail.com"),
    ),
+   generator_class=BothHttpAndHttpsSchemaGenerator,
    public=True,
    permission_classes=(permissions.AllowAny,),
    authentication_classes=()
