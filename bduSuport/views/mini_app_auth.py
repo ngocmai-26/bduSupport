@@ -53,7 +53,7 @@ class MiniAppAuth(viewsets.ViewSet):
             
             self.__create_access_token(user_id, access_token)
 
-            return RestResponse(status=status.HTTP_200_OK).response
+            return RestResponse(status=status.HTTP_200_OK, data=resp_data).response
         except Exception as e:
             logging.getLogger().exception("MiniAppAuth.register_session exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
