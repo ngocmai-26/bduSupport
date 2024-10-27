@@ -39,6 +39,8 @@ class MiniAppAuth(viewsets.ViewSet):
 
             resp_data = resp.json()
 
+            logging.getLogger().info("MiniAppAuth.register_session get zalo user info resp_data=%s", resp_data)
+
             if resp_data["error"] != 0:
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi khi chúng tôi cố gắng kiểm tra tài khoản của bạn!").response
             
