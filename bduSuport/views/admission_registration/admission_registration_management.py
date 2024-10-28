@@ -14,6 +14,8 @@ from bduSuport.models.admission_registration import AdmissionRegistration, Revie
 from bduSuport.serializers.admission_registration_serializer import AdmissionRegistrationSerializer
 from bduSuport.validations.list_admission_registration_filter import ListAdmissionRegistrationFilter
 from bduSuport.validations.review_registration import ReviewRegistrationValidator
+from bduSuport.models.miniapp_notification import MiniappNotification
+from bduSuport.models.subject import Subject
 
 class AdmissionRegistrationManagementView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
@@ -99,9 +101,27 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
                     }
                 )
 
+                messages = {
+                    ReviewStatusChoices.APPROVED: f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} đã được duyệt!",
+                    ReviewStatusChoices.REJECTED: f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} không đủ điều kiện xét duyệt!"
+                }
+
+                self.__create_approve_registration_noti_in_miniapp(
+                    messages[ReviewStatusChoices.APPROVED],
+                    registration.user
+                )
+
                 return RestResponse(status=status.HTTP_200_OK).response 
             except AdmissionRegistration.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
         except Exception as e:
             logging.getLogger().exception("AdmissionRegistrationManagementView.approve exc=%s, pk=%s, req=%s", e, pk, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    def __create_approve_registration_noti_in_miniapp(self, content, user):
+        try:
+            noti = MiniappNotification(content=content, user=user)
+            noti.save()
+        except Exception as e:
+            logging.getLogger().exception("AdmissionRegistrationManagementView.__create_approve_registration_noti_in_miniapp exc=%s, user=%s", e, user)
+            

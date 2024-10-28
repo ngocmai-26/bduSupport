@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Kết Quả Xét Duyệt Đơn Xét Tuyển Đại Học</title>
+    <title>Đơn Xét Tuyển Đại Học</title>
 </head>
 <body style="font-family: Arial, sans-serif; margin: 20px;">
 
-    <h1 style="text-align: center; color: #2E8B57;">Kết Quả Xét Duyệt Đơn Xét Tuyển Đại Học</h1>
+    <h1 style="text-align: center; color: #2E8B57;">Đơn Xét Tuyển Đại Học</h1>
     
     <div style="border: 1px solid #ccc; padding: 20px; margin-bottom: 20px;">
         <h2 style="color: #4682B4;">Thông Tin Sinh Viên</h2>
@@ -27,18 +27,7 @@
         <p><strong>Phương thức xét tuyển:</strong> {{ admission_registration.evaluation_method.name }}</p>
         <p><strong>Khối ngành xét tuyển:</strong> {{ admission_registration.college_exam_group.name }}</p>
         <p><strong>Ngày tạo đơn:</strong> {{ created_at }}</p>
-        <p><strong>Tình trạng xét duyệt:</strong> Đã xét duyệt </p>
+        <p><strong>Tình trạng xét duyệt:</strong> Chờ duyệt </p>
     </div>
-
-    <div style="border: 1px solid #ccc; padding: 20px;">
-        <h2 style="color: #4682B4;">Kết Quả Xét Tuyển</h2>
-        <p><strong>Điểm xét tuyển:</strong> {{ admission_registration.final_score }}</p>
-        {% if is_approved %}
-            <p><strong>Kết quả xét tuyển</strong>: <strong style="color: #2c7b44;">Đạt</strong></p>
-        {% else %}
-            <p><strong>Kết quả xét tuyển</strong>: <strong style="color: #b50303;">Không đạt</strong></p>
-        {% endif %}
-    </div>
-
 </body>
 </html>

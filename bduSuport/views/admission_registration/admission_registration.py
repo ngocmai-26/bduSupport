@@ -3,6 +3,7 @@ from django.db import transaction, IntegrityError
 from drf_yasg.utils import swagger_auto_schema
 import logging
 
+from bduSuport.helpers.email import EmailProvider
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
 from bduSuport.models.mini_app_user import MiniAppUser
@@ -16,6 +17,7 @@ from bduSuport.models.competency_assessment_exam_score import CompetencyAssessme
 
 class AdmissionRegistrationView(viewsets.ViewSet):
     authentication_classes = (MiniAppAuthentication, )
+    email_provider = EmailProvider()
     
     @swagger_auto_schema(request_body=SubmitAdmissionRegistration)
     def create(self, request):
@@ -67,14 +69,27 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                 if not ok:
                     raise IntegrityError("create_score_failed")
                 
+            self.email_provider.send_html_template_email(
+                    [registration.student.email],
+                    [],
+                    "[Trường Đại học Bình Dương] Ghi nhận Đơn Xét Tuyển Đại Học 2024",
+                    "submit_registration.html",
+                    {
+                        "student": registration.student,
+                        "admission_registration": registration,
+                        "created_at": registration.created_at.strftime("%d/%m/%Y %H:%M:%S"),
+                        "date_of_birth": registration.student.date_of_birth.strftime("%d/%m/%Y"),
+                    }
+                )
+                
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("AdmissionRegistration.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
-    def __create_case_competency_assessment_exam_score(self, data, regisation) -> bool:
+    def __create_case_competency_assessment_exam_score(self, data, registration) -> bool:
         try:
-            score = CompetencyAssessmentExamScore(score=data["score"], admission_registration=regisation)
+            score = CompetencyAssessmentExamScore(score=data["score"], admission_registration=registration)
             score.save()
 
             return score.id is not None
@@ -82,22 +97,22 @@ class AdmissionRegistrationView(viewsets.ViewSet):
             logging.getLogger().exception("AdmissionRegistration.__create_case_competency_assessment_exam_score exc=%s", e)
             return False
         
-    def __create_case_5_semesters_of_high_school(self, data, regisation) -> bool:
-        scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": regisation}) for item in data])
+    def __create_case_5_semesters_of_high_school(self, data, registration) -> bool:
+        scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
         return all(ids)
 
-    def __create_case_grade_12(self, data, regisation) -> bool:
-        scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": regisation}) for item in data])
+    def __create_case_grade_12(self, data, registration) -> bool:
+        scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
         return all(ids)
 
-    def __create_case_grades_10_11_12(self, data, regisation) -> bool:
-        scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": regisation}) for item in data])
+    def __create_case_grades_10_11_12(self, data, registration) -> bool:
+        scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
         return all(ids)
 
-    def __create_case_high_school_graduation_exam(self, data, regisation) -> bool:
-        scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": regisation}) for item in data])
+    def __create_case_high_school_graduation_exam(self, data, registration) -> bool:
+        scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
         return all(ids)

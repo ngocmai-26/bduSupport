@@ -90,3 +90,4 @@ class MiniAppAuth(viewsets.ViewSet):
             {"user_id": mini_app_user_id},
             7*24*60*60
         )
+        
