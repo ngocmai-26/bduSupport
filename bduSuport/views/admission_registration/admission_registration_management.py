@@ -16,13 +16,13 @@ from bduSuport.serializers.admission_registration_serializer import AdmissionReg
 from bduSuport.validations.list_admission_registration_filter import ListAdmissionRegistrationFilter
 from bduSuport.validations.review_registration import ReviewRegistrationValidator
 from bduSuport.models.miniapp_notification import MiniappNotification
-from bduSuport.models.subject import Subject
+from bduSuport.middlewares.permissions.is_root import IsRoot
 
 class AdmissionRegistrationManagementView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
     email_provider = EmailProvider()
 
-    @action(methods=["DELETE"], detail=True, url_path="root")
+    @action(methods=["DELETE"], detail=True, url_path="root", permission_classes=[IsRoot])
     def delete_registration(self, request, pk):
         try:
             registration = AdmissionRegistration.objects.get(id=pk)
