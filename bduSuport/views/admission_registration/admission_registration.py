@@ -7,6 +7,7 @@ from bduSuport.helpers.email import EmailProvider
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
 from bduSuport.models.mini_app_user import MiniAppUser
+from bduSuport.models.miniapp_notification import MiniappNotification
 from bduSuport.validations.submit_admission_registration import SubmitAdmissionRegistration
 
 from bduSuport.models.student import Student
@@ -69,10 +70,15 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                 if not ok:
                     raise IntegrityError("create_score_failed")
                 
+            self.__create_submit_registration_noti_in_miniapp(
+                f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} đã được ghi nhận!",
+                registration.user
+            )
+                
             self.email_provider.send_html_template_email(
                     [registration.student.email],
                     [],
-                    "[Trường Đại học Bình Dương] Ghi nhận Đơn Xét Tuyển Đại Học 2024",
+                    "[Trường Đại học Bình Dương] Ghi Nhận Đơn Xét Tuyển Đại Học 2024",
                     "submit_registration.html",
                     {
                         "student": registration.student,
@@ -116,3 +122,10 @@ class AdmissionRegistrationView(viewsets.ViewSet):
         scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
         return all(ids)
+    
+    def __create_submit_registration_noti_in_miniapp(self, content, user):
+        try:
+            noti = MiniappNotification(content=content, user=user)
+            noti.save()
+        except Exception as e:
+            logging.getLogger().exception("AdmissionRegistration.__create_submit_registration_noti_in_miniapp exc=%s, user=%s", e, user)

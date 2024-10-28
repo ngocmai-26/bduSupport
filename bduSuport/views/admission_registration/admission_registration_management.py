@@ -87,6 +87,16 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
                 registration.review_status = ReviewStatusChoices.APPROVED if validate.validated_data["is_approve"] else ReviewStatusChoices.REJECTED
                 registration.save(update_fields=["reviewed_by", "review_status"])
 
+                messages = {
+                    ReviewStatusChoices.APPROVED: f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} đã được duyệt!",
+                    ReviewStatusChoices.REJECTED: f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} không đủ điều kiện xét duyệt!"
+                }
+
+                self.__create_approve_registration_noti_in_miniapp(
+                    messages[ReviewStatusChoices.APPROVED],
+                    registration.user
+                )
+
                 self.email_provider.send_html_template_email(
                     [registration.student.email],
                     [],
@@ -99,16 +109,6 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
                         "date_of_birth": registration.student.date_of_birth.strftime("%d/%m/%Y"),
                         "is_approved": registration.review_status == ReviewStatusChoices.APPROVED
                     }
-                )
-
-                messages = {
-                    ReviewStatusChoices.APPROVED: f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} đã được duyệt!",
-                    ReviewStatusChoices.REJECTED: f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} không đủ điều kiện xét duyệt!"
-                }
-
-                self.__create_approve_registration_noti_in_miniapp(
-                    messages[ReviewStatusChoices.APPROVED],
-                    registration.user
                 )
 
                 return RestResponse(status=status.HTTP_200_OK).response 
