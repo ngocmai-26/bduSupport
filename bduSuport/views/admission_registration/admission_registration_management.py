@@ -1,3 +1,4 @@
+import datetime
 from django.db.models import Q
 import logging
 
@@ -20,6 +21,19 @@ from bduSuport.models.subject import Subject
 class AdmissionRegistrationManagementView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
     email_provider = EmailProvider()
+
+    @action(methods=["DELETE"], detail=True, url_path="root")
+    def delete_registration(self, request, pk):
+        try:
+            registration = AdmissionRegistration.objects.get(id=pk)
+            registration.recalled_at = datetime.datetime.now()
+            registration.reviewed_by = request.user
+            registration.save()
+
+            return RestResponse(status=status.HTTP_200_OK).response
+        except Exception as e:
+            logging.getLogger().exception("AdmissionRegistrationManagementView.delete_registration exc=%s, pk=%s", e, pk)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
 
     @swagger_auto_schema(
         manual_parameters=[
