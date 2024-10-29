@@ -74,5 +74,7 @@ class AdmissionRegistration(models.Model):
 
         if method == EvaluationMethods.CompetencyAssessmentExam:
             return self.final_score >= self.major.benchmark_competency_assessment_exam
-        else:
+        elif method == EvaluationMethods.HighSchoolGraduationExam:
             return self.final_score >= self.major.benchmark_30
+        else:
+            return self.final_score >= self.major.benchmark_school_record

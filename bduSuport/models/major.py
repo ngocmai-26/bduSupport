@@ -18,6 +18,7 @@ class Major(models.Model):
     description = models.CharField(max_length=255)
     year = models.IntegerField(db_index=True, validators=[MinValueValidator(0)])
     benchmark_30 = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(30)])
+    benchmark_school_record = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(30)])
     benchmark_competency_assessment_exam = models.IntegerField(validators=[MinValueValidator(0)])
     tuition_fee = models.IntegerField(validators=[MinValueValidator(0)])
     training_location = models.CharField(max_length=255)
