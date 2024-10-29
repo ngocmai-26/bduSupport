@@ -7,7 +7,7 @@ from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
 from bduSuport.models.miniapp_notification import MiniappNotification
 from bduSuport.serializers.miniapp_notification import MiniappNotificationSerializer
 
-class MiniappNotification(ViewSet):
+class MiniappNotificationView(ViewSet):
     authentication_classes = (MiniAppAuthentication, )
 
     def list(self, request):
