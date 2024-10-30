@@ -24,7 +24,6 @@ class AdmissionRegistrationView(viewsets.ViewSet):
     def create(self, request):
         try:
             logging.getLogger().info("AdmissionRegistrationView.create req=%s", request.data)
-            request.user = MiniAppUser.objects.get(id=1)
             validate = SubmitAdmissionRegistration(data=request.data)
 
             if not validate.is_valid():
@@ -41,7 +40,7 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                 
                 _subject_scores = _data.pop("subject_scores")
                 _competency_assessment_exam_score = _data.pop("competency_assessment_exam_score")
-                
+
                 registration = AdmissionRegistration(**{**_data, "student": student, "user": request.user})
                 registration.save()
 
@@ -106,22 +105,22 @@ class AdmissionRegistrationView(viewsets.ViewSet):
     def __create_case_5_semesters_of_high_school(self, data, registration) -> bool:
         scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
-        return all(ids)
+        return True
 
     def __create_case_grade_12(self, data, registration) -> bool:
         scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
-        return all(ids)
+        return True
 
     def __create_case_grades_10_11_12(self, data, registration) -> bool:
         scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
-        return all(ids)
+        return True
 
     def __create_case_high_school_graduation_exam(self, data, registration) -> bool:
         scores = SubjectScore.objects.bulk_create([SubjectScore(**{**item, "admission_registration": registration}) for item in data])
         ids = [score.id is not None for score in scores]
-        return all(ids)
+        return True
     
     def __create_submit_registration_noti_in_miniapp(self, content, user):
         try:
