@@ -41,7 +41,7 @@ class AcademicLevelView(viewsets.ViewSet):
         try:
             logging.getLogger().info("AcademicLevelView.destroy pk=%s", pk)
             try:
-                level = AcademicLevel.objects.get(code=pk)
+                level = AcademicLevel.objects.get(id=pk)
                 level.deleted_at = datetime.datetime.now().date()
                 level.save(update_fields=["deleted_at"])
             except AcademicLevel.DoesNotExist:

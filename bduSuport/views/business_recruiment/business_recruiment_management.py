@@ -52,7 +52,7 @@ class BusinessRecruimentManagementView(viewsets.ViewSet):
         try:
             logging.getLogger().info("BusinessRecruimentManagementView.create pk=%s", pk)
             try:
-                recruiment = BusinessRecruitment.objects.get(code=pk)
+                recruiment = BusinessRecruitment.objects.get(id=pk)
                 recruiment.deleted_at = datetime.datetime.now().date()
                 recruiment.save(update_fields=["deleted_at"])
             except BusinessRecruitment.DoesNotExist:
