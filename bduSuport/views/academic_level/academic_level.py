@@ -20,7 +20,10 @@ class AcademicLevelView(viewsets.ViewSet):
             if not validate.is_valid():
                 return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
-            subject = AcademicLevel(name=validate.validated_data["name"])
+            subject = AcademicLevel(
+                name=validate.validated_data["name"],
+                need_evaluation_method=validate.validated_data["need_evaluation_method"]
+            )
             subject.save()
 
             return RestResponse(status=status.HTTP_200_OK).response
