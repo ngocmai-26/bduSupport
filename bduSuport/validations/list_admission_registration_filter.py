@@ -4,6 +4,7 @@ from bduSuport.models.admission_registration import ReviewStatusChoices
 from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.models.evaluation_method import EvaluationMethod
 from bduSuport.models.major import Major
+from bduSuport.models.training_location import TrainingLocation
 
 class ListAdmissionRegistrationFilter(serializers.Serializer):
     evaluation_method = serializers.PrimaryKeyRelatedField(

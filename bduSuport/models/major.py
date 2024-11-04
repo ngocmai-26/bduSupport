@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from bduSuport.models.academic_level import AcademicLevel
 from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.models.evaluation_method import EvaluationMethod
+from bduSuport.models.training_location import TrainingLocation
 
 class Major(models.Model):
     class Meta:
@@ -21,7 +22,7 @@ class Major(models.Model):
     benchmark_school_record = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(30)])
     benchmark_competency_assessment_exam = models.IntegerField(validators=[MinValueValidator(0)])
     tuition_fee = models.IntegerField(validators=[MinValueValidator(0)])
-    training_location = models.CharField(max_length=255)
+    training_location = models.ForeignKey(TrainingLocation, on_delete=models.CASCADE, related_name="majors")
     academic_level = models.ForeignKey(AcademicLevel, on_delete=models.CASCADE, related_name="majors")
     evaluation_methods = models.ManyToManyField(EvaluationMethod, related_name="majors", null=True)
     number_of_credits = models.IntegerField(validators=[MinValueValidator(0)])

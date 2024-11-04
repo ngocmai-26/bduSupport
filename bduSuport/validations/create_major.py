@@ -5,6 +5,7 @@ from bduSuport.models.academic_level import AcademicLevel
 from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.models.evaluation_method import EvaluationMethod
 from bduSuport.models.major import Major
+from bduSuport.models.training_location import TrainingLocation
 
 class CreateMajorValidator(serializers.Serializer):
     class Meta:
@@ -29,7 +30,6 @@ class CreateMajorValidator(serializers.Serializer):
     benchmark_school_record = serializers.FloatField(min_value=0.00, max_value=30.00)
     benchmark_competency_assessment_exam = serializers.IntegerField(min_value=0)
     tuition_fee = serializers.IntegerField(min_value=0)
-    training_location = serializers.CharField()
     academic_level = serializers.PrimaryKeyRelatedField(queryset=AcademicLevel.objects.filter(deleted_at=None))
     evaluation_methods = serializers.PrimaryKeyRelatedField(
         queryset=EvaluationMethod.objects.filter(deleted_at=None), 
@@ -37,6 +37,7 @@ class CreateMajorValidator(serializers.Serializer):
         allow_empty=True,
     )
     number_of_credits = serializers.IntegerField(min_value=0)
+    training_location = serializers.PrimaryKeyRelatedField(queryset=TrainingLocation.objects.filter(deleted_at=None))
 
     def validate(self, attrs):
         _attrs = super().validate(attrs)

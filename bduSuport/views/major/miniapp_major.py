@@ -19,7 +19,8 @@ class MiniappMajorView(viewsets.ViewSet):
 
     @swagger_auto_schema(manual_parameters=[
         openapi.Parameter("year", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
-        openapi.Parameter("academic_level", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
+        openapi.Parameter("academic_level", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
     ])
     def list(self, request):
         try:

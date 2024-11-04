@@ -8,11 +8,13 @@ from bduSuport.models.academic_level import AcademicLevel
 from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.models.evaluation_method import EvaluationMethod
 from bduSuport.models.major import Major
+from bduSuport.models.training_location import TrainingLocation
 from bduSuport.serializers.academic_level import AcademicLevelSerializer
 from bduSuport.serializers.college_exam_group import CollegeExamGroupSerializer
 from bduSuport.serializers.evaluation_method_serializer import EvaluationMethodSerializer
 from bduSuport.serializers.major_serializer import MajorSerializer
 from bduSuport.models.miniapp_role import MiniappRole
+from bduSuport.serializers.training_location import TrainingLocationSerializer
 
 class ConstructorView(viewsets.ViewSet):
     @action(methods=["GET"], detail=False, url_path="registration-form")
@@ -23,27 +25,32 @@ class ConstructorView(viewsets.ViewSet):
                 "academic_levels": self.__get_academic_levels(),
                 "college_exam_groups": self.__get_college_exam_groups(),
                 "majors": self.__get_majors(),
+                "training_location": self.__get_training_location(),
             }
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("ConstructorView.init_registration_form exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
-        
+
+    def __get_training_location(self):
+        methods = TrainingLocation.objects.filter(deleted_at=None)
+        return TrainingLocationSerializer(methods, many=True).data
+
     def __get_evaluation_methods(self):
-        methods = EvaluationMethod.objects.all()
-        return EvaluationMethodSerializer(methods, many=True, fields=["code", "name"]).data
+        methods = EvaluationMethod.objects.filter(deleted_at=None)
+        return EvaluationMethodSerializer(methods, many=True).data
     
     def __get_academic_levels(self):
-        levels = AcademicLevel.objects.all()
-        return AcademicLevelSerializer(levels, many=True, fields=["id", "name"]).data
+        levels = AcademicLevel.objects.filter(deleted_at=None)
+        return AcademicLevelSerializer(levels, many=True).data
 
     def __get_college_exam_groups(self):
         groups = CollegeExamGroup.objects.filter(deleted_at=None)
-        return CollegeExamGroupSerializer(groups, many=True, fields=["id", "code", "name"]).data
+        return CollegeExamGroupSerializer(groups, many=True).data
     
     def __get_majors(self):
         majors = Major.objects.filter(deleted_at=None)
-        return MajorSerializer(majors, many=True, fields=["code", "name"]).data
+        return MajorSerializer(majors, many=True).data
     
     @action(methods=["GET"], detail=False, url_path="feedback-form")
     def init_feedback_form(self, request):

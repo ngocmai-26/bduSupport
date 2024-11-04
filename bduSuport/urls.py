@@ -34,6 +34,8 @@ from bduSuport.views.subject.subject_management import SubjectView
 from bduSuport.views.mini_app_auth import MiniAppAuth
 from bduSuport.views.constructor import ConstructorView
 from bduSuport.views.root.root import RootView
+from bduSuport.views.training_location.miniapp_training_location import MiniappTrainingLocationView
+from bduSuport.views.training_location.training_location_management import TrainingLocationView
 
 class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
     def get_schema(self, request=None, public=False):
@@ -68,8 +70,9 @@ miniap_router.register('majors', MiniappMajorView, basename='miniapp_majors')
 miniap_router.register('feedbacks', FeedbackView, basename='miniapp_feedback')
 miniap_router.register('business-recruiments', BusinessRecruimentView, basename='business_recruiments')
 miniap_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
-miniap_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
 miniap_router.register('miniapp-notification', MiniappNotificationView, basename='miniapp_notification')
+miniap_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
+miniap_router.register('training-location', MiniappTrainingLocationView, basename='miniapp_training_location')
 
 backoffice_router.register('super-admin', RootView, basename='super_admin')
 backoffice_router.register('majors', MajorView, basename='major_management')
@@ -80,6 +83,7 @@ backoffice_router.register('feedbacks', FeedbackManagementView, basename='feedba
 backoffice_router.register('news-types', NewsTypeManagementView, basename='news_type_management')
 backoffice_router.register('admin/accounts', AdminAccountView, basename='backoffice_admin_account')
 backoffice_router.register('academic-levels', AcademicLevelView, basename='academic_level_management')
+backoffice_router.register('training-location', TrainingLocationView, basename='training_location_management')
 backoffice_router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method_management')
 backoffice_router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group_management')
 backoffice_router.register('business-recruiments', BusinessRecruimentManagementView, basename='business_recruiments_management')

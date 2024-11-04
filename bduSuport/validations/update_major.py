@@ -3,6 +3,7 @@ from rest_framework import serializers
 from bduSuport.models.academic_level import AcademicLevel
 from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.models.evaluation_method import EvaluationMethod
+from bduSuport.models.training_location import TrainingLocation
 
 class UpdateMajorValidator(serializers.Serializer):
     name = serializers.CharField(required=False)
@@ -11,7 +12,7 @@ class UpdateMajorValidator(serializers.Serializer):
         required=False,
         queryset=CollegeExamGroup.objects.filter(deleted_at=None),
         many=True,
-        allow_empty=False
+        allow_empty=True
     )
     description = serializers.CharField(required=False)
     year = serializers.IntegerField(required=False, min_value=0)
@@ -19,9 +20,13 @@ class UpdateMajorValidator(serializers.Serializer):
     benchmark_school_record = serializers.FloatField(required=False, min_value=0.00, max_value=30.00)
     benchmark_competency_assessment_exam = serializers.IntegerField(required=False, min_value=0)
     tuition_fee = serializers.IntegerField(required=False, min_value=0)
-    training_location = serializers.CharField(required=False)
     academic_level = serializers.PrimaryKeyRelatedField(queryset=AcademicLevel.objects.filter(deleted_at=None))
-    evaluation_methods = serializers.PrimaryKeyRelatedField(queryset=EvaluationMethod.objects.filter(deleted_at=None), many=True, allow_empty=False)
+    evaluation_methods = serializers.PrimaryKeyRelatedField(
+        queryset=EvaluationMethod.objects.filter(deleted_at=None), 
+        many=True, 
+        allow_empty=True
+    )
+    training_location = serializers.PrimaryKeyRelatedField(queryset=TrainingLocation.objects.filter(deleted_at=None))
 
     def validate_benchmark_30(self, value: float):
         s = str(value)
