@@ -17,6 +17,7 @@ class AdmissionRegistrationSerializer(serializers.ModelSerializer):
     evaluation_method_name = serializers.SerializerMethodField()
     subject_scores = serializers.SerializerMethodField()
     is_reviewed = serializers.SerializerMethodField()
+    files = serializers.SerializerMethodField()
 
     def get_final_score(self, obj: AdmissionRegistration):
         return obj.final_score
@@ -46,8 +47,12 @@ class AdmissionRegistrationSerializer(serializers.ModelSerializer):
     def get_evaluation_method_name(self, obj: AdmissionRegistration):
         return obj.evaluation_method.name
     
-    def get_is_reviewed(self, obj):
+    def get_is_reviewed(self, obj: AdmissionRegistration):
         return obj.is_reviewed
+    
+    def get_files(self, obj: AdmissionRegistration):
+        files = [file.url for file in obj.admission_registration_files.all()]
+        return files
     
     def get_subject_scores(self, obj):
         scores = obj.subject_scores.values(

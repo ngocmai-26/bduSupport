@@ -30,7 +30,7 @@ class NewsManagementView(viewsets.ViewSet):
             image_url = ""
             
             if _data.get("image", None):
-                image_url = self.image_storage_provider.upload_image(_data.pop("image"))
+                image_url = self.image_storage_provider.upload_file(_data.pop("image"))
             
             news = News(**_data, author=request.user, deleted_at=None, image=image_url)
             news.save()
@@ -70,7 +70,7 @@ class NewsManagementView(viewsets.ViewSet):
             _data = validate.validated_data
 
             if "image" in _data:
-                _data["image"] = self.image_storage_provider.upload_image(_data.pop("image"))
+                _data["image"] = self.image_storage_provider.upload_file(_data.pop("image"))
             
             for k, v in _data.items():
                 setattr(news, k, v)

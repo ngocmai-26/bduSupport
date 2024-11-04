@@ -26,7 +26,7 @@ class BusinessRecruimentManagementView(viewsets.ViewSet):
                 return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
-            banner_url = self.image_storage_provider.upload_image(_data.pop("banner"))
+            banner_url = self.image_storage_provider.upload_file(_data.pop("banner"))
             recruiment = BusinessRecruitment(**_data, banner=banner_url, creator=request.user)
             recruiment.save()
 

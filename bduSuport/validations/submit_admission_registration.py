@@ -9,23 +9,47 @@ from bduSuport.serializers.student import StudentSerializer
 from bduSuport.serializers.subject_score import SubjectScoreSerializer
 
 class SubmitAdmissionRegistration(serializers.Serializer):
-    evaluation_method = serializers.PrimaryKeyRelatedField(queryset=EvaluationMethod.objects.filter(deleted_at=None))
+    evaluation_method = serializers.PrimaryKeyRelatedField(queryset=EvaluationMethod.objects.filter(deleted_at=None), allow_null=True)
     major = serializers.PrimaryKeyRelatedField(queryset=Major.objects.filter(deleted_at=None))
     college_exam_group = serializers.PrimaryKeyRelatedField(queryset=CollegeExamGroup.objects.filter(deleted_at=None), allow_null=True)
     student = StudentSerializer()
     subject_scores = SubjectScoreSerializer(many=True, allow_empty=False, allow_null=True, exclude=["admission_registration"])
     competency_assessment_exam_score = CompetencyAssessmentExamScoreSerializer(allow_null=True, exclude=["admission_registration"])
+    files = serializers.ListField(
+        child=serializers.URLField(),
+        max_length=5,
+        allow_empty=False
+    )
 
     def validate(self, attrs):
-        _evaluation_method = attrs["evaluation_method"]
+        if not attrs["major"].academic_level.need_evaluation_method:
+            attrs["subject_scores"] = None
+            attrs["college_exam_group"] = None
+            attrs["competency_assessment_exam_score"] = None
+        else:
+            _evaluation_method = attrs.get("evaluation_method", None)
 
-        {
-            EvaluationMethods.FiveSemestersOfHighSchool: self.__validate_5_semesters_of_high_school,
-            EvaluationMethods.CompetencyAssessmentExam: self.__validate_competency_assessment_exam,
-            EvaluationMethods.Grade_12: self.__validate_grade_12,
-            EvaluationMethods.Grades_10_11_12: self.__validate_grades_10_11_12,
-            EvaluationMethods.HighSchoolGraduationExam: self.__validate_high_school_graduation_exam,
-        }[EvaluationMethods(_evaluation_method.code)](attrs)
+            if _evaluation_method is None:
+                raise serializers.ValidationError("evaluation_method_is_null")
+
+            if _evaluation_method in [EvaluationMethods.CompetencyAssessmentExam.value]:
+                attrs["subject_scores"] = None
+                attrs["college_exam_group"] = None
+            elif _evaluation_method in [
+                EvaluationMethods.FiveSemestersOfHighSchool.value,
+                EvaluationMethods.Grade_12.value,
+                EvaluationMethods.Grades_10_11_12.value,
+                EvaluationMethods.HighSchoolGraduationExam.value
+            ]:
+                attrs["competency_assessment_exam_score"] = None
+
+            {
+                EvaluationMethods.FiveSemestersOfHighSchool: self.__validate_5_semesters_of_high_school,
+                EvaluationMethods.CompetencyAssessmentExam: self.__validate_competency_assessment_exam,
+                EvaluationMethods.Grade_12: self.__validate_grade_12,
+                EvaluationMethods.Grades_10_11_12: self.__validate_grades_10_11_12,
+                EvaluationMethods.HighSchoolGraduationExam: self.__validate_high_school_graduation_exam,
+            }[EvaluationMethods(_evaluation_method.code)](attrs)
 
         return attrs
 
@@ -211,21 +235,21 @@ class SubmitAdmissionRegistration(serializers.Serializer):
         if len(valid_subjects) != 0:
             raise serializers.ValidationError("lack_of_subject")
         
-    def validate_empty_values(self, data):
-        ok, _data = super().validate_empty_values(data)
+    # def validate_empty_values(self, data):
+    #     ok, _data = super().validate_empty_values(data)
 
-        _evaluation_method = _data.get("evaluation_method", None)
+    #     _evaluation_method = _data.get("evaluation_method", None)
 
-        if _evaluation_method is not None:
-            if _evaluation_method in [EvaluationMethods.CompetencyAssessmentExam.value]:
-                _data["subject_scores"] = None
-                _data["college_exam_group"] = None
-            elif _evaluation_method in [
-                EvaluationMethods.FiveSemestersOfHighSchool.value,
-                EvaluationMethods.Grade_12.value,
-                EvaluationMethods.Grades_10_11_12.value,
-                EvaluationMethods.HighSchoolGraduationExam.value
-            ]:
-                _data["competency_assessment_exam_score"] = None
+    #     if _evaluation_method is not None:
+    #         if _evaluation_method in [EvaluationMethods.CompetencyAssessmentExam.value]:
+    #             _data["subject_scores"] = None
+    #             _data["college_exam_group"] = None
+    #         elif _evaluation_method in [
+    #             EvaluationMethods.FiveSemestersOfHighSchool.value,
+    #             EvaluationMethods.Grade_12.value,
+    #             EvaluationMethods.Grades_10_11_12.value,
+    #             EvaluationMethods.HighSchoolGraduationExam.value
+    #         ]:
+    #             _data["competency_assessment_exam_score"] = None
 
-        return ok, _data
+    #     return ok, _data

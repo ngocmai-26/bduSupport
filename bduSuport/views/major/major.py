@@ -30,8 +30,10 @@ class MajorView(viewsets.ViewSet):
                 evaluation_methods = _data.pop("evaluation_methods")
                 major = Major(**_data)
                 major.save()
-                major.college_exam_groups.set(college_exam_groups)
-                major.evaluation_methods.set(evaluation_methods)
+
+                if major.academic_level.need_evaluation_method:
+                    major.college_exam_groups.set(college_exam_groups)
+                    major.evaluation_methods.set(evaluation_methods)
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:

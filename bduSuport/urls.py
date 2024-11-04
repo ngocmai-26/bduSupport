@@ -24,6 +24,7 @@ from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
 from bduSuport.views.major.major import MajorView
 from bduSuport.views.major.miniapp_major import MiniappMajorView
+from bduSuport.views.media import MediaView
 from bduSuport.views.news.miniapp_news import MiniappNewsView
 from bduSuport.views.news.news_menegement import NewsManagementView
 from bduSuport.views.news.news_type_management import NewsTypeManagementView
@@ -58,6 +59,7 @@ miniap_router = SimpleRouter(trailing_slash=False)
 backoffice_router = SimpleRouter(trailing_slash=False)
 
 health_router.register('health', HealthView, basename='health')
+health_router.register('media', MediaView, basename='media')
 
 miniap_router.register('init', ConstructorView, basename='constructor')
 miniap_router.register('news', MiniappNewsView, basename='miniapp_news')

@@ -18,7 +18,7 @@ class AdmissionRegistration(models.Model):
 
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(MiniAppUser, on_delete=models.CASCADE, related_name="admission_registrations")
-    evaluation_method = models.ForeignKey(EvaluationMethod, on_delete=models.CASCADE, related_name="admission_registrations")  
+    evaluation_method = models.ForeignKey(EvaluationMethod, on_delete=models.CASCADE, related_name="admission_registrations", null=True)
     major = models.ForeignKey(Major, on_delete=models.CASCADE, related_name="admission_registrations")
     college_exam_group = models.ForeignKey(CollegeExamGroup, on_delete=models.CASCADE, related_name="admission_registrations", null=True)
     student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name="admission_registration")
@@ -33,6 +33,9 @@ class AdmissionRegistration(models.Model):
 
     @property
     def final_score(self):
+        if not self.major.academic_level.need_evaluation_method:
+            return -1
+        
         method = EvaluationMethods(self.evaluation_method.code)
 
         return {
@@ -70,6 +73,9 @@ class AdmissionRegistration(models.Model):
   
     @property
     def is_passed(self):
+        if not self.major.academic_level.need_evaluation_method:
+            return True
+
         method = EvaluationMethods(self.evaluation_method.code)
 
         if method == EvaluationMethods.CompetencyAssessmentExam:

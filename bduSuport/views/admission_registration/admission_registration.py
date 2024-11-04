@@ -6,6 +6,7 @@ import logging
 from bduSuport.helpers.email import EmailProvider
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
+from bduSuport.models.admission_registration_file import AdmissionRegistrationFile
 from bduSuport.models.mini_app_user import MiniAppUser
 from bduSuport.models.miniapp_notification import MiniappNotification
 from bduSuport.validations.submit_admission_registration import SubmitAdmissionRegistration
@@ -40,6 +41,7 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                 
                 _subject_scores = _data.pop("subject_scores")
                 _competency_assessment_exam_score = _data.pop("competency_assessment_exam_score")
+                _files = _data.pop("files")
 
                 registration = AdmissionRegistration(**{**_data, "student": student, "user": request.user})
                 registration.save()
@@ -47,30 +49,33 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                 if registration.id is None:
                     raise IntegrityError("create_registration_failed")
                 
-                evaluation_method = EvaluationMethods(registration.evaluation_method.code)
+                self.__create_files(_files, registration)
+                
+                if registration.major.academic_level.need_evaluation_method:
+                    evaluation_method = EvaluationMethods(registration.evaluation_method.code)
 
-                ok = False
-                
-                if evaluation_method == EvaluationMethods.FiveSemestersOfHighSchool: 
-                    ok = self.__create_case_5_semesters_of_high_school(_subject_scores, registration)
+                    ok = False
+                    
+                    if evaluation_method == EvaluationMethods.FiveSemestersOfHighSchool: 
+                        ok = self.__create_case_5_semesters_of_high_school(_subject_scores, registration)
 
-                elif evaluation_method == EvaluationMethods.CompetencyAssessmentExam:
-                    ok = self.__create_case_competency_assessment_exam_score(_competency_assessment_exam_score, registration)
-                
-                elif evaluation_method == EvaluationMethods.Grade_12:
-                    ok = self.__create_case_grade_12(_subject_scores, registration)
-                
-                elif evaluation_method == EvaluationMethods.Grades_10_11_12:
-                    ok = self.__create_case_grades_10_11_12(_subject_scores, registration)
-                
-                elif evaluation_method == EvaluationMethods.HighSchoolGraduationExam:
-                    ok = self.__create_case_high_school_graduation_exam(_subject_scores, registration)
+                    elif evaluation_method == EvaluationMethods.CompetencyAssessmentExam:
+                        ok = self.__create_case_competency_assessment_exam_score(_competency_assessment_exam_score, registration)
+                    
+                    elif evaluation_method == EvaluationMethods.Grade_12:
+                        ok = self.__create_case_grade_12(_subject_scores, registration)
+                    
+                    elif evaluation_method == EvaluationMethods.Grades_10_11_12:
+                        ok = self.__create_case_grades_10_11_12(_subject_scores, registration)
+                    
+                    elif evaluation_method == EvaluationMethods.HighSchoolGraduationExam:
+                        ok = self.__create_case_high_school_graduation_exam(_subject_scores, registration)
 
-                if not ok:
-                    raise IntegrityError("create_score_failed")
+                    if not ok:
+                        raise IntegrityError("create_score_failed")
                 
             self.__create_submit_registration_noti_in_miniapp(
-                f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} đã được ghi nhận!",
+                f"Đơn xét tuyển ngành {registration.major.name} của bạn {registration.student.fullname} đã được ghi nhận!",
                 registration.user
             )
                 
@@ -128,3 +133,7 @@ class AdmissionRegistrationView(viewsets.ViewSet):
             noti.save()
         except Exception as e:
             logging.getLogger().exception("AdmissionRegistration.__create_submit_registration_noti_in_miniapp exc=%s, user=%s", e, user)
+
+    def __create_files(self, data, registration) -> bool:
+        scores = AdmissionRegistrationFile.objects.bulk_create([AdmissionRegistrationFile(url=item, admission_registration=registration) for item in data])
+        return True
