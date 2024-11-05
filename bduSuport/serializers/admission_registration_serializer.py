@@ -45,7 +45,9 @@ class AdmissionRegistrationSerializer(serializers.ModelSerializer):
         return None
     
     def get_evaluation_method_name(self, obj: AdmissionRegistration):
-        return obj.evaluation_method.name
+        if obj.evaluation_method:
+            return obj.evaluation_method.name
+        return None
     
     def get_is_reviewed(self, obj: AdmissionRegistration):
         return obj.is_reviewed
