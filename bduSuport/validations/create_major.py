@@ -11,8 +11,8 @@ class CreateMajorValidator(serializers.Serializer):
     class Meta:
         validators = [
             UniqueTogetherValidator(
-                queryset=Major.objects.all(),
-                fields=['code', 'year']
+                queryset=Major.objects.filter(deleted_at=None),
+                fields=['code', 'year', 'training_location']
             )
         ]
 

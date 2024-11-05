@@ -31,7 +31,7 @@ class MiniappMajorView(viewsets.ViewSet):
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
-            majors = Major.objects.filter(Q(**_data))
+            majors = Major.objects.filter(Q(**_data) & Q(deleted_at=None))
             data = MajorSerializer(majors, many=True).data
             
             return RestResponse(data=data, status=status.HTTP_200_OK).response
@@ -43,7 +43,7 @@ class MiniappMajorView(viewsets.ViewSet):
     def get_evaluation_methods_by_academic_major(self, request, pk):
         try:
             logging.getLogger().info("MiniappMajorView.get_evaluation_methods_by_academic_major pk=%s", pk)
-            methods = EvaluationMethod.objects.filter(majors__id=pk)
+            methods = EvaluationMethod.objects.filter(majors__id=pk, deleted_at=None)
             data = EvaluationMethodSerializer(methods, many=True).data
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
@@ -55,7 +55,7 @@ class MiniappMajorView(viewsets.ViewSet):
         try:
             try:
                 logging.getLogger().info("MiniappMajorView.get_college_exam_groups_by_academic_major pk=%s", pk)
-                groups = Major.objects.get(id=pk).college_exam_groups.all()
+                groups = Major.objects.get(id=pk).college_exam_groups.filter(deleted_at=None)
                 data = CollegeExamGroupSerializer(groups, many=True).data
                 return RestResponse(data=data, status=status.HTTP_200_OK).response
             except Major.DoesNotExist:

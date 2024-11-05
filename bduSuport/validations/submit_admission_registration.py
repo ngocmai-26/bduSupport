@@ -13,7 +13,7 @@ class SubmitAdmissionRegistration(serializers.Serializer):
     major = serializers.PrimaryKeyRelatedField(queryset=Major.objects.filter(deleted_at=None))
     college_exam_group = serializers.PrimaryKeyRelatedField(queryset=CollegeExamGroup.objects.filter(deleted_at=None), allow_null=True)
     student = StudentSerializer()
-    subject_scores = SubjectScoreSerializer(many=True, allow_empty=False, allow_null=True, exclude=["admission_registration"])
+    subject_scores = SubjectScoreSerializer(many=True, allow_empty=True, exclude=["admission_registration"])
     competency_assessment_exam_score = CompetencyAssessmentExamScoreSerializer(allow_null=True, exclude=["admission_registration"])
     files = serializers.ListField(
         child=serializers.URLField(),
@@ -56,7 +56,7 @@ class SubmitAdmissionRegistration(serializers.Serializer):
     def __validate_5_semesters_of_high_school(self, attrs):
         scores = attrs["subject_scores"]
 
-        if scores is None:
+        if len(scores) == 0:
             raise serializers.ValidationError("score_is_null")
         
         college_exam_group = attrs["college_exam_group"]
@@ -109,7 +109,7 @@ class SubmitAdmissionRegistration(serializers.Serializer):
     def __validate_grade_12(self, attrs):
         scores = attrs["subject_scores"]
 
-        if scores is None:
+        if len(scores) == 0:
             raise serializers.ValidationError("score_is_null")
         
         college_exam_group = attrs["college_exam_group"]
@@ -152,7 +152,7 @@ class SubmitAdmissionRegistration(serializers.Serializer):
     def __validate_grades_10_11_12(self, attrs):
         scores = attrs["subject_scores"]
 
-        if scores is None:
+        if len(scores) == 0:
             raise serializers.ValidationError("score_is_null")
         
         college_exam_group = attrs["college_exam_group"]
@@ -195,7 +195,7 @@ class SubmitAdmissionRegistration(serializers.Serializer):
     def __validate_high_school_graduation_exam(self, attrs):
         scores = attrs["subject_scores"]
 
-        if scores is None:
+        if len(scores) == 0:
             raise serializers.ValidationError("score_is_null")
         
         college_exam_group = attrs["college_exam_group"]

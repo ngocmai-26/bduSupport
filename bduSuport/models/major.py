@@ -9,7 +9,6 @@ from bduSuport.models.training_location import TrainingLocation
 class Major(models.Model):
     class Meta:
         db_table = "major"
-        unique_together = ["code", "year"]
     
     id = models.AutoField(primary_key=True)
     code = models.CharField(max_length=10, db_index=True)

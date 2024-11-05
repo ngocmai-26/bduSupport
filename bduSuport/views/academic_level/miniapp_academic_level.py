@@ -25,7 +25,7 @@ class MiniappAcademicLevelView(viewsets.ViewSet):
             if not validate.is_valid():
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
 
-            query = Q(academic_level__id=pk)
+            query = Q(academic_level__id=pk, deleted_at=None)
             location = validate.validated_data.get("training_location", None)
 
             if location is not None:
