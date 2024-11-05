@@ -7,4 +7,4 @@ class MiniAppUser(models.Model):
     id = models.AutoField(primary_key=True)
     mini_app_user_id = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
-    avatar_url = models.URLField()
+    avatar_url = models.CharField(max_length=255)

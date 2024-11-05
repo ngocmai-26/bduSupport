@@ -45,8 +45,8 @@ class MiniAppAuth(viewsets.ViewSet):
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi khi chúng tôi cố gắng kiểm tra tài khoản của bạn!").response
             
             user_id = resp_data["id"]
-            user_name = resp_data["name"]
-            user_avatar_url = resp_data["picture"]["data"]["url"]
+            user_name = resp_data.get("name", "")
+            user_avatar_url = resp_data.get("picture", {}).get("data", {}).get("url", "")
 
             if not self.__create_mini_app_user(user_id, user_name, user_avatar_url):
                 return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
