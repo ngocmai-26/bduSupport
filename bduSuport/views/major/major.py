@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -79,6 +80,35 @@ class MajorView(viewsets.ViewSet):
                     _data = validate.validated_data
                     college_exam_groups = _data.pop("college_exam_groups", None)
                     evaluation_methods = _data.pop("evaluation_methods", None)
+                    code = _data.get("code", None)
+                    year = _data.get("year", None)
+                    academic_level = _data.get("academic_level", None)
+                    training_location = _data.get("training_location", None)
+
+                    unique_query = Q(deleted_at=None) & ~Q(id=pk)
+
+                    if code is not None:
+                        unique_query = unique_query & Q(code=code)
+                    else:
+                        unique_query = unique_query & Q(code=major.code)
+
+                    if year is not None:
+                        unique_query = unique_query & Q(year=year)
+                    else:
+                        unique_query = unique_query & Q(year=major.year)
+
+                    if academic_level is not None:
+                        unique_query = unique_query & Q(academic_level=academic_level)
+                    else:
+                        unique_query = unique_query & Q(academic_level=major.academic_level)
+
+                    if training_location is not None:
+                        unique_query = unique_query & Q(training_location=training_location)
+                    else:
+                        unique_query = unique_query & Q(training_location=major.training_location)
+
+                    if Major.objects.filter(unique_query).exists():
+                        return RestResponse(message="Thông tin ngành hợp không hợp lệ!", status=status.HTTP_400_BAD_REQUEST).response
 
                     for k, v in _data.items():
                         setattr(major, k, v)
