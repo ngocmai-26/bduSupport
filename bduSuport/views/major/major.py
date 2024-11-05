@@ -75,10 +75,10 @@ class MajorView(viewsets.ViewSet):
             
             with transaction.atomic():
                 try:
-                    major = Major.objects.get(code=pk, deleted_at=None)
+                    major = Major.objects.get(id=pk, deleted_at=None)
                     _data = validate.validated_data
                     college_exam_groups = _data.pop("college_exam_groups", None)
-                    evaluation_methods = _data.pop("evaluation_methods")
+                    evaluation_methods = _data.pop("evaluation_methods", None)
 
                     for k, v in _data.items():
                         setattr(major, k, v)

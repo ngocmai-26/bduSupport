@@ -12,7 +12,7 @@ class CreateMajorValidator(serializers.Serializer):
         validators = [
             UniqueTogetherValidator(
                 queryset=Major.objects.filter(deleted_at=None),
-                fields=['code', 'year', 'training_location']
+                fields=['code', 'year', 'training_location', 'academic_level']
             )
         ]
 
