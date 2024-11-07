@@ -27,7 +27,7 @@ class AdminAccountView(viewsets.ViewSet):
             email = validated_data["email"]
             otp = validated_data["otp"]
             
-            if self.otp_service.verify_otp("verify_account", email, otp):
+            if not self.otp_service.verify_otp("verify_account", email, otp):
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="OTP không chính xác hoặc đã hết hạn!").response
 
             try:
