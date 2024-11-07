@@ -24,7 +24,7 @@ class CreateMajorValidator(serializers.Serializer):
         many=True,
         allow_empty=True,
     )
-    description = serializers.CharField()
+    description = serializers.CharField(allow_blank=True)
     year = serializers.IntegerField(min_value=0)
     benchmark_30 = serializers.FloatField(min_value=0.00, max_value=30.00)
     benchmark_school_record = serializers.FloatField(min_value=0.00, max_value=30.00)

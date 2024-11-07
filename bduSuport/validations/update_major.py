@@ -16,7 +16,7 @@ class UpdateMajorValidator(serializers.Serializer):
         many=True,
         allow_empty=True
     )
-    description = serializers.CharField(required=False)
+    description = serializers.CharField(required=False, allow_blank=True)
     year = serializers.IntegerField(required=False, min_value=0)
     benchmark_30 = serializers.FloatField(required=False, min_value=0.00, max_value=30.00)
     benchmark_school_record = serializers.FloatField(required=False, min_value=0.00, max_value=30.00)
@@ -30,7 +30,7 @@ class UpdateMajorValidator(serializers.Serializer):
         allow_empty=True
     )
     training_location = serializers.PrimaryKeyRelatedField(required=False, queryset=TrainingLocation.objects.filter(deleted_at=None))
-    number_of_credits = serializers.IntegerField(min_value=0)
+    number_of_credits = serializers.IntegerField(required=False, min_value=0)
 
     def validate_benchmark_30(self, value: float):
         s = str(value)
