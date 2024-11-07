@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
 from bduSuport.models.major import Major
 from bduSuport.models.academic_level import AcademicLevel
@@ -31,6 +30,7 @@ class UpdateMajorValidator(serializers.Serializer):
         allow_empty=True
     )
     training_location = serializers.PrimaryKeyRelatedField(required=False, queryset=TrainingLocation.objects.filter(deleted_at=None))
+    number_of_credits = serializers.IntegerField(min_value=0)
 
     def validate_benchmark_30(self, value: float):
         s = str(value)
