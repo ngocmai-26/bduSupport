@@ -31,7 +31,7 @@ class CollegeExamGroupView(viewsets.ViewSet):
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
-            logging.getLogger().exception("SubjectView.create exc=%s, req=%s", e, request.data)
+            logging.getLogger().exception("CollegeExamGroupView.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def list(self, request):
@@ -40,12 +40,12 @@ class CollegeExamGroupView(viewsets.ViewSet):
             data = CollegeExamGroupSerializer(subjects, many=True).data
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            logging.getLogger().exception("SubjectView.list exc=%s", e)
+            logging.getLogger().exception("CollegeExamGroupView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def destroy(self, request, pk):
         try:
-            logging.getLoggerinfo("SubjectView.destroy pk=%s", pk)
+            logging.getLogger().info("CollegeExamGroupView.destroy pk=%s", pk)
             try:
                 group = CollegeExamGroup.objects.get(id=pk, deleted_at=None)
                 majors = group.majors.filter(deleted_at=None)
@@ -62,5 +62,5 @@ class CollegeExamGroupView(viewsets.ViewSet):
             except CollegeExamGroup.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
         except Exception as e:
-            logging.getLogger().exception("SubjectView.destroy exc=%s, pk=%s", e, pk)
+            logging.getLogger().exception("CollegeExamGroupView.destroy exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

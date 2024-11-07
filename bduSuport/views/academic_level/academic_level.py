@@ -45,6 +45,13 @@ class AcademicLevelView(viewsets.ViewSet):
             logging.getLogger().info("AcademicLevelView.destroy pk=%s", pk)
             try:
                 level = AcademicLevel.objects.get(id=pk)
+                majors = level.majors.filter(deleted_at=None)
+
+                if majors.exists():
+                    codes = ", ".join([f"'{major.code}'" for major in majors])
+                    message = f"Không thể xóa trình độ đào tạo vì các ngành {codes} đang tham chiếu đến trình độ đào tạo này."
+                    return RestResponse(status=status.HTTP_400_BAD_REQUEST, message=message).response
+                
                 level.deleted_at = datetime.datetime.now().date()
                 level.save(update_fields=["deleted_at"])
             except AcademicLevel.DoesNotExist:

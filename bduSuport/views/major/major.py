@@ -54,7 +54,7 @@ class MajorView(viewsets.ViewSet):
         try:
             logging.getLogger().info("MajorView.destroy pk=%s", pk)
             try:
-                major = Major.objects.get(code=pk)
+                major = Major.objects.get(id=pk)
                 major.deleted_at = datetime.now().date()
                 major.save(update_fields=["deleted_at"])
             except Major.DoesNotExist:

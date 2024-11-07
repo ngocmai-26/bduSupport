@@ -43,9 +43,16 @@ class TrainingLocationView(viewsets.ViewSet):
         try:
             logging.getLogger().info("TrainingLocationView.destroy pk=%s", pk)
             try:
-                level = TrainingLocation.objects.get(id=pk)
-                level.deleted_at = datetime.datetime.now().date()
-                level.save(update_fields=["deleted_at"])
+                location = TrainingLocation.objects.get(id=pk)
+                majors = location.majors.filter(deleted_at=None)
+
+                if majors.exists():
+                    majors_name = ", ".join([f"'{major.name} ({major.code})'" for major in majors])
+                    message = f"Không thể xóa nơi đào tạo vì các ngành {majors_name} đang tham chiếu đến nơi đào tạo này."
+                    return RestResponse(status=status.HTTP_400_BAD_REQUEST, message=message).response
+                
+                location.deleted_at = datetime.datetime.now().date()
+                location.save(update_fields=["deleted_at"])
             except TrainingLocation.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response
             
