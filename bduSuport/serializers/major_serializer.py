@@ -22,8 +22,14 @@ class MajorSerializer(serializers.ModelSerializer):
     college_exam_groups = CollegeExamGroupSerializer(many=True)
     evaluation_methods = EvaluationMethodSerializer(many=True)
     academic_level_name = serializers.SerializerMethodField()
+    training_location_name = serializers.SerializerMethodField()
 
     def get_academic_level_name(self, obj: Major):
-        return obj.academic_level.name
+        if obj.academic_level:
+            return obj.academic_level.name
+    
+    def get_training_location_name(self, obj: Major):
+        if obj.training_location:
+            return obj.training_location.name
        
     
