@@ -19,7 +19,6 @@ class HealthView(ViewSet):
             "cache_database": self.__get_redis_connection_info(),
             "betterstack_log_token": config("BETTERSTACK_LOG_TOKEN", "")
         }
-        logging.getLogger(__name__).info("HealthView.health data=%s", data)
         return Response(data=data, status=HTTP_200_OK)
     
     def __get_redis_connection_info(self):

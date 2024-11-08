@@ -13,6 +13,7 @@ from bduSuport.views.account_management import AccountManagementView
 from bduSuport.views.admin_account import AdminAccountView
 from bduSuport.views.admission_registration.admission_registration import AdmissionRegistrationView
 from bduSuport.views.admission_registration.admission_registration_management import AdmissionRegistrationManagementView
+from bduSuport.views.anonymous.backoffice import BackofficeAnonymousUserView
 from bduSuport.views.business_recruiment.business_recruiment import BusinessRecruimentView
 from bduSuport.views.business_recruiment.business_recruiment_management import BusinessRecruimentManagementView
 from bduSuport.views.college_exam_group.college_exam_group_management import CollegeExamGroupView
@@ -56,23 +57,26 @@ schema_view = get_schema_view(
    authentication_classes=()
 )
 
+backoffice_anonymous_router = SimpleRouter(trailing_slash=False)
 health_router = SimpleRouter(trailing_slash=False)
-miniap_router = SimpleRouter(trailing_slash=False)
+miniapp_router = SimpleRouter(trailing_slash=False)
 backoffice_router = SimpleRouter(trailing_slash=False)
 
 health_router.register('health', HealthView, basename='health')
 health_router.register('media', MediaView, basename='media')
 
-miniap_router.register('init', ConstructorView, basename='constructor')
-miniap_router.register('news', MiniappNewsView, basename='miniapp_news')
-miniap_router.register('auth', MiniAppAuth, basename='account_miniapp_auth')
-miniap_router.register('majors', MiniappMajorView, basename='miniapp_majors')
-miniap_router.register('feedbacks', FeedbackView, basename='miniapp_feedback')
-miniap_router.register('business-recruiments', BusinessRecruimentView, basename='business_recruiments')
-miniap_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
-miniap_router.register('miniapp-notification', MiniappNotificationView, basename='miniapp_notification')
-miniap_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
-miniap_router.register('training-location', MiniappTrainingLocationView, basename='miniapp_training_location')
+backoffice_anonymous_router.register('account', BackofficeAnonymousUserView, basename="bf_anonymous_account")
+
+miniapp_router.register('init', ConstructorView, basename='constructor')
+miniapp_router.register('news', MiniappNewsView, basename='miniapp_news')
+miniapp_router.register('auth', MiniAppAuth, basename='account_miniapp_auth')
+miniapp_router.register('majors', MiniappMajorView, basename='miniapp_majors')
+miniapp_router.register('feedbacks', FeedbackView, basename='miniapp_feedback')
+miniapp_router.register('business-recruiments', BusinessRecruimentView, basename='business_recruiments')
+miniapp_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
+miniapp_router.register('miniapp-notification', MiniappNotificationView, basename='miniapp_notification')
+miniapp_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
+miniapp_router.register('training-location', MiniappTrainingLocationView, basename='miniapp_training_location')
 
 backoffice_router.register('super-admin', RootView, basename='super_admin')
 backoffice_router.register('majors', MajorView, basename='major_management')
@@ -98,6 +102,7 @@ backoffice_urls = backoffice_router.urls + [
 urlpatterns = [
    path('apis/', include(health_router.urls)),
    path('apis/backoffice/', include(backoffice_urls)),
-   path('apis/miniapp/', include(miniap_router.urls)),
+   path('apis/backoffice/anonymous/', include(backoffice_anonymous_router.urls)),
+   path('apis/miniapp/', include(miniapp_router.urls)),
    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

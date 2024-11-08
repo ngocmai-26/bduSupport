@@ -7,6 +7,7 @@ from bduSuport.helpers.response import RestResponse
 from bduSuport.models.academic_level import AcademicLevel
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
 from bduSuport.serializers.academic_level import AcademicLevelSerializer
+from bduSuport.validations.update_academic_level import UpdateAcademicLevelValidator
 
 class AcademicLevelView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
@@ -38,6 +39,27 @@ class AcademicLevelView(viewsets.ViewSet):
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("AcademicLevelView.list exc=%s", e)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    @swagger_auto_schema(request_body=UpdateAcademicLevelValidator)
+    def update(self, request, pk):
+        try:
+            validate = UpdateAcademicLevelValidator(data=request.data)
+
+            if not validate.is_valid():
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
+            
+            level = AcademicLevel.objects.get(id=pk)
+
+            for k, v in validate.validated_data.items():
+                setattr(level, k, v)
+
+            level.save()
+            return RestResponse(status=status.HTTP_200_OK).response
+        except AcademicLevel.DoesNotExist as e:
+            return RestResponse(status=status.HTTP_404_NOT_FOUND).response
+        except Exception as e:
+            logging.getLogger().exception("AcademicLevelView.update exc=%s, pk=%s, req=%s", e, pk, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     def destroy(self, request, pk):

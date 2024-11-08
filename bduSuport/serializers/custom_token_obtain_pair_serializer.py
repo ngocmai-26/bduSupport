@@ -26,7 +26,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 raise e
             
             if self.user.status == AccountStatus.BLOCKED:
-                raise PermissionDenied("non activated account!")
+                raise PermissionDenied("Non activated account!")
             elif self.user.status == AccountStatus.UNVERIFIED:
                 raise UnVerifiedException("Unverified account!")
             
