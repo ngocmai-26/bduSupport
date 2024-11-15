@@ -135,5 +135,8 @@ class AdmissionRegistrationView(viewsets.ViewSet):
             logging.getLogger().exception("AdmissionRegistration.__create_submit_registration_noti_in_miniapp exc=%s, user=%s", e, user)
 
     def __create_files(self, data, registration) -> bool:
+        if len(data) == 0:
+            return True
+        
         scores = AdmissionRegistrationFile.objects.bulk_create([AdmissionRegistrationFile(url=item, admission_registration=registration) for item in data])
         return True

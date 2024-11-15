@@ -18,7 +18,7 @@ class SubmitAdmissionRegistration(serializers.Serializer):
     files = serializers.ListField(
         child=serializers.URLField(),
         max_length=5,
-        allow_empty=False
+        allow_empty=True
     )
 
     def validate(self, attrs):
