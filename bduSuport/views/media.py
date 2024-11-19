@@ -5,6 +5,7 @@ from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from bduSuport.helpers.firebase_storage_provider import FirebaseStorageProvider
 from bduSuport.helpers.response import RestResponse
@@ -13,7 +14,7 @@ from bduSuport.validations.create_media import CreateMediaValidator
 from bduSuport.validations.delete_media import DeleteMediaValidator
 
 class MediaView(viewsets.ViewSet):
-    authentication_classes = (MiniAppAuthentication, )
+    # authentication_classes = (MiniAppAuthentication, )
     parser_classes = (MultiPartParser,)
     file_storage_provider = FirebaseStorageProvider()
 
@@ -29,10 +30,30 @@ class MediaView(viewsets.ViewSet):
             
             file_url = self.file_storage_provider.upload_file(request.data["file"])
             
-            return RestResponse(data=file_url, status=status.HTTP_200_OK).response
+            # return RestResponse(data=file_url, status=status.HTTP_200_OK).response
+            return Response(
+                data={
+                    "error": 0,
+                    "code": status.HTTP_200_OK,
+                    "message": "Thành công!",
+                    "data": file_url
+                },
+                status=status.HTTP_200_OK,
+                content_type = "application/json"
+            )
         except Exception as e:
             logging.getLogger().exception("MediaView.create exc=%s", e)
-            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+            # return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+            return Response(
+                data={
+                    "error": 1,
+                    "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    "message": "Thành công!",
+                    "data": None
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                content_type = "application/json"
+            )
         
     @action(methods=["DELETE"], detail=False, url_path="remove")
     @swagger_auto_schema(request_body=DeleteMediaValidator)
