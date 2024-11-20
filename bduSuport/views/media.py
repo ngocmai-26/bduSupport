@@ -34,9 +34,10 @@ class MediaView(viewsets.ViewSet):
             return Response(
                 data={
                     "error": 0,
-                    "code": status.HTTP_200_OK,
                     "message": "Thành công!",
-                    "data": file_url
+                    "data": {
+                        "urls": [file_url]
+                    }
                 },
                 status=status.HTTP_200_OK,
                 content_type = "application/json"
@@ -47,9 +48,10 @@ class MediaView(viewsets.ViewSet):
             return Response(
                 data={
                     "error": 1,
-                    "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "message": "Thành công!",
-                    "data": None
+                    "message": "Thất bại!",
+                    "data": {
+                        "urls": []
+                    }
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content_type = "application/json"
