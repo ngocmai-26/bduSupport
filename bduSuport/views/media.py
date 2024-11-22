@@ -14,7 +14,7 @@ from bduSuport.validations.create_media import CreateMediaValidator
 from bduSuport.validations.delete_media import DeleteMediaValidator
 
 class MediaView(viewsets.ViewSet):
-    authentication_classes = (MiniAppAuthentication, )
+    # authentication_classes = (MiniAppAuthentication, )
     parser_classes = (MultiPartParser,)
     file_storage_provider = FirebaseStorageProvider()
 
