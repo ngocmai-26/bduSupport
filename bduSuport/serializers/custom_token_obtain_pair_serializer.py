@@ -20,7 +20,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             _session_data = AccountSerializer(self.user, many=False, exclude=["password"]).data
             self.__save_session(self.user.id, _session_data, access_jti, refresh_jti)
 
-            return validated_data
+            return {**validated_data, "user_info": _session_data}
         except AuthenticationFailed as e:
             if self.user is None:
                 raise e

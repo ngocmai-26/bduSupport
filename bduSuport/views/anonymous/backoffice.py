@@ -16,8 +16,6 @@ class BackofficeAnonymousUserView(ViewSet):
     otp_service = OtpService()
     email_service = EmailService()
 
-    otp_service = OtpService()
-
     @action(methods=["POST"], detail=False, url_path="verify")
     @swagger_auto_schema(request_body=BackofficeVerifyAccountValidator)
     def verify_account(self, request):
