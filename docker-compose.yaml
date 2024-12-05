@@ -15,7 +15,7 @@ services:
       - DATABASE_HOST=bdusupport_mysql
       - DATABASE_PORT=3306
       - REDIS_HOST=bdusupport_redis
-      - REDIS_PORT=6380
+      - REDIS_PORT=6379
       - REDIS_USERNAME=""
       - REDIS_PASSWORD=""
       - EMAIL_HOST=smtp.gmail.com
