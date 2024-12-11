@@ -14,8 +14,8 @@ from bduSuport.validations.create_app_function import CreateAppFunctionSerialize
 from bduSuport.validations.update_app_function import UpdateAppFunctionSerializer
 
 class AppFunctionManagementView(viewsets.ViewSet):
-    # authentication_classes = (BackofficeAuthentication, )
-    # permission_classes = (IsRoot,)
+    authentication_classes = (BackofficeAuthentication, )
+    permission_classes = (IsRoot,)
     parser_classes = (MultiPartParser,)
     image_storage_provider = FirebaseStorageProvider()
 
@@ -84,7 +84,7 @@ class AppFunctionManagementView(viewsets.ViewSet):
                 setattr(func, k, v)
 
             if icon:
-                icon_url = self.image_storage_provider.upload_file(_data.pop("icon"))
+                icon_url = self.image_storage_provider.upload_file(icon)
                 func.icon_url = icon_url
             
             func.save()
