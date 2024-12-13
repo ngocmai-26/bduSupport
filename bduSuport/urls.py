@@ -39,6 +39,7 @@ from bduSuport.views.constructor import ConstructorView
 from bduSuport.views.root.root import RootView
 from bduSuport.views.training_location.miniapp_training_location import MiniappTrainingLocationView
 from bduSuport.views.training_location.training_location_management import TrainingLocationView
+from bduSuport.views.app_function.miniapp import MiniappAppFunctionView
 
 class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
     def get_schema(self, request=None, public=False):
@@ -75,6 +76,7 @@ miniapp_router.register('auth', MiniAppAuth, basename='account_miniapp_auth')
 miniapp_router.register('majors', MiniappMajorView, basename='miniapp_majors')
 miniapp_router.register('feedbacks', FeedbackView, basename='miniapp_feedback')
 miniapp_router.register('config', MiniAppConfigView, basename='miniapp_config')
+miniapp_router.register('personal-app-func', MiniappAppFunctionView, basename='miniapp_personal_app_func')
 miniapp_router.register('business-recruiments', BusinessRecruimentView, basename='business_recruiments')
 miniapp_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
 miniapp_router.register('miniapp-notification', MiniappNotificationView, basename='miniapp_notification')

@@ -1,9 +1,10 @@
 import logging
-from rest_framework.decorators import action
+from django.db.models import Q
 from rest_framework import viewsets, status
 
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.app_function import AppFunction
+from bduSuport.models.personal_app_function import PersonalAppFunction
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
 from bduSuport.serializers.app_function import AppFunctionSerializer
 
@@ -23,8 +24,17 @@ class MiniAppConfigView(viewsets.ViewSet):
         
     def __get_app_functions(self):
         try:
-            funcs = AppFunction.objects.filter(deleted_at=None, is_show=True).order_by("-order")
+            funcs = AppFunction.objects.filter(
+                Q(deleted_at=None) &
+                Q(is_show=True) &
+                (
+                    ~Q(personal_app_functions__isnull=False) |
+                    Q(personal_app_functions__is_show_in_home=True)
+                )
+            ).distinct().order_by("-order")
+
             data = AppFunctionSerializer(funcs, many=True).data
+
             return data
         except Exception as e:
             logging.getLogger().exception("MiniAppConfigView.__get_app_functions exc=%s", e)
