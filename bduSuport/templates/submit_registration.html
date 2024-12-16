@@ -10,23 +10,23 @@
     
     <div style="border: 1px solid #ccc; padding: 20px; margin-bottom: 20px;">
         <h2 style="color: #4682B4;">Thông Tin Sinh Viên</h2>
-        <p><strong>Họ và tên:</strong> {{ student.fullname }}</p>
-        <p><strong>Giới tính:</strong> {{ student.gender|yesno:"Nam,Nữ" }}</p>
+        <p><strong>Họ và tên:</strong> {{ student__fullname }}</p>
+        <p><strong>Giới tính:</strong> {{ student__gender|yesno:"Nam,Nữ" }}</p>
         <p><strong>Ngày sinh:</strong> {{ date_of_birth }}</p>
-        <p><strong>Số CMND:</strong> {{ student.citizen_id }}</p>
-        <p><strong>Email:</strong> {{ student.email }}</p>
-        <p><strong>Số điện thoại:</strong> {{ student.phone }}</p>
-        <p><strong>Địa chỉ:</strong> {{ student.address }}</p>
-        <p><strong>Thành phố:</strong> {{ student.city }}</p>
-        <p><strong>Trường THPT:</strong> {{ student.high_school }}</p>
+        <p><strong>Số CMND:</strong> {{ student__citizen_id }}</p>
+        <p><strong>Email:</strong> {{ student__email }}</p>
+        <p><strong>Số điện thoại:</strong> {{ student__phone }}</p>
+        <p><strong>Địa chỉ:</strong> {{ student__address }}</p>
+        <p><strong>Thành phố:</strong> {{ student__city }}</p>
+        <p><strong>Trường THPT:</strong> {{ student__high_school }}</p>
     </div>
 
     <div style="border: 1px solid #ccc; padding: 20px; margin-bottom: 20px;">
         <h2 style="color: #4682B4;">Thông Tin Đơn Đăng Ký</h2>
-        <p><strong>Ngành đăng ký:</strong> {{ admission_registration.major.name }}</p>
-        <p><strong>Phương thức xét tuyển:</strong> {{ admission_registration.evaluation_method.name }}</p>
-        <p><strong>Khối ngành xét tuyển:</strong> {{ admission_registration.college_exam_group.name }}</p>
-        <p><strong>Bậc học:</strong> {{ admission_registration.major.academic_level.name }}</p>
+        <p><strong>Ngành đăng ký:</strong> {{ major_name }}</p>
+        <p><strong>Phương thức xét tuyển:</strong> {{ evaluation_method_name }}</p>
+        <p><strong>Khối ngành xét tuyển:</strong> {{ college_exam_group_name }}</p>
+        <p><strong>Bậc học:</strong> {{ academic_level_name }}</p>
         <p><strong>Ngày tạo đơn:</strong> {{ created_at }}</p>
         <p><strong>Tình trạng xét duyệt:</strong> Chờ duyệt </p>
     </div>

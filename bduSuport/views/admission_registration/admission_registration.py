@@ -3,7 +3,7 @@ from django.db import transaction, IntegrityError
 from drf_yasg.utils import swagger_auto_schema
 import logging
 
-from bduSuport.helpers.email import EmailProvider
+from bduSuport.helpers.email import send_html_template_email
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
 from bduSuport.models.admission_registration_file import AdmissionRegistrationFile
@@ -19,7 +19,6 @@ from bduSuport.models.competency_assessment_exam_score import CompetencyAssessme
 
 class AdmissionRegistrationView(viewsets.ViewSet):
     authentication_classes = (MiniAppAuthentication, )
-    email_provider = EmailProvider()
     
     @swagger_auto_schema(request_body=SubmitAdmissionRegistration)
     def create(self, request):
@@ -79,18 +78,29 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                 registration.user
             )
                 
-            self.email_provider.send_html_template_email(
-                    [registration.student.email],
-                    [],
-                    "[Trường Đại học Bình Dương] Ghi Nhận Đơn Xét Tuyển Đại Học 2024",
-                    "submit_registration.html",
-                    {
-                        "student": registration.student,
-                        "admission_registration": registration,
+            send_html_template_email.apply_async(
+                kwargs={
+                    "to": [registration.student.email],
+                    "subject": "[Trường Đại học Bình Dương] Ghi Nhận Đơn Xét Tuyển Đại Học 2024",
+                    "template_name": "submit_registration.html",
+                    "context": {
+                        "student__fullname": registration.student.fullname,
+                        "student__gender": registration.student.gender,
+                        "student__citizen_id": registration.student.citizen_id,
+                        "student__email": registration.student.email,
+                        "student__phone": registration.student.phone,
+                        "student__address": registration.student.address,
+                        "student__city": registration.student.city,
+                        "student__high_school": registration.student.high_school,
+                        "major_name": registration.major.name,
+                        "evaluation_method_name": registration.evaluation_method.name,
+                        "college_exam_group_name": getattr(registration.college_exam_group, "name", "N\A"),
+                        "academic_level_name": registration.major.academic_level.name,
                         "created_at": registration.created_at.strftime("%d/%m/%Y %H:%M:%S"),
                         "date_of_birth": registration.student.date_of_birth.strftime("%d/%m/%Y"),
                     }
-                )
+                }
+            )
                 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:

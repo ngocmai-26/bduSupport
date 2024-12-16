@@ -8,7 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
-from bduSuport.helpers.email import EmailProvider
+from bduSuport.helpers.email import send_html_template_email
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
 from bduSuport.models.admission_registration import AdmissionRegistration, ReviewStatusChoices
@@ -20,7 +20,6 @@ from bduSuport.middlewares.permissions.is_root import IsRoot
 
 class AdmissionRegistrationManagementView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
-    email_provider = EmailProvider()
 
     @action(methods=["DELETE"], detail=True, url_path="root", permission_classes=[IsRoot])
     def delete_registration(self, request, pk):
@@ -111,17 +110,29 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
                     registration.user
                 )
 
-                self.email_provider.send_html_template_email(
-                    [registration.student.email],
-                    [],
-                    "[Trường Đại học Bình Dương] Thông Báo Kết Quả Xét Duyệt Đơn Xét Tuyển Đại Học 2024",
-                    "approve_registration.html",
-                    {
-                        "student": registration.student,
-                        "admission_registration": registration,
-                        "created_at": registration.created_at.strftime("%d/%m/%Y %H:%M:%S"),
-                        "date_of_birth": registration.student.date_of_birth.strftime("%d/%m/%Y"),
-                        "is_approved": registration.review_status == ReviewStatusChoices.APPROVED
+                send_html_template_email.apply_async(
+                    kwargs={
+                        "to": [registration.student.email],
+                        "subject": "[Trường Đại học Bình Dương] Thông Báo Kết Quả Xét Duyệt Đơn Xét Tuyển Đại Học 2024",
+                        "template_name": "approve_registration.html",
+                        "context": {
+                            "student__fullname": registration.student.fullname,
+                            "student__gender": registration.student.gender,
+                            "student__citizen_id": registration.student.citizen_id,
+                            "student__email": registration.student.email,
+                            "student__phone": registration.student.phone,
+                            "student__address": registration.student.address,
+                            "student__city": registration.student.city,
+                            "student__high_school": registration.student.high_school,
+                            "major_name": registration.major.name,
+                            "evaluation_method_name": registration.evaluation_method.name,
+                            "college_exam_group_name": getattr(registration.college_exam_group, "name", "N\A"),
+                            "academic_level_name": registration.major.academic_level.name,
+                            "final_score": registration.final_score,
+                            "created_at": registration.created_at.strftime("%d/%m/%Y %H:%M:%S"),
+                            "date_of_birth": registration.student.date_of_birth.strftime("%d/%m/%Y"),
+                            "is_approved": registration.review_status == ReviewStatusChoices.APPROVED
+                        }
                     }
                 )
 

@@ -115,13 +115,14 @@ DATABASES = {
 
 REDIS_HOST = config("REDIS_HOST", "")
 REDIS_PORT = config("REDIS_PORT", "")
-REDIS_USERNAME = config("REDIS_USERNAME", "")
+REDIS_USERNAME = config("REDIS_USERNAME", "default")
 REDIS_PASSWORD = config("REDIS_PASSWORD", "")
+REDIS_CONN_STR = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}',
+        'LOCATION': REDIS_CONN_STR,
     }
 }
 
@@ -245,3 +246,15 @@ LOGGING = {
         },
     },
 }
+
+CELERY_BROKER_URL = REDIS_CONN_STR
+CELERY_RESULT_BACKEND = REDIS_CONN_STR
+CELERY_CACHE_BACKEND = "default"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_RESULT_EXPIRES = 600
+CELERY_TIMEZONE = "Asia/Ho_Chi_Minh"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_IMPORTS = ["bduSuport.tasks.bg_tasks", "bduSuport.tasks.cron_tasks"]

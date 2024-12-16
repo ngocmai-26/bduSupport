@@ -16,3 +16,5 @@ django-cors-headers
 requests
 firebase_admin
 logtail-python
+celery
+django_celery_beat
