@@ -59,7 +59,7 @@ services:
       # MYSQL_PASSWORD: "bdusupport"
       MYSQL_ROOT_PASSWORD: "bdusupport"
     ports:
-      - 3307:3306
+      - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -67,7 +67,7 @@ services:
     image: redis:6.0
     restart: always
     ports:
-      - 6380:6380
+      - 6379:6379
     volumes:
       - redis_data:/data
 
