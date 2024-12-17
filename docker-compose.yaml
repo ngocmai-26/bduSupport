@@ -30,8 +30,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.worker
-    ports:
-      - 8000:8000
     restart: always
     environment:
       - DATABASE_ENGINE=mysql
