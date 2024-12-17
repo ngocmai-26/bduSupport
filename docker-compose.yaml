@@ -16,15 +16,43 @@ services:
       - DATABASE_PORT=3306
       - REDIS_HOST=bdusupport_redis
       - REDIS_PORT=6379
-      - REDIS_USERNAME=""
+      - REDIS_USERNAME=default
       - REDIS_PASSWORD=""
       - EMAIL_HOST=smtp.gmail.com
       - EMAIL_PORT=587
-      - EMAIL_HOST_USER=""
-      - EMAIL_HOST_PASSWORD=""
+      - EMAIL_HOST_USER="ntt06012k2@gmail.com"
+      - EMAIL_HOST_PASSWORD="ntav gnas vdmt rkpk"
       - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.json
       - FIREBASE_STORAGE_BUCKET_URL=bdusupport.appspot.com
-      - BETTERSTACK_LOG_TOKEN=YDqiL7DsQiCgTsvuF9hFM7MN
+      - BETTERSTACK_LOG_TOKEN=RBoHWYbFThGsSkXKkZwc9hKP
+    volumes:
+      - ./:/usr/src/app
+
+  bdusupport_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    ports:
+      - 8000:8000
+    restart: always
+    environment:
+      - DATABASE_ENGINE=mysql
+      - DATABASE_NAME=bdusupport
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=bdusupport
+      - DATABASE_HOST=bdusupport_mysql
+      - DATABASE_PORT=3306
+      - REDIS_HOST=bdusupport_redis
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=""
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_HOST_USER="ntt06012k2@gmail.com"
+      - EMAIL_HOST_PASSWORD="ntav gnas vdmt rkpk"
+      - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.json
+      - FIREBASE_STORAGE_BUCKET_URL=bdusupport.appspot.com
+      - BETTERSTACK_LOG_TOKEN=RBoHWYbFThGsSkXKkZwc9hKP
     volumes:
       - ./:/usr/src/app
   
