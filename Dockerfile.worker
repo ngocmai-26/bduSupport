@@ -34,9 +34,6 @@ RUN pip install -r requirements.txt
 # Copy toàn bộ mã nguồn dự án vào thư mục làm việc
 COPY . /usr/src/app
 
-# Mở cổng 8000 để chạy ứng dụng
-EXPOSE 8000
-
 # Command để chạy server Django
 # celery -A BDUSuportBE worker -l info --autoscale 3,10
 CMD ["celery", "-A", "BDUSuportBE", "worker", "-l", "info", "--autoscale", "3,10"]
