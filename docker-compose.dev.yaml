@@ -61,8 +61,6 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: "bdusupport"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "bdusupport"
       MYSQL_ROOT_PASSWORD: "bdusupport"
     ports:
       - 3307:3306
