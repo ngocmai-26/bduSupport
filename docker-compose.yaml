@@ -25,6 +25,9 @@ services:
       - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.json
       - FIREBASE_STORAGE_BUCKET_URL=bdusupport.appspot.com
       - BETTERSTACK_LOG_TOKEN=RBoHWYbFThGsSkXKkZwc9hKP
+    depends_on:
+      - bdusupport_mysql
+      - bdusupport_redis
 
   bdusupport_worker:
     build:
@@ -49,17 +52,20 @@ services:
       - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.json
       - FIREBASE_STORAGE_BUCKET_URL=bdusupport.appspot.com
       - BETTERSTACK_LOG_TOKEN=RBoHWYbFThGsSkXKkZwc9hKP
+    depends_on:
+      - bdusupport_mysql
+      - bdusupport_redis
   
   bdusupport_mysql:
     image: mysql:8.0
     restart: always
     environment:
       MYSQL_DATABASE: "bdusupport"
-      # MYSQL_USER: "root"
-      # MYSQL_PASSWORD: "bdusupport"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "bdusupport"
       MYSQL_ROOT_PASSWORD: "bdusupport"
     ports:
-      - 3306:3306
+      - 3307:3306
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -67,7 +73,7 @@ services:
     image: redis:6.0
     restart: always
     ports:
-      - 6379:6379
+      - 6380:6379
     volumes:
       - redis_data:/data
 
