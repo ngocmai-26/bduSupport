@@ -19,10 +19,14 @@ from bduSuport.views.config.miniapp import MiniAppConfigView
 from bduSuport.views.business_recruiment.business_recruiment import BusinessRecruimentView
 from bduSuport.views.business_recruiment.business_recruiment_management import BusinessRecruimentManagementView
 from bduSuport.views.college_exam_group.college_exam_group_management import CollegeExamGroupView
+from bduSuport.views.contact.management import ContactManagementView
+from bduSuport.views.contact.miniapp import ContactView
 from bduSuport.views.custom_refresh_token_view import CustomRefreshTokenView
 from bduSuport.views.evaluation_method import EvaluationMethodView
 from bduSuport.views.feedback.feedback import FeedbackView
 from bduSuport.views.feedback.feedback_management import FeedbackManagementView
+from bduSuport.views.handbook.management import HandbookManagementView
+from bduSuport.views.handbook.miniapp import HandbookView
 from bduSuport.views.health import HealthView
 from bduSuport.views.login import TokenPairView
 from bduSuport.views.major.major import MajorView
@@ -75,6 +79,8 @@ miniapp_router.register('news', MiniappNewsView, basename='miniapp_news')
 miniapp_router.register('auth', MiniAppAuth, basename='account_miniapp_auth')
 miniapp_router.register('majors', MiniappMajorView, basename='miniapp_majors')
 miniapp_router.register('feedbacks', FeedbackView, basename='miniapp_feedback')
+miniapp_router.register('contacts', ContactView, basename='miniapp_contact')
+miniapp_router.register('handbooks', HandbookView, basename='miniapp_handbook')
 miniapp_router.register('config', MiniAppConfigView, basename='miniapp_config')
 miniapp_router.register('personal-app-func', MiniappAppFunctionView, basename='miniapp_personal_app_func')
 miniapp_router.register('business-recruiments', BusinessRecruimentView, basename='business_recruiments')
@@ -87,6 +93,8 @@ backoffice_router.register('super-admin', RootView, basename='super_admin')
 backoffice_router.register('majors', MajorView, basename='major_management')
 backoffice_router.register('subjects', SubjectView, basename='subject_management')
 backoffice_router.register('news', NewsManagementView, basename='news_management')
+backoffice_router.register('contact', ContactManagementView, basename='contact_management')
+backoffice_router.register('handbooks', HandbookManagementView, basename='handbook_management')
 backoffice_router.register('accounts', AccountManagementView, basename='account_management')
 backoffice_router.register('feedbacks', FeedbackManagementView, basename='feedback_management')
 backoffice_router.register('news-types', NewsTypeManagementView, basename='news_type_management')
