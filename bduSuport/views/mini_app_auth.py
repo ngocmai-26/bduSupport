@@ -21,38 +21,32 @@ class MiniAppAuth(viewsets.ViewSet):
     def register_session(self, request):
         try:
             logging.getLogger().info("MiniAppAuth.register_session req=%s", request.data)
-            # validate = CreateMiniAppSessionValidator(data=request.data)
+            validate = CreateMiniAppSessionValidator(data=request.data)
 
-            # if not validate.is_valid():
-            #     return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
+            if not validate.is_valid():
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST).response
             
-            # _data = validate.validated_data
-            # access_token = _data["token"]
+            _data = validate.validated_data
+            access_token = _data["token"]
 
-            # resp = requests.get(
-            #     url=ZALO_USER_INFO_API,
-            #     headers={
-            #         "access_token": access_token
-            #     }
-            # )
-            # logging.getLogger().info("MiniAppAuth.register_session get zalo user info resp=%s", resp.text)
+            resp = requests.get(
+                url=ZALO_USER_INFO_API,
+                headers={
+                    "access_token": access_token
+                }
+            )
+            logging.getLogger().info("MiniAppAuth.register_session get zalo user info resp=%s", resp.text)
 
-            # resp_data = resp.json()
+            resp_data = resp.json()
 
-            # logging.getLogger().info("MiniAppAuth.register_session get zalo user info resp_data=%s", resp_data)
+            logging.getLogger().info("MiniAppAuth.register_session get zalo user info resp_data=%s", resp_data)
 
-            # if resp_data["error"] != 0:
-            #     return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi khi chúng tôi cố gắng kiểm tra tài khoản của bạn!").response
+            if resp_data["error"] != 0:
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi khi chúng tôi cố gắng kiểm tra tài khoản của bạn!").response
             
-            # user_id = resp_data["id"]
-            # user_name = resp_data.get("name", "")
-            # user_avatar_url = resp_data.get("picture", {}).get("data", {}).get("url", "")
-
-            access_token = "string"
-            user_id = "abc123"
-            user_name = "Trong Thuan"
-            user_avatar_url = "http://example.com"
-            resp_data = None
+            user_id = resp_data["id"]
+            user_name = resp_data.get("name", "")
+            user_avatar_url = resp_data.get("picture", {}).get("data", {}).get("url", "")
 
             if not self.__create_mini_app_user(user_id, user_name, user_avatar_url):
                 return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
