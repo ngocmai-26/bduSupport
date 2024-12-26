@@ -27,14 +27,44 @@ services:
       - BETTERSTACK_LOG_TOKEN=YDqiL7DsQiCgTsvuF9hFM7MN
     volumes:
       - ./:/usr/src/app
-  
+    depends_on:
+      - bdusupport_mysql
+      - bdusupport_redis
+
+  bdusupport_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - DATABASE_ENGINE=mysql
+      - DATABASE_NAME=bdusupport
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=bdusupport
+      - DATABASE_HOST=bdusupport_mysql
+      - DATABASE_PORT=3306
+      - REDIS_HOST=bdusupport_redis
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=""
+      - REDIS_PASSWORD=""
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_HOST_USER=""
+      - EMAIL_HOST_PASSWORD=""
+      - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.json
+      - FIREBASE_STORAGE_BUCKET_URL=bdusupport.appspot.com
+      - BETTERSTACK_LOG_TOKEN=YDqiL7DsQiCgTsvuF9hFM7MN
+    volumes:
+      - ./:/usr/src/app
+    depends_on:
+      - bdusupport_mysql
+      - bdusupport_redis
+
   bdusupport_mysql:
     image: mysql:8.0
     restart: always
     environment:
       MYSQL_DATABASE: "bdusupport"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "bdusupport"
       MYSQL_ROOT_PASSWORD: "bdusupport"
     ports:
       - 3307:3306
@@ -45,7 +75,7 @@ services:
     image: redis:6.0
     restart: always
     ports:
-      - 6380:6380
+      - 6380:6379
     volumes:
       - redis_data:/data
 
