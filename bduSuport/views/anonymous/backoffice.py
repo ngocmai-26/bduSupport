@@ -5,16 +5,15 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action
 from rest_framework import status
 
+from bduSuport.helpers.email import send_html_template_email
 from bduSuport.helpers.response import RestResponse
 from bduSuport.serializers.email import EmailValidator
 from bduSuport.models.account import Account, AccountStatus
-from bduSuport.services.mail import EmailService
 from bduSuport.services.otp import OtpService
 from bduSuport.validations.verify_backoffice_account import BackofficeVerifyAccountValidator
 
 class BackofficeAnonymousUserView(ViewSet):
     otp_service = OtpService()
-    email_service = EmailService()
 
     @action(methods=["POST"], detail=False, url_path="verify")
     @swagger_auto_schema(request_body=BackofficeVerifyAccountValidator)
@@ -77,10 +76,15 @@ class BackofficeAnonymousUserView(ViewSet):
         
     def __send_otp_mail(self, email, otp):
         try:
-            subject = 'Confirmation Code for Registration'
-            message = f'Your confirmation code is: {otp}'
-            recipient_list = [email]
-            
-            self.email_service.send_simple_mail(subject, message, recipient_list)
+            send_html_template_email.apply_async(
+                kwargs={
+                    "to": [email],
+                    "subject": "[Trường Đại học Bình Dương] Mã xác thực của bạn!",
+                    "template_name": "otp.html",
+                    "context": {
+                        "otp": otp
+                    }
+                }
+            )
         except Exception as e:
             logging.getLogger().exception("TokenPairView.__send_otp_mail exc=%s", e)
