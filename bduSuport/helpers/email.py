@@ -8,6 +8,7 @@ import logging
 def send_html_template_email(to, subject, template_name, context):
     try:
         logging.info("shared_task send_html_template_email to=%s, subject=%s, template_name=%s, context=%s", to, subject, template_name, context)
+        logging.info("shared_task send_html_template_email user=%s, password=%s", settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
         template = get_template(template_name)
         content = template.render(context=context)
 
