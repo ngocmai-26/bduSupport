@@ -21,7 +21,7 @@ services:
       - EMAIL_HOST=smtp.gmail.com
       - EMAIL_PORT=587
       - EMAIL_HOST_USER="ntt06012k2@gmail.com"
-      - EMAIL_HOST_PASSWORD="ntav gnas vdmt rkpk"
+      - EMAIL_HOST_PASSWORD="igfx srbi qvpc dwcm"
       - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.dev.json
       - FIREBASE_STORAGE_BUCKET_URL=super-system-65cf5.appspot.com
       - BETTERSTACK_LOG_TOKEN=RBoHWYbFThGsSkXKkZwc9hKP
@@ -48,7 +48,7 @@ services:
       - EMAIL_HOST=smtp.gmail.com
       - EMAIL_PORT=587
       - EMAIL_HOST_USER="ntt06012k2@gmail.com"
-      - EMAIL_HOST_PASSWORD="ntav gnas vdmt rkpk"
+      - EMAIL_HOST_PASSWORD="ovnr zdwh sxjp iotb"
       - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.dev.json
       - FIREBASE_STORAGE_BUCKET_URL=super-system-65cf5.appspot.com
       - BETTERSTACK_LOG_TOKEN=RBoHWYbFThGsSkXKkZwc9hKP
