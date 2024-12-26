@@ -93,7 +93,7 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                         "student__city": registration.student.city,
                         "student__high_school": registration.student.high_school,
                         "major_name": registration.major.name,
-                        "evaluation_method_name": registration.evaluation_method.name,
+                        "evaluation_method_name": getattr(registration.evaluation_method, "name", "N\A"),
                         "college_exam_group_name": getattr(registration.college_exam_group, "name", "N\A"),
                         "academic_level_name": registration.major.academic_level.name,
                         "created_at": registration.created_at.strftime("%d/%m/%Y %H:%M:%S"),
