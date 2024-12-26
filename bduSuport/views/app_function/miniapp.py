@@ -19,7 +19,7 @@ class MiniappAppFunctionView(viewsets.ViewSet):
                 Q(is_show=True)
             ).distinct().order_by("-order")
 
-            data = AppFunctionSerializer(funcs, many=True).data
+            data = AppFunctionSerializer(funcs, many=True, context={"user": request.user}).data
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:

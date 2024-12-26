@@ -14,7 +14,7 @@ class MiniAppConfigView(viewsets.ViewSet):
     def list(self, request):
         try:
             data = {
-                "functions": self.__get_app_functions()
+                "functions": self.__get_app_functions(request.user)
             }
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response
@@ -22,18 +22,21 @@ class MiniAppConfigView(viewsets.ViewSet):
             logging.getLogger().exception("MiniAppConfigView.config exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
-    def __get_app_functions(self):
+    def __get_app_functions(self, user):
         try:
             funcs = AppFunction.objects.filter(
                 Q(deleted_at=None) &
                 Q(is_show=True) &
                 (
                     ~Q(personal_app_functions__isnull=False) |
-                    Q(personal_app_functions__is_show_in_home=True)
+                    Q(
+                        personal_app_functions__is_show_in_home=True,
+                        personal_app_functions__user=user
+                    )
                 )
             ).distinct().order_by("-order")
 
-            data = AppFunctionSerializer(funcs, many=True).data
+            data = AppFunctionSerializer(funcs, many=True, context={"user": user}).data
 
             return data
         except Exception as e:

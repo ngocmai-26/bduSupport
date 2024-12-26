@@ -10,9 +10,11 @@ class AppFunctionSerializer(serializers.ModelSerializer):
 
     def get_is_show_in_home(self, obj: AppFunction):
         try:
-            if obj.personal_app_functions.first() is None:
+            f = obj.personal_app_functions.filter(user=self.context.get("user", None)).first()
+            
+            if f is None:
                 return True
             
-            return obj.personal_app_functions.first().is_show_in_home
+            return f.is_show_in_home
         except Exception as e:
             return False
