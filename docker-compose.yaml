@@ -53,7 +53,7 @@ services:
       - EMAIL_HOST_PASSWORD=""
       - FIREBASE_CERTIFICATE=/usr/src/app/firebase_cert.json
       - FIREBASE_STORAGE_BUCKET_URL=bdusupport.appspot.com
-      - BETTERSTACK_LOG_TOKEN=YDqiL7DsQiCgTsvuF9hFM7MN
+      - BETTERSTACK_LOG_TOKEN=MrimjgZxaRG2msVSzgDF4RLM
     volumes:
       - ./:/usr/src/app
     depends_on:
