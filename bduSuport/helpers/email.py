@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.mail import send_mail, get_connection
+from django.core.mail import send_mail
 from django.template.loader import get_template
 from celery import shared_task
 import logging
@@ -17,7 +17,8 @@ def send_html_template_email(to, subject, template_name, context):
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=to,
             html_message=content,
-            connection=get_connection()
+            auth_user=settings.EMAIL_HOST_USER,
+            auth_password=settings.EMAIL_HOST_PASSWORD
         )
     except Exception as e:
         logging.exception("shared_task send_html_template_email exc=%s, to=%s, subject=%s, template_name=%s, context=%s", e, to, subject, template_name, context)
