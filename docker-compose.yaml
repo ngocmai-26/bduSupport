@@ -34,7 +34,7 @@ services:
   bdusupport_worker:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.worker
     restart: always
     environment:
       - DATABASE_ENGINE=mysql
