@@ -12,8 +12,8 @@ from bduSuport.serializers.backoffice_audit_log import BackofficeAuditLogSeriali
 from bduSuport.middlewares.permissions.is_root import IsRoot
 
 class AuditLogView(viewsets.ViewSet):
-    # authentication_classes = (BackofficeAuthentication, )
-    # permission_classes = (IsRoot, )
+    authentication_classes = (BackofficeAuthentication, )
+    permission_classes = (IsRoot, )
     
     @action(methods=["GET"], detail=False, url_path="backoffice")
     @swagger_auto_schema(manual_parameters=[
