@@ -10,7 +10,6 @@ from bduSuport.serializers.account_serializer import AccountSerializer
 class AccountManagementView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
     permission_classes = (IsAdminOrRoot, )
-    
 
     def list(self, request):
         queryset = Account.objects.all()

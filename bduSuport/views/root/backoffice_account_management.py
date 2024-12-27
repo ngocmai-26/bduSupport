@@ -3,6 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.permissions.is_root import IsRoot
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -27,7 +28,7 @@ class BackofficeAccountManagementView(viewsets.ViewSet):
                 account = Account.objects.get(id=pk)
                 account.set_password(validate.validated_data["new_password"])
                 account.save()
-
+                audit_back_office(request.user, "Reset mật khẩu", account.email)
                 return RestResponse(status=status.HTTP_200_OK).response
             except Account.DoesNotExist:
                 return RestResponse(message="Tài khoản không tồn tại!", status=status.HTTP_404_NOT_FOUND).response
@@ -47,7 +48,7 @@ class BackofficeAccountManagementView(viewsets.ViewSet):
                 
                 account.status = AccountStatus.BLOCKED
                 account.save(update_fields=["status"])
-
+                audit_back_office(request.user, "Khóa tài khoản", account.email)
                 return RestResponse(status=status.HTTP_200_OK).response
             except Account.DoesNotExist:
                 return RestResponse(message="Tài khoản không tồn tại!", status=status.HTTP_404_NOT_FOUND).response
@@ -67,7 +68,7 @@ class BackofficeAccountManagementView(viewsets.ViewSet):
                 
                 account.status = AccountStatus.UNVERIFIED
                 account.save(update_fields=["status"])
-
+                audit_back_office(request.user, "Mở khóa tài khoản", account.email)
                 return RestResponse(status=status.HTTP_200_OK).response
             except Account.DoesNotExist:
                 return RestResponse(message="Tài khoản không tồn tại!", status=status.HTTP_404_NOT_FOUND).response

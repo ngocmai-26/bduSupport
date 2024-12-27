@@ -15,6 +15,7 @@ from bduSuport.views.admission_registration.admission_registration import Admiss
 from bduSuport.views.admission_registration.admission_registration_management import AdmissionRegistrationManagementView
 from bduSuport.views.anonymous.backoffice import BackofficeAnonymousUserView
 from bduSuport.views.app_function.management import AppFunctionManagementView
+from bduSuport.views.audit import AuditLogView
 from bduSuport.views.config.miniapp import MiniAppConfigView
 from bduSuport.views.business_recruiment.business_recruiment import BusinessRecruimentView
 from bduSuport.views.business_recruiment.business_recruiment_management import BusinessRecruimentManagementView
@@ -91,6 +92,7 @@ miniapp_router.register('training-location', MiniappTrainingLocationView, basena
 
 backoffice_router.register('super-admin', RootView, basename='super_admin')
 backoffice_router.register('majors', MajorView, basename='major_management')
+backoffice_router.register('audit', AuditLogView, basename='audit_management')
 backoffice_router.register('subjects', SubjectView, basename='subject_management')
 backoffice_router.register('news', NewsManagementView, basename='news_management')
 backoffice_router.register('contact', ContactManagementView, basename='contact_management')

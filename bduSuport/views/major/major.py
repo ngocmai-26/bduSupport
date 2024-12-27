@@ -6,6 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
 import logging
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
 from bduSuport.models.major import Major
@@ -35,7 +36,7 @@ class MajorView(viewsets.ViewSet):
                 if major.academic_level.need_evaluation_method:
                     major.college_exam_groups.set(college_exam_groups)
                     major.evaluation_methods.set(evaluation_methods)
-
+            audit_back_office(request.user, "Tạo ngành học", major.code)
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("MajorView.create exc=%s, req=%s", e, request.data)
@@ -57,6 +58,7 @@ class MajorView(viewsets.ViewSet):
                 major = Major.objects.get(id=pk)
                 major.deleted_at = datetime.now().date()
                 major.save(update_fields=["deleted_at"])
+                audit_back_office(request.user, "Xóa ngành học", major.code)
             except Major.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response
             
@@ -124,6 +126,7 @@ class MajorView(viewsets.ViewSet):
                 except Major.DoesNotExist:
                     return RestResponse(status=status.HTTP_404_NOT_FOUND).response
             
+            audit_back_office(request.user, "Cập nhật ngành học", major.code)
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("MajorView.update exc=%s, pk=%s, req=%s", e, pk, request.data)

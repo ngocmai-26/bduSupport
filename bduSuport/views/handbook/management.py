@@ -3,6 +3,7 @@ import datetime
 from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.models.handbook import Handbook
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -27,7 +28,7 @@ class HandbookManagementView(viewsets.ViewSet):
 
             if handbook.id is None:
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi trong quá trình tạo tin tức!").response
-
+            audit_back_office(request.user, "Tạo sổ tay", handbook.name)
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("HandbookManagementView.create exc=%s, req=%s", e, request.data)
@@ -61,7 +62,7 @@ class HandbookManagementView(viewsets.ViewSet):
                 setattr(handbook, k, v)
             
             handbook.save(update_fields=list(validate.validated_data.keys()))
-
+            audit_back_office(request.user, "Cập nhật sổ tay", handbook.name)
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("HandbookManagementView.update exc=%s, req=%s", e, request.data)
@@ -74,7 +75,7 @@ class HandbookManagementView(viewsets.ViewSet):
                 handbook = Handbook.objects.get(id=pk)
                 handbook.deleted_at = datetime.datetime.now()
                 handbook.save(update_fields=["deleted_at"])
-                
+                audit_back_office(request.user, "Xóa sổ tay", handbook.name)
                 return RestResponse(status=status.HTTP_200_OK).response 
             except Handbook.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 

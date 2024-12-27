@@ -4,6 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.response import RestResponse
 from bduSuport.services.otp import OtpService
 from bduSuport.models.account import Account, AccountStatus
@@ -39,6 +40,7 @@ class AdminAccountView(viewsets.ViewSet):
                 else:
                     account.set_password(new_pass)
                     account.save()
+                    audit_back_office(request.user, "Đổi mật khẩu", "")
 
                 return RestResponse(status=status.HTTP_200_OK).response
             except Account.DoesNotExist:

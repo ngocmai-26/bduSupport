@@ -4,6 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
 import logging
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.college_exam_group import CollegeExamGroup
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -28,6 +29,7 @@ class CollegeExamGroupView(viewsets.ViewSet):
                 group = CollegeExamGroup(**_data)
                 group.save()
                 group.subjects.set(subjects)
+                audit_back_office(request.user, "Tạo khối ngành", group.name)
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
@@ -57,6 +59,7 @@ class CollegeExamGroupView(viewsets.ViewSet):
                 
                 group.deleted_at = datetime.now()
                 group.save(update_fields=["deleted_at"])
+                audit_back_office(request.user, "Xóa khối ngành", group.name)
                 
                 return RestResponse(status=status.HTTP_200_OK).response
             except CollegeExamGroup.DoesNotExist:

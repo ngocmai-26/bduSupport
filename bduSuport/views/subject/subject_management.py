@@ -3,6 +3,7 @@ from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
 import logging
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.subject import Subject
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -22,7 +23,7 @@ class SubjectView(viewsets.ViewSet):
             
             subject = Subject(name=validate.validated_data["name"])
             subject.save()
-
+            audit_back_office(request.user, "Tạo môn học", subject.name)
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("SubjectView.create exc=%s, req=%s", e, request.data)
@@ -51,7 +52,7 @@ class SubjectView(viewsets.ViewSet):
                 
                 subject.deleted_at = datetime.now()
                 subject.save(update_fields=["deleted_at"])
-                
+                audit_back_office(request.user, "Xóa môn học", subject.name)
                 return RestResponse(status=status.HTTP_200_OK).response
             except Subject.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 

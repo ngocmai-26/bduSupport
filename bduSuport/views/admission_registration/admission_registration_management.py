@@ -8,6 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.email import send_html_template_email
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -20,19 +21,6 @@ from bduSuport.middlewares.permissions.is_root import IsRoot
 
 class AdmissionRegistrationManagementView(viewsets.ViewSet):
     authentication_classes = (BackofficeAuthentication, )
-
-    @action(methods=["DELETE"], detail=True, url_path="root", permission_classes=[IsRoot])
-    def delete_registration(self, request, pk):
-        try:
-            registration = AdmissionRegistration.objects.get(id=pk)
-            registration.recalled_at = datetime.datetime.now()
-            registration.reviewed_by = request.user
-            registration.save()
-
-            return RestResponse(status=status.HTTP_200_OK).response
-        except Exception as e:
-            logging.getLogger().exception("AdmissionRegistrationManagementView.delete_registration exc=%s, pk=%s", e, pk)
-            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -99,6 +87,11 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
                 registration.reviewed_by = request.user
                 registration.review_status = ReviewStatusChoices.APPROVED if validate.validated_data["is_approve"] else ReviewStatusChoices.REJECTED
                 registration.save(update_fields=["reviewed_by", "review_status"])
+                audit_back_office(
+                    request.user, 
+                    "Xét duyệt đơn đăng ký", 
+                    f"{registration.student.fullname} - {registration.major.name} - {registration.major.academic_level.name}"
+                )
 
                 messages = {
                     ReviewStatusChoices.APPROVED: f"Đơn xét tuyển ngành {registration.major.name} của học sinh {registration.student.fullname} đã được duyệt!",

@@ -4,6 +4,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.firebase_storage_provider import FirebaseStorageProvider
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.app_function import AppFunction
@@ -32,6 +33,7 @@ class AppFunctionManagementView(viewsets.ViewSet):
             icon_url = self.image_storage_provider.upload_file(_data.pop("icon"))
             app_func = AppFunction(**_data, icon_url=icon_url)
             app_func.save()
+            audit_back_office(request.user, "Tạo chức năng cho miniapp", app_func.name)
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
@@ -55,6 +57,7 @@ class AppFunctionManagementView(viewsets.ViewSet):
                 func = AppFunction.objects.get(id=pk)
                 func.deleted_at = datetime.datetime.now().date()
                 func.save(update_fields=["deleted_at"])
+                audit_back_office(request.user, "Xóa chức năng trên miniapp", func.name)
             except AppFunction.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response
             
@@ -88,6 +91,7 @@ class AppFunctionManagementView(viewsets.ViewSet):
                 func.icon_url = icon_url
             
             func.save()
+            audit_back_office(request.user, "Cập nhật chức năng trên miniapp", func.name)
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:

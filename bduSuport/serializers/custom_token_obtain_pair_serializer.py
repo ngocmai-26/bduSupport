@@ -6,6 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
 from rest_framework_simplejwt.settings import api_settings as jwt_configs
 
 from bduSuport.errors.un_verified_exception import UnVerifiedException
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.models.account import AccountStatus
 from bduSuport.serializers.account_serializer import AccountSerializer
 
@@ -19,7 +20,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             access_jti = self.token_class.access_token_class(validated_data["access"]).payload["jti"]
             _session_data = AccountSerializer(self.user, many=False, exclude=["password"]).data
             self.__save_session(self.user.id, _session_data, access_jti, refresh_jti)
-
+            audit_back_office(self.user, "Đăng nhập", "Đăng nhập")
             return {**validated_data, "user_info": _session_data}
         except AuthenticationFailed as e:
             if self.user is None:

@@ -4,6 +4,7 @@ from rest_framework.parsers import MultiPartParser
 from drf_yasg.utils import swagger_auto_schema
 import logging
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.firebase_storage_provider import FirebaseStorageProvider
 from bduSuport.models.news import News
 from bduSuport.helpers.response import RestResponse
@@ -37,7 +38,7 @@ class NewsManagementView(viewsets.ViewSet):
 
             if news.id is None:
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi trong quá trình tạo tin tức!").response
-
+            audit_back_office(request.user, "Tạo tin tức", news.title)
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("NewsManagementView.create exc=%s, req=%s", e, request.data)
@@ -76,6 +77,7 @@ class NewsManagementView(viewsets.ViewSet):
                 setattr(news, k, v)
             
             news.save(update_fields=list(_data.keys()))
+            audit_back_office(request.user, "Cập nhật tin tức", news.title)
 
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
@@ -89,7 +91,7 @@ class NewsManagementView(viewsets.ViewSet):
                 news = News.objects.get(id=pk)
                 news.deleted_at = datetime.datetime.now()
                 news.save(update_fields=["deleted_at"])
-                
+                audit_back_office(request.user, "Xóa tin tức", news.title)
                 return RestResponse(status=status.HTTP_200_OK).response 
             except News.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 

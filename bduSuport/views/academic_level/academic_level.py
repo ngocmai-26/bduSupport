@@ -3,6 +3,7 @@ from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
 import logging
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.academic_level import AcademicLevel
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -21,12 +22,12 @@ class AcademicLevelView(viewsets.ViewSet):
             if not validate.is_valid():
                 return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
-            subject = AcademicLevel(
+            academic_level = AcademicLevel(
                 name=validate.validated_data["name"],
                 need_evaluation_method=validate.validated_data["need_evaluation_method"]
             )
-            subject.save()
-
+            academic_level.save()
+            audit_back_office(request.user, "Tạo bậc học", academic_level.name)
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("AcademicLevelView.create exc=%s, req=%s", e, request.data)
@@ -50,11 +51,18 @@ class AcademicLevelView(viewsets.ViewSet):
                 return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             level = AcademicLevel.objects.get(id=pk)
+            old_name = level.name
+            old_need_evaluation_method = level.need_evaluation_method
 
             for k, v in validate.validated_data.items():
                 setattr(level, k, v)
 
             level.save()
+            audit_back_office(
+                request.user, 
+                "Cập nhật bậc học", 
+                f"Tên: {old_name} -> {level.name}\nXét tuyển: {old_need_evaluation_method} -> {level.need_evaluation_method}"
+            )
             return RestResponse(status=status.HTTP_200_OK).response
         except AcademicLevel.DoesNotExist as e:
             return RestResponse(status=status.HTTP_404_NOT_FOUND).response
@@ -76,6 +84,7 @@ class AcademicLevelView(viewsets.ViewSet):
                 
                 level.deleted_at = datetime.datetime.now().date()
                 level.save(update_fields=["deleted_at"])
+                audit_back_office(request.user, "Xóa bậc học", level.name)
             except AcademicLevel.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response
             

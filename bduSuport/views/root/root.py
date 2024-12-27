@@ -4,6 +4,7 @@ import logging
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.response import RestResponse
 
 from bduSuport.middlewares.permissions.is_root import IsRoot
@@ -42,7 +43,7 @@ class RootView(viewsets.ViewSet):
                 
             if account.id is None:
                 return RestResponse(message="Failed to create account.", status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
-            
+            audit_back_office(request.user, "Tạo tài khoản", account.email)
             return RestResponse(message="Account created successfully", status=status.HTTP_201_CREATED).response
         except Exception as e:
             logging.getLogger().exception("RootView.create_account exc=%s, req=%s", e, request.data)

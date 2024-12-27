@@ -3,6 +3,7 @@ import datetime
 from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
 
+from bduSuport.helpers.audit import audit_back_office
 from bduSuport.models.contact import Contact
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
@@ -27,7 +28,7 @@ class ContactManagementView(viewsets.ViewSet):
 
             if contact.id is None:
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Đã xảy ra lỗi trong quá trình tạo tin tức!").response
-
+            audit_back_office(request.user, "Tạo liên hệ", f"{contact.name} - {contact.phone} - {contact.location.name}")
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("ContactManagementView.create exc=%s, req=%s", e, request.data)
@@ -61,7 +62,7 @@ class ContactManagementView(viewsets.ViewSet):
                 setattr(contact, k, v)
             
             contact.save(update_fields=list(validate.validated_data.keys()))
-
+            audit_back_office(request.user, "Cập nhật liên hệ", f"{contact.name} - {contact.phone} - {contact.location.name}")
             return RestResponse(status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("ContactManagementView.update exc=%s, req=%s", e, request.data)
@@ -74,6 +75,7 @@ class ContactManagementView(viewsets.ViewSet):
                 contact = Contact.objects.get(id=pk)
                 contact.deleted_at = datetime.datetime.now()
                 contact.save(update_fields=["deleted_at"])
+                audit_back_office(request.user, "Xóa liên hệ", f"{contact.name} - {contact.phone} - {contact.location.name}")
                 
                 return RestResponse(status=status.HTTP_200_OK).response 
             except Contact.DoesNotExist:
