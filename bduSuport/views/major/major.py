@@ -1,12 +1,13 @@
 from datetime import datetime
 from django.db.models import Q
 from rest_framework import viewsets, status
-from rest_framework.response import Response
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
 import logging
 
 from bduSuport.helpers.audit import audit_back_office
+from bduSuport.helpers.paginator import CustomPageNumberPagination
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
 from bduSuport.models.major import Major
@@ -41,12 +42,18 @@ class MajorView(viewsets.ViewSet):
         except Exception as e:
             logging.getLogger().exception("MajorView.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
-        
+    
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter("page", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        openapi.Parameter("size", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+    ])
     def list(self, request):
         try:
-            majors = Major.objects.filter(deleted_at=None)
-            data = MajorSerializer(majors, many=True).data
-            return RestResponse(data=data, status=status.HTTP_200_OK).response
+            queryset = Major.objects.filter(deleted_at=None).order_by("-created_at")
+            paginator = CustomPageNumberPagination()
+            queryset = paginator.paginate_queryset(queryset, request)
+            data = MajorSerializer(queryset, many=True).data
+            return RestResponse(data=paginator.get_paginated_data(data), status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("MajorView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

@@ -22,11 +22,10 @@ class AuditLogView(viewsets.ViewSet):
     ])
     def list_backoffice_audit_logs(self, request):
         try:
-            print(request.query_params)
             queryset = BackofficeAuditLog.objects.all().order_by("-created_at")
             paginator = CustomPageNumberPagination()
-            paginated_queryset = paginator.paginate_queryset(queryset, request)
-            data = BackofficeAuditLogSerializer(paginated_queryset, many=True).data
+            queryset = paginator.paginate_queryset(queryset, request)
+            data = BackofficeAuditLogSerializer(queryset, many=True).data
 
             return RestResponse(data=paginator.get_paginated_data(data), status=status.HTTP_200_OK).response
         except Exception as e:

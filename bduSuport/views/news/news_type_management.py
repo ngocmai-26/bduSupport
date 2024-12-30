@@ -1,15 +1,14 @@
 import datetime
 from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 import logging
 
+from bduSuport.helpers.paginator import CustomPageNumberPagination
 from bduSuport.models.news import News
 from bduSuport.helpers.response import RestResponse
 from bduSuport.models.news_type import NewsType
-from bduSuport.serializers.new_serializer import NewsSerializer
-from bduSuport.validations.create_news import CreateNewsValidator
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
-from bduSuport.validations.update_news import UpdateNewsValidator
 from bduSuport.serializers.news_type_serializer import NewsTypeSerializer
 
 class NewsTypeManagementView(viewsets.ViewSet):
@@ -36,13 +35,19 @@ class NewsTypeManagementView(viewsets.ViewSet):
         except Exception as e:
             logging.getLogger().exception("NewsTypeManagementView.create exc=%s, req=%s", e, request.data)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
-        
+    
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter("page", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        openapi.Parameter("size", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+    ])
     def list(self, request):
         try:
-            news_types = NewsType.objects.filter(deleted_at=None).order_by("created_at")
-            data = NewsTypeSerializer(news_types, many=True).data
+            queryset = NewsType.objects.filter(deleted_at=None).order_by("created_at")
+            paginator = CustomPageNumberPagination()
+            queryset = paginator.paginate_queryset(queryset, request)
+            data = NewsTypeSerializer(queryset, many=True).data
 
-            return RestResponse(data=data, status=status.HTTP_200_OK).response
+            return RestResponse(data=paginator.get_paginated_data(data), status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("NewsTypeManagementView.list exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

@@ -10,6 +10,7 @@ from rest_framework.decorators import action
 
 from bduSuport.helpers.audit import audit_back_office
 from bduSuport.helpers.email import send_html_template_email
+from bduSuport.helpers.paginator import CustomPageNumberPagination
 from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentication
 from bduSuport.models.admission_registration import AdmissionRegistration, ReviewStatusChoices
@@ -28,6 +29,8 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
             openapi.Parameter("major", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("college_exam_group", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("review_status", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, enum=ReviewStatusChoices.values),
+            openapi.Parameter("page", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+            openapi.Parameter("size", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
         ]
     )
     def list(self, request):
@@ -39,10 +42,12 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             query_condition = Q(**validate.validated_data, recalled_at=None)
-            registrations = AdmissionRegistration.objects.filter(query_condition)
-            data = AdmissionRegistrationSerializer(registrations, many=True).data
+            queryset = AdmissionRegistration.objects.filter(query_condition).order_by("-created_at")
+            paginator = CustomPageNumberPagination()
+            queryset = paginator.paginate_queryset(queryset, request)
+            data = AdmissionRegistrationSerializer(queryset, many=True).data
 
-            return RestResponse(data=data, status=status.HTTP_200_OK).response 
+            return RestResponse(data=paginator.get_paginated_data(data), status=status.HTTP_200_OK).response 
         except Exception as e:
             logging.getLogger().exception("AdmissionRegistrationManagementView.list exc=%s, params=%s", e, request.query_params)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
