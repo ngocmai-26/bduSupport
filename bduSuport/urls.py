@@ -45,6 +45,7 @@ from bduSuport.views.root.root import RootView
 from bduSuport.views.training_location.miniapp_training_location import MiniappTrainingLocationView
 from bduSuport.views.training_location.training_location_management import TrainingLocationView
 from bduSuport.views.app_function.miniapp import MiniappAppFunctionView
+from bduSuport.views.notification.management import MiniappNotificationManagementView
 
 class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
     def get_schema(self, request=None, public=False):
@@ -107,6 +108,7 @@ backoffice_router.register('training-location', TrainingLocationView, basename='
 backoffice_router.register('evaluation-methods', EvaluationMethodView, basename='evaluation_method_management')
 backoffice_router.register('college-exam-groups', CollegeExamGroupView, basename='college_exam_group_management')
 backoffice_router.register('business-recruiments', BusinessRecruimentManagementView, basename='business_recruiments_management')
+backoffice_router.register('miniapp-notifications', MiniappNotificationManagementView, basename='miniappp_notification_management')
 backoffice_router.register('admission-registration', AdmissionRegistrationManagementView, basename='admission_registration_management')
 backoffice_router.register('super-admin/accounts/backoffice', BackofficeAccountManagementView, basename='backoffice_account_management')
 

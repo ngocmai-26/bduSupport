@@ -1,0 +1,1 @@
+docker rm -f bdusupport_bdusupport_worker_1 bdusupport_bdusupport_backend_1 && docker image rm -f bdusupport_bdusupport_worker bdusupport_bdusupport_backend && docker-compose -f docker-compose.dev.yaml up -d bdusupport_backend bdusupport_worker
