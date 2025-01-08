@@ -23,7 +23,7 @@ class BduDwService:
     def get_attendances(self):
         pass
 
-    def get_students(self) -> list[BduStudentDto]:
+    def get_students(self):
         try:
             resp = requests.get(
                 f"{self.__base_url}/fact_ho_so_sinh_vien_odp",
