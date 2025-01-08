@@ -1,0 +1,36 @@
+from django.db import models
+
+class BduStudent(models.Model):
+    student_id = models.IntegerField(primary_key=True)
+    id_card = models.CharField(max_length=255, blank=True, default="")
+    created_at = models.DateTimeField(null=True, blank=True)
+    ethnicity = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField(max_length=255, blank=True, default="")
+    gender = models.CharField(max_length=50, blank=True, default="")
+    attendance = models.CharField(max_length=255, null=True, blank=True)
+    residence = models.CharField(max_length=255, blank=True, default="")
+    last_name = models.CharField(max_length=255, blank=True, default="")
+    major_code = models.CharField(max_length=255, null=True, blank=True)
+    advisor_code = models.CharField(max_length=255, null=True, blank=True)
+    education_system_code = models.CharField(max_length=255, null=True, blank=True)
+    faculty_code = models.CharField(max_length=255, blank=True, default="")
+    class_code = models.CharField(max_length=255, blank=True, default="")
+    field_code = models.CharField(max_length=255, blank=True, default="")
+    date_of_birth = models.DateTimeField(null=True, blank=True)
+    source = models.CharField(max_length=255, blank=True, default="")
+    academic_year = models.CharField(max_length=255, blank=True, default="")
+    place_of_birth = models.CharField(max_length=255, blank=True, default="")
+    phone_number = models.CharField(max_length=255, blank=True, default="")
+    degree_name = models.CharField(max_length=255, blank=True, default="")
+    major_name = models.CharField(max_length=255, null=True, blank=True)
+    advisor_name = models.CharField(max_length=255, null=True, blank=True)
+    full_name = models.CharField(max_length=255, blank=True, default="")
+    faculty_name = models.CharField(max_length=255, blank=True, default="")
+    class_name = models.CharField(max_length=255, null=True, blank=True)
+    field_name = models.CharField(max_length=255, blank=True, default="")
+    first_name = models.CharField(max_length=255, blank=True, default="")
+    religion = models.CharField(max_length=255, blank=True, default="")
+    updated_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'bdu_student'

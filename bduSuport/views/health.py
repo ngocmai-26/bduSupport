@@ -8,6 +8,8 @@ from django_redis import get_redis_connection
 import logging
 from decouple import config
 
+from bduSuport.services.bdu_dw.bdu_dw import BduDwService
+
 class HealthView(ViewSet):
     authentication_classes = ()
 
@@ -19,6 +21,7 @@ class HealthView(ViewSet):
             "cache_database": self.__get_redis_connection_info(),
             "betterstack_log_token": config("BETTERSTACK_LOG_TOKEN", "")
         }
+        BduDwService().get_students()
         return Response(data=data, status=HTTP_200_OK)
     
     def __get_redis_connection_info(self):

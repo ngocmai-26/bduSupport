@@ -17,4 +17,4 @@ requests
 firebase_admin
 logtail-python
 celery
-django_celery_beat
+django-celery-beat
