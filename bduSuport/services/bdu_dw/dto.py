@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 
 @dataclass
@@ -19,7 +19,7 @@ class BduStudentDto:
     class_code: str = ""
     field_code: str = ""
     student_id: int = 0
-    date_of_birth: Optional[datetime] = field(default=None)
+    date_of_birth: Optional[date] = field(default=None)
     source: str = ""
     academic_year: str = ""
     place_of_birth: str = ""
@@ -36,11 +36,6 @@ class BduStudentDto:
     updated_at: Optional[datetime] = field(default=None)
 
     def __post_init__(self):
-        date_fields = ["created_at", "date_of_birth", "updated_at"]
-        for field_name in date_fields:
-            value = getattr(self, field_name)
-            if value and isinstance(value, str):
-                try:
-                    setattr(self, field_name, datetime.strptime(value, "%a, %d %b %Y %H:%M:%S %Z"))
-                except ValueError:
-                    setattr(self, field_name, None)
+        setattr(self, "created_at", datetime.strptime(self.created_at, "%a, %d %b %Y %H:%M:%S %Z"))
+        setattr(self, "updated_at", datetime.strptime(self.updated_at, "%a, %d %b %Y %H:%M:%S %Z"))
+        setattr(self, "date_of_birth", datetime.strptime(self.date_of_birth, "%d/%m/%Y").date())

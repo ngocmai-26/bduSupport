@@ -9,10 +9,5 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 app.conf.task_default_queue = "bdu_support"
 app.conf.broker_connection_retry_on_startup = True
-app.conf.beat_schedule = {
-    "sync_bdu_students": {
-        "task": "bduSuport.tasks.cron_tasks.sync_bdu_students",
-        "schedule": crontab(minute=0)
-    }
-}
+app.conf.beat_schedule = {}
 

@@ -2,13 +2,11 @@ import requests
 from requests.auth import HTTPBasicAuth
 from decouple import config
 import logging
-from dataclasses import asdict
 
 from bduSuport.helpers.http import is_2xx
 from bduSuport.services.bdu_dw.dto import BduStudentDto
-from bduSuport.services.bdu_dw.key_mapper import convert_list
+from bduSuport.services.bdu_dw.key_mapper import convert_keys, convert_list
 from bduSuport.services.bdu_dw.mapping_dicts import student_key_mapping
-from bduSuport.models.bdu_student import BduStudent
 
 class BduDwService:
     __base_url = ""
@@ -18,7 +16,7 @@ class BduDwService:
     def __init__(self):
         self.__base_url = config("BDU_DATA_WAREHOUSE_GATEWAY_BASE_URL")
         self.__username = config("BDU_DATA_WAREHOUSE_GATEWAY_USERNAME")
-        self.__password = config("BDU_DATA_WAREHOUSE_GATEWAY_PASSWORD")        
+        self.__password = config("BDU_DATA_WAREHOUSE_GATEWAY_PASSWORD")
 
     def get_attendances(self):
         pass
@@ -43,3 +41,33 @@ class BduDwService:
         except Exception as e:
             logging.getLogger().exception("BduDwService.get_students exc=%s, resp_content=%s", str(e), resp.text)
             return []
+    
+    def get_student(self, student_id: str):
+        try:
+            resp = requests.get(
+                f"{self.__base_url}/fact_ho_so_sinh_vien_odp?mssv={student_id}",
+                auth=HTTPBasicAuth(self.__username, self.__password),
+                verify=False
+            )
+
+            if not is_2xx(resp.status_code):
+                logging.getLogger().error("BduDwService.get_student status_code not is 2xx student_id=%s, content=%s", student_id, resp.text)
+                return []
+            
+            data = resp.json()
+
+            if not isinstance(data, list):
+                logging.getLogger().error("BduDwService.get_student response is not a list student_id=%s, content=%s", student_id, resp.text)
+                return None
+            
+            if len(data) == 0:
+                logging.getLogger().error("BduDwService.get_student response is empty student_id=%s, content=%s", student_id, resp.text)
+                return None
+            
+            student = convert_keys(data[0], student_key_mapping)
+            student_dto = BduStudentDto(**student)
+            
+            return student_dto
+        except Exception as e:
+            logging.getLogger().exception("BduDwService.get_student exc=%s, student_id=%s, resp_content=%s", str(e), student_id, resp.text)
+            return None
