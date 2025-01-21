@@ -8,10 +8,11 @@ class News(models.Model):
         db_table = "news"
         
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=1000)
     link = models.URLField()
     image = models.URLField()
     type = models.ForeignKey(NewsType, on_delete=models.CASCADE, related_name="news")
+    posted_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True)

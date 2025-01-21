@@ -20,7 +20,7 @@ class MiniappNewsView(viewsets.ViewSet):
             if request.query_params.get("type", "").isdigit():
                 news_type_filter = int(request.query_params["type"])
             
-            news = News.objects.filter(deleted_at=None).order_by("created_at")
+            news = News.objects.filter(deleted_at=None).order_by("posted_at")
 
             if news_type_filter is not None: 
                 news = news.filter(type__id=news_type_filter)

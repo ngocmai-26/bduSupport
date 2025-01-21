@@ -52,7 +52,7 @@ class NewsManagementView(viewsets.ViewSet):
     ])
     def list(self, request):
         try:
-            queryset = News.objects.filter(deleted_at=None).order_by("created_at")
+            queryset = News.objects.filter(deleted_at=None).order_by("posted_at")
             paginator = CustomPageNumberPagination()
             queryset = paginator.paginate_queryset(queryset, request)
             data = NewsSerializer(queryset, many=True).data

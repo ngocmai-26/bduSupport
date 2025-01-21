@@ -10,3 +10,4 @@ class UpdateNewsValidator(serializers.Serializer):
         required=False, 
         queryset=NewsType.objects.filter(deleted_at=None)
     )
+    posted_at = serializers.DateTimeField(required=False)
