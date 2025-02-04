@@ -10,4 +10,4 @@ class StudentSupervisionRegistration(models.Model):
     student_dw_code = models.IntegerField(null=False)
     student_full_name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True )
+    deleted_at = models.DateTimeField(null=True)

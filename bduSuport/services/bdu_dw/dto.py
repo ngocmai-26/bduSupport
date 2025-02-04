@@ -38,4 +38,23 @@ class BduStudentDto:
     def __post_init__(self):
         setattr(self, "created_at", datetime.strptime(self.created_at, "%a, %d %b %Y %H:%M:%S %Z"))
         setattr(self, "updated_at", datetime.strptime(self.updated_at, "%a, %d %b %Y %H:%M:%S %Z"))
-        setattr(self, "date_of_birth", datetime.strptime(self.date_of_birth, "%d/%m/%Y").date())
+        setattr(self, "date_of_birth", datetime.strptime(self.date_of_birth, "%a, %d %b %Y %H:%M:%S %Z").date())
+
+@dataclass
+class Attendance:
+    lesson: str = ""
+    status: Optional[str] = None
+    attendance_id: str = ""
+    subject_code: str = ""
+    group_code: str = ""
+    student_code: str = ""
+    attendance_date: Optional[date] = field(default=None)
+    attendance_datetime: Optional[datetime] = field(default=None)
+    created_at: Optional[datetime] = field(default=None)
+    updated_at: Optional[datetime] = field(default=None)
+
+    def __post_init__(self):
+        setattr(self, "created_at", datetime.strptime(self.created_at, "%a, %d %b %Y %H:%M:%S %Z"))
+        setattr(self, "updated_at", datetime.strptime(self.updated_at, "%a, %d %b %Y %H:%M:%S %Z"))
+        setattr(self, "attendance_datetime", datetime.strptime(self.attendance_datetime, "%a, %d %b %Y %H:%M:%S %Z"))
+        setattr(self, "attendance_date", datetime.strptime(self.attendance_date, "%Y-%m-%d").date())

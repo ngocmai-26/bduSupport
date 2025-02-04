@@ -1,12 +1,13 @@
-import requests
-from requests.auth import HTTPBasicAuth
-from decouple import config
 import logging
+import requests
+from datetime import date
+from decouple import config
+from requests.auth import HTTPBasicAuth
 
 from bduSuport.helpers.http import is_2xx
-from bduSuport.services.bdu_dw.dto import BduStudentDto
+from bduSuport.services.bdu_dw.dto import Attendance, BduStudentDto
 from bduSuport.services.bdu_dw.key_mapper import convert_keys, convert_list
-from bduSuport.services.bdu_dw.mapping_dicts import student_key_mapping
+from bduSuport.services.bdu_dw.mapping_dicts import student_key_mapping, attendance_key_mapping
 
 class BduDwService:
     __base_url = ""
@@ -18,8 +19,39 @@ class BduDwService:
         self.__username = config("BDU_DATA_WAREHOUSE_GATEWAY_USERNAME")
         self.__password = config("BDU_DATA_WAREHOUSE_GATEWAY_PASSWORD")
 
-    def get_attendances(self):
-        pass
+    def get_attendances_by_student_code_and_date(self, student_code: int, date: date):
+        try:
+            resp = requests.get(
+                f"{self.__base_url}/dim_danh_sach_diem_danh_odp",
+                params={
+                    "mssv": student_code,
+                    "ngay_origin": date.strftime("%Y-%m-%d")
+                },
+                auth=HTTPBasicAuth(self.__username, self.__password),
+                verify=False
+            )
+
+            if not is_2xx(resp.status_code):
+                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date status_code not is 2xx student_code=%s, content=%s", student_code, resp.text)
+                return []
+            
+            dataset = resp.json()
+
+            if not isinstance(dataset, list):
+                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date response is not a list student_code=%s, content=%s", student_code, resp.text)
+                return []
+            
+            if len(dataset) == 0:
+                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date response is empty student_code=%s, content=%s", student_code, resp.text)
+                return []
+            
+            converted_dataset = convert_list(dataset, attendance_key_mapping)
+            attendances = [Attendance(**converted_data) for converted_data in converted_dataset]
+            
+            return attendances
+        except Exception as e:
+            logging.getLogger().exception("BduDwService.get_attendances_by_student_code_and_date exc=%s, resp_content=%s", str(e), resp.text)
+            return []
 
     def get_students(self):
         try:
@@ -45,14 +77,17 @@ class BduDwService:
     def get_student(self, student_id: str):
         try:
             resp = requests.get(
-                f"{self.__base_url}/fact_ho_so_sinh_vien_odp?mssv={student_id}",
+                f"{self.__base_url}/fact_ho_so_sinh_vien_odp",
+                params={
+                    "mssv": student_id
+                },
                 auth=HTTPBasicAuth(self.__username, self.__password),
                 verify=False
             )
 
             if not is_2xx(resp.status_code):
                 logging.getLogger().error("BduDwService.get_student status_code not is 2xx student_id=%s, content=%s", student_id, resp.text)
-                return []
+                return None
             
             data = resp.json()
 

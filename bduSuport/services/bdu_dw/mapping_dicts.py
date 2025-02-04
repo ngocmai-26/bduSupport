@@ -30,3 +30,16 @@ student_key_mapping = {
     "ton_giao": "religion",
     "updated_at": "updated_at"
 }
+
+attendance_key_mapping = {
+    "buoi": "lesson",
+    "created_at": "created_at",
+    "diem_danh": "status",
+    "ma_diem_danh": "attendance_id",
+    "ma_mon_hoc": "subject_code",
+    "ma_nhom": "group_code",
+    "mssv": "student_code",
+    "ngay": "attendance_datetime",
+    "ngay_origin": "attendance_date",
+    "updated_at": "updated_at"
+}
