@@ -20,3 +20,7 @@ class ListAdmissionRegistrationFilter(serializers.Serializer):
         queryset=CollegeExamGroup.objects.filter(deleted_at=None)
     )
     review_status = serializers.ChoiceField(required=False, choices=ReviewStatusChoices.choices)
+    training_location = serializers.PrimaryKeyRelatedField(
+        required=False,
+        queryset=TrainingLocation.objects.filter(deleted_at=None)
+    )

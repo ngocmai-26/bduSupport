@@ -28,6 +28,7 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
             openapi.Parameter("evaluation_method", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("major", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("college_exam_group", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+            openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("review_status", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, enum=ReviewStatusChoices.values),
             openapi.Parameter("page", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("size", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
@@ -41,7 +42,13 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
             if not validate.is_valid():
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
-            query_condition = Q(**validate.validated_data, recalled_at=None)
+            query_condition = Q(recalled_at=None)
+
+            if "training_location" in validate.validated_data:
+                query_condition = query_condition & Q(major__training_location=validate.validated_data.pop("training_location"))
+
+            query_condition = query_condition & Q(**validate.validated_data)
+
             queryset = AdmissionRegistration.objects.filter(query_condition).order_by("-created_at")
             paginator = CustomPageNumberPagination()
             queryset = paginator.paginate_queryset(queryset, request)

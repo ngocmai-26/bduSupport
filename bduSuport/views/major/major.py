@@ -13,6 +13,7 @@ from bduSuport.middlewares.backoffice_authentication import BackofficeAuthentica
 from bduSuport.models.major import Major
 from bduSuport.serializers.major_serializer import MajorSerializer
 from bduSuport.validations.create_major import CreateMajorValidator
+from bduSuport.validations.majors_filter import MajorsFilter
 from bduSuport.validations.update_major import UpdateMajorValidator
 
 class MajorView(viewsets.ViewSet):
@@ -46,10 +47,17 @@ class MajorView(viewsets.ViewSet):
     @swagger_auto_schema(manual_parameters=[
         openapi.Parameter("page", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
         openapi.Parameter("size", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
     ])
     def list(self, request):
         try:
-            queryset = Major.objects.filter(deleted_at=None).order_by("-created_at")
+            validate = MajorsFilter(data=request.query_params, fields=["training_location"])
+
+            if not validate.is_valid():
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
+            
+            _data = validate.validated_data
+            queryset = Major.objects.filter(Q(**_data) & Q(deleted_at=None)).order_by("-created_at")
             paginator = CustomPageNumberPagination()
             queryset = paginator.paginate_queryset(queryset, request)
             data = MajorSerializer(queryset, many=True).data

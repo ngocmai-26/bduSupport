@@ -13,3 +13,13 @@ class MajorsFilter(serializers.Serializer):
         required=False,
         queryset=TrainingLocation.objects.filter(deleted_at=None)
     )
+
+    def __init__(self, *args, **kwargs):
+        existing = set(self.fields.keys())
+        fields = kwargs.pop("fields", []) or existing
+        exclude = kwargs.pop("exclude", [])
+        
+        super().__init__(*args, **kwargs)
+        
+        for field in exclude + list(set(existing) - set(fields)):
+            self.fields.pop(field, None)
