@@ -64,7 +64,7 @@ class MiniAppAuth(viewsets.ViewSet):
                 user = MiniAppUser.objects.get(mini_app_user_id=user_id)
                 return True
             except MiniAppUser.DoesNotExist:
-                logging.getLogger().error("MiniAppAuth.__create_mini_app_user DoesNotExist user_id=%s", user_id)
+                logging.getLogger().info("MiniAppAuth.__create_mini_app_user DoesNotExist user_id=%s", user_id)
             
             user = MiniAppUser(
                 mini_app_user_id=user_id,
