@@ -22,5 +22,5 @@ class MiniAppAuthentication(BaseAuthentication):
             
             return (user, token)
         except Exception as e:
-            logging.getLogger().exception("MiniAppAuthentication.authenticate exc=%s", e)
+            logging.getLogger().info("MiniAppAuthentication.authenticate exc=%s", e)
             raise AuthenticationFailed("Verify token failed!")

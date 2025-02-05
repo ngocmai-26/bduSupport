@@ -12,5 +12,5 @@ class CustomRefreshTokenView(TokenRefreshView):
             response = super().post(request, *args, **kwargs)
             return RestResponse(data=response.data, status=status.HTTP_200_OK).response
         except Exception as e:
-            logging.getLogger().exception("CustomRefreshTokenView.post exc=%s, req=%s", e, request.data)
+            logging.getLogger().info("CustomRefreshTokenView.post exc=%s, req=%s", e, request.data)
             return RestResponse(code="refresh_token_failed", message="Refresh token hết hạn hoặc không hợp lệ!", status=status.HTTP_400_BAD_REQUEST).response
