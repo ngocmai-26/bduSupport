@@ -7,3 +7,4 @@ class TrainingLocationFilter(serializers.Serializer):
         required=False,
         queryset=TrainingLocation.objects.filter(deleted_at=None)
     )
+    year = serializers.IntegerField(required=False)

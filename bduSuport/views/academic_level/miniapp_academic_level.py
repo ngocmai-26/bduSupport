@@ -16,7 +16,12 @@ class MiniappAcademicLevelView(viewsets.ViewSet):
     authentication_classes = (MiniAppAuthentication, )
 
     @action(methods=["GET"], detail=True, url_path="majors")
-    @swagger_auto_schema(manual_parameters=[openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)])
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+            openapi.Parameter("year", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
+        ]
+    )
     def get_majors_by_academic_level(self, request, pk):
         try:
             logging.getLogger().info("AcademicLevelView.get_majors_by_academic_level pk=%s, query_params=%s", pk, request.query_params)
@@ -27,9 +32,13 @@ class MiniappAcademicLevelView(viewsets.ViewSet):
 
             query = Q(academic_level__id=pk, deleted_at=None)
             location = validate.validated_data.get("training_location", None)
+            year = validate.validated_data.get("year", None)
 
             if location is not None:
                 query = query & Q(training_location=location)
+
+            if year is not None:
+                query = query & Q(year=year)
                 
             majors = Major.objects.filter(query)
             data = MajorSerializer(majors, many=True).data
