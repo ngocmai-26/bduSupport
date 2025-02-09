@@ -47,11 +47,13 @@ class MajorView(viewsets.ViewSet):
     @swagger_auto_schema(manual_parameters=[
         openapi.Parameter("page", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
         openapi.Parameter("size", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        openapi.Parameter("year", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        openapi.Parameter("academic_level", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
         openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
     ])
     def list(self, request):
         try:
-            validate = MajorsFilter(data=request.query_params, fields=["training_location"])
+            validate = MajorsFilter(data=request.query_params)
 
             if not validate.is_valid():
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
@@ -124,8 +126,12 @@ class MajorView(viewsets.ViewSet):
                     else:
                         unique_query = unique_query & Q(training_location=major.training_location)
 
-                    if Major.objects.filter(unique_query).exists():
-                        return RestResponse(message="Thông tin ngành hợp không hợp lệ!", status=status.HTTP_400_BAD_REQUEST).response
+                    unique_check_objs = Major.objects.filter(unique_query)
+
+                    if unique_check_objs.exists():
+                        first_unique_check_obj = unique_check_objs.first()
+                        logging.getLogger().info("MajorView.update pk=%s, req=%s, unique_obj=%s", pk, request.data, unique_check_objs)
+                        return RestResponse(message=f"Thông tin ngành học bị trùng lặp với ngành {first_unique_check_obj.code} - {first_unique_check_obj.name} - {first_unique_check_obj.academic_level.name} - {first_unique_check_obj.training_location.name}!", status=status.HTTP_400_BAD_REQUEST).response
 
                     for k, v in _data.items():
                         setattr(major, k, v)
