@@ -19,30 +19,31 @@ class BduDwService:
         self.__username = config("BDU_DATA_WAREHOUSE_GATEWAY_USERNAME")
         self.__password = config("BDU_DATA_WAREHOUSE_GATEWAY_PASSWORD")
 
-    def get_attendances_by_student_code_and_date(self, student_code: int, date: date):
+    def get_attendances_by_student_code_and_date_range(self, student_code: int, date_start: date, date_end: date):
         try:
             resp = requests.get(
                 f"{self.__base_url}/dim_danh_sach_diem_danh_odp",
                 params={
                     "mssv": student_code,
-                    "ngay_origin": date.strftime("%Y-%m-%d")
+                    "ngay_origin_start": date_start.strftime("%Y-%m-%d"),
+                    "ngay_origin_end": date_end.strftime("%Y-%m-%d"),
                 },
                 auth=HTTPBasicAuth(self.__username, self.__password),
                 verify=False
             )
 
             if not is_2xx(resp.status_code):
-                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date status_code not is 2xx student_code=%s, content=%s", student_code, resp.text)
+                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date_range status_code not is 2xx student_code=%s, content=%s", student_code, resp.text)
                 return []
             
             dataset = resp.json()
 
             if not isinstance(dataset, list):
-                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date response is not a list student_code=%s, content=%s", student_code, resp.text)
+                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date_range response is not a list student_code=%s, content=%s", student_code, resp.text)
                 return []
             
             if len(dataset) == 0:
-                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date response is empty student_code=%s, content=%s", student_code, resp.text)
+                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date_range response is empty student_code=%s, content=%s", student_code, resp.text)
                 return []
             
             converted_dataset = convert_list(dataset, attendance_key_mapping)
@@ -50,7 +51,7 @@ class BduDwService:
             
             return attendances
         except Exception as e:
-            logging.getLogger().exception("BduDwService.get_attendances_by_student_code_and_date exc=%s, resp_content=%s", str(e), resp.text)
+            logging.getLogger().exception("BduDwService.get_attendances_by_student_code_and_date_range exc=%s, resp_content=%s", str(e), resp.text)
             return []
 
     def get_students(self):

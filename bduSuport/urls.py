@@ -38,7 +38,7 @@ from bduSuport.views.news.news_menegement import NewsManagementView
 from bduSuport.views.news.news_type_management import NewsTypeManagementView
 from bduSuport.views.notification.miniapp_notification import MiniappNotificationView
 from bduSuport.views.root.backoffice_account_management import BackofficeAccountManagementView
-from bduSuport.views.student_supervision.miniapp import MiniappStudentSupervisionRegistrationView
+from bduSuport.views.student_supervision.miniapp_registration import MiniappStudentSupervisionRegistrationView
 from bduSuport.views.subject.subject_management import SubjectView
 from bduSuport.views.mini_app_auth import MiniAppAuth
 from bduSuport.views.constructor import ConstructorView

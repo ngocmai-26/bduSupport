@@ -7,7 +7,7 @@ from bduSuport.models.miniapp_notification import MiniappNotification
 
 def create_student_attendance_notification(student_dw_code: int, student_name: str, mini_app_users: List[MiniAppUser], attendance_date: date):
     try:
-        attendances = BduDwService().get_attendances_by_student_code_and_date(student_dw_code, attendance_date)
+        attendances = BduDwService().get_attendances_by_student_code_and_date_range(student_dw_code, attendance_date, attendance_date)
 
         for attendance in attendances:
             _attendance_date = attendance.attendance_date.strftime("%d-%m-%Y")

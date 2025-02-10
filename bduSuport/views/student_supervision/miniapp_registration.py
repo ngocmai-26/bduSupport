@@ -9,8 +9,7 @@ from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
 from bduSuport.models.student_supervision_registration import StudentSupervisionRegistration
 from bduSuport.validations.submit_student_supervision_registration import SubmitStudentSupervisionRegistration
 from bduSuport.services.bdu_dw.bdu_dw import BduDwService
-from bduSuport.serializers.student_supervision_registration import (
-    StudentSupervisionRegistrationSerializer)
+from bduSuport.serializers.student_supervision_registration import StudentSupervisionRegistrationSerializer
 
 class MiniappStudentSupervisionRegistrationView(viewsets.ViewSet):
     authentication_classes = (MiniAppAuthentication, )
