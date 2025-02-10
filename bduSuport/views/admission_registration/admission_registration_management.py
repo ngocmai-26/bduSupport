@@ -30,6 +30,7 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
             openapi.Parameter("college_exam_group", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("review_status", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, enum=ReviewStatusChoices.values),
+            openapi.Parameter("year", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("page", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
             openapi.Parameter("size", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
         ]
@@ -46,6 +47,9 @@ class AdmissionRegistrationManagementView(viewsets.ViewSet):
 
             if "training_location" in validate.validated_data:
                 query_condition = query_condition & Q(major__training_location=validate.validated_data.pop("training_location"))
+
+            if "year" in validate.validated_data:
+                query_condition = query_condition & Q(major__year=validate.validated_data.pop("year"))
 
             query_condition = query_condition & Q(**validate.validated_data)
 
