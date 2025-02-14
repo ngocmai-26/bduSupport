@@ -43,7 +43,7 @@ class BduDwService:
                 return []
             
             if len(dataset) == 0:
-                logging.getLogger().error("BduDwService.get_attendances_by_student_code_and_date_range response is empty student_code=%s, content=%s", student_code, resp.text)
+                logging.getLogger().info("BduDwService.get_attendances_by_student_code_and_date_range response is empty student_code=%s, content=%s", student_code, resp.text)
                 return []
             
             converted_dataset = convert_list(dataset, attendance_key_mapping)
