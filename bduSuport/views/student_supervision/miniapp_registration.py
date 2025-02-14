@@ -72,7 +72,7 @@ class MiniappStudentSupervisionRegistrationView(viewsets.ViewSet):
         
     def destroy(self, request, pk):
         try:
-            registration = StudentSupervisionRegistration.objects.get(miniapp_user=request.user, deleted_at=None, student_dw_code=pk)
+            registration = StudentSupervisionRegistration.objects.get(miniapp_user=request.user, deleted_at=None, id=pk)
             registration.deleted_at = datetime.datetime.now()
             registration.save()
 
