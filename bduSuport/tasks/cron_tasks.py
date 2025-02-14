@@ -4,6 +4,7 @@ from collections import defaultdict
 from celery import shared_task
 from bduSuport.models.student_supervision_registration import StudentSupervisionRegistration
 from bduSuport.tasks.biz.send_student_attendance_notification import create_student_attendance_notification
+from bduSuport.tasks.heartbeats import send_heartbeat
 
 @shared_task
 def send_student_attendance_notification():
@@ -28,7 +29,8 @@ def send_student_attendance_notification():
                 continue
 
         _end_time = datetime.datetime.now()
-
+        send_heartbeat("DZGSQi8BBK5yFjQfFzzd8yvi")
+        
         return {
             "task": "send_student_attendance_notification",
             "start_time": _start_time,
@@ -37,5 +39,6 @@ def send_student_attendance_notification():
         }
     except Exception as e:
         logging.getLogger().exception("send_student_attendance_notification exc=%s", str(e))
+        send_heartbeat("DZGSQi8BBK5yFjQfFzzd8yvi", True)
         raise e
 
