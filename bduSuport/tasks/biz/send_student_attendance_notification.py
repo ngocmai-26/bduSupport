@@ -16,7 +16,7 @@ def create_student_attendance_notification(student_dw_code: int, student_name: s
                 try:
                     MiniappNotification.objects.create(
                         user=mini_app_user,
-                        content=f"Sinh viên {attendance.student_code} - {student_name} tham gia môn học {attendance.subject_code} vào ngày {_attendance_date} (buổi: {attendance.lesson}) với trạng thái điểm danh: {attendance.status}"
+                        content=f"Sinh viên {attendance.student_code} - {student_name} tham gia môn học {attendance.subject_code} - {attendance.subject_name} vào ngày {_attendance_date} (buổi: {attendance.lesson}) với trạng thái điểm danh: {attendance.status}"
                     )
                 except Exception as e:
                     logging.getLogger().exception(

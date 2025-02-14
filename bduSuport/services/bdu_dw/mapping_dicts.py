@@ -37,6 +37,7 @@ attendance_key_mapping = {
     "diem_danh": "status",
     "ma_diem_danh": "attendance_id",
     "ma_mon_hoc": "subject_code",
+    "ten_mon_hoc": "subject_name",
     "ma_nhom": "group_code",
     "mssv": "student_code",
     "ngay": "attendance_datetime",

@@ -46,6 +46,7 @@ class Attendance:
     status: Optional[str] = None
     attendance_id: str = ""
     subject_code: str = ""
+    subject_name: str = ""
     group_code: str = ""
     student_code: str = ""
     attendance_date: Optional[date] = field(default=None)
