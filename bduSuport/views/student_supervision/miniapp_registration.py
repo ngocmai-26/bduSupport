@@ -1,3 +1,4 @@
+import datetime
 import logging
 from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
@@ -67,4 +68,17 @@ class MiniappStudentSupervisionRegistrationView(viewsets.ViewSet):
             return RestResponse(data=paginator.get_paginated_data(data), status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("MiniappStudentSupervisionRegistrationView.list exc=%s", e)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    def destroy(self, request, pk):
+        try:
+            registration = StudentSupervisionRegistration.objects.get(miniapp_user=request.user, deleted_at=None, student_dw_code=pk)
+            registration.deleted_at = datetime.datetime.now()
+            registration.save()
+
+            return RestResponse().response
+        except StudentSupervisionRegistration.DoesNotExist:
+            return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Bạn chưa đăng ký nhận thông tin của sinh viên này!").response
+        except Exception as e:
+            logging.getLogger().exception("MiniappStudentSupervisionRegistrationView.destroy exc=%s, pk=%s", e, pk)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
