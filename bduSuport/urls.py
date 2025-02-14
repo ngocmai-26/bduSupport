@@ -39,6 +39,7 @@ from bduSuport.views.news.news_type_management import NewsTypeManagementView
 from bduSuport.views.notification.miniapp_notification import MiniappNotificationView
 from bduSuport.views.root.backoffice_account_management import BackofficeAccountManagementView
 from bduSuport.views.student_supervision.miniapp_registration import MiniappStudentSupervisionRegistrationView
+from bduSuport.views.student_supervision.miniapp_supervision import MiniappStudentSupervisionView
 from bduSuport.views.subject.subject_management import SubjectView
 from bduSuport.views.mini_app_auth import MiniAppAuth
 from bduSuport.views.constructor import ConstructorView
@@ -92,6 +93,7 @@ miniapp_router.register('personal-app-func', MiniappAppFunctionView, basename='m
 miniapp_router.register('admission-registration', AdmissionRegistrationView, basename='admission_registration')
 miniapp_router.register('training-location', MiniappTrainingLocationView, basename='miniapp_training_location')
 miniapp_router.register('student-supervision-registration', MiniappStudentSupervisionRegistrationView, basename='miniapp_student_supervision_registration')
+miniapp_router.register('student-supervision', MiniappStudentSupervisionView, basename='miniapp_student_supervision')
 
 backoffice_router.register('super-admin', RootView, basename='super_admin')
 backoffice_router.register('majors', MajorView, basename='major_management')
