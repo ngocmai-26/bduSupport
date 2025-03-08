@@ -43,3 +43,27 @@ class MiniappStudentSupervisionView(viewsets.ViewSet):
         except Exception as e:
             logging.getLogger().exception("MiniappStudentSupervisionView.get_attendances exc=%s, pk=%s, params=%s", e, pk, request.query_params)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    @action(methods=["GET"], detail=True, url_path="scores")
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter("semester", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+        openapi.Parameter("academic_year", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+    ]) 
+    def get_scores(self, request, pk):
+        try:
+            logging.getLogger().info("MiniappStudentSupervisionView.get_scores pk=%s, params=%s", pk, request.query_params)
+
+            if not StudentSupervisionRegistration.objects.filter(deleted_at=None, miniapp_user=request.user, student_dw_code=pk).exists():
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Bạn không có quyền xem dữ liệu sinh viên này!").response
+            
+            scores = BduDwService().get_student_scores(
+                student_code=pk,
+                semester=request.query_params.get("semester", ""),
+                academic_year=request.query_params.get("academic_year", "")
+            )
+            result = [asdict(score) for score in scores]
+
+            return RestResponse(result).response
+        except Exception as e:
+            logging.getLogger().exception("MiniappStudentSupervisionView.get_scores exc=%s, pk=%s, params=%s", e, pk, request.query_params)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

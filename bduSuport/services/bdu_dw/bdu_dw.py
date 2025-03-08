@@ -5,9 +5,9 @@ from decouple import config
 from requests.auth import HTTPBasicAuth
 
 from bduSuport.helpers.http import is_2xx
-from bduSuport.services.bdu_dw.dto import Attendance, BduStudentDto
+from bduSuport.services.bdu_dw.dto import Attendance, BduStudentDto, StudentScore
 from bduSuport.services.bdu_dw.key_mapper import convert_keys, convert_list
-from bduSuport.services.bdu_dw.mapping_dicts import student_key_mapping, attendance_key_mapping
+from bduSuport.services.bdu_dw.mapping_dicts import student_key_mapping, attendance_key_mapping, score_key_mapping
 
 class BduDwService:
     __base_url = ""
@@ -107,3 +107,39 @@ class BduDwService:
         except Exception as e:
             logging.getLogger().exception("BduDwService.get_student exc=%s, student_id=%s, resp_content=%s", str(e), student_id, resp.text)
             return None
+        
+    def get_student_scores(self, student_code: str, semester: int, academic_year: str):
+        try:
+            resp = requests.get(
+                f"{self.__base_url}/dim_bang_diem_odp",
+                params={
+                    "mssv": student_code,
+                    "nk": academic_year,
+                    "hk": semester,
+                },
+                auth=HTTPBasicAuth(self.__username, self.__password),
+                verify=False
+            )
+            print(resp.url)
+
+            if not is_2xx(resp.status_code):
+                logging.getLogger().error("BduDwService.get_student_scores status_code not is 2xx student_code=%s, semester=%s, academic_year=%s, content=%s", student_code, semester, academic_year, resp.text)
+                return []
+            
+            dataset = resp.json()
+
+            if not isinstance(dataset, list):
+                logging.getLogger().error("BduDwService.get_student_scores response is not a list student_code=%s, semester=%s, academic_year=%s, content=%s", student_code, semester, academic_year, resp.text)
+                return []
+            
+            if len(dataset) == 0:
+                logging.getLogger().info("BduDwService.get_student_scores response is empty student_code=%s, semester=%s, academic_year=%s, content=%s", student_code, semester, academic_year, resp.text)
+                return []
+            
+            converted_dataset = convert_list(dataset, score_key_mapping)
+            scores = [StudentScore(**converted_data) for converted_data in converted_dataset]
+            
+            return scores
+        except Exception as e:
+            logging.getLogger().exception("BduDwService.get_student_scores exc=%s, resp_content=%s", str(e), resp.text)
+            return []

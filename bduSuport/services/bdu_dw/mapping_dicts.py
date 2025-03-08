@@ -44,3 +44,27 @@ attendance_key_mapping = {
     "ngay_origin": "attendance_date",
     "updated_at": "updated_at"
 }
+
+score_key_mapping = {
+    "mssv": "student_id",
+    "ten_mon_hoc": "subject_name",
+    "ho_ten": "full_name",
+    "lop": "class_name",
+    "ma_khoa": "department_code",
+    "nien_khoa_format": "academic_year",
+    "nkhk": "semester_code",
+    "hoc_ki": "semester",
+    "ma_nhom": "subject_group",
+    "dat_hp": "passed",
+    "diem_chu_hp": "letter_grade",
+    "diem_hp": "final_score_10",
+    "diem_hp_4": "final_score_4",
+    "k1": "midterm_score",
+    "k1pt": "midterm_weight",
+    "t1": "final_exam_score",
+    "t1pt": "final_exam_weight",
+    "b1": "library_score",
+    "tv": "library_weight",
+    "created_at": "created_at",
+    "updated_at": "updated_at"
+}
