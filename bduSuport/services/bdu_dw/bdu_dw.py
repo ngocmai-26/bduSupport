@@ -108,13 +108,13 @@ class BduDwService:
             logging.getLogger().exception("BduDwService.get_student exc=%s, student_id=%s, resp_content=%s", str(e), student_id, resp.text)
             return None
         
-    def get_student_scores(self, student_code: str, semester: int, academic_year: str):
+    def get_student_scores(self, student_code: str, semester: int, academic_year: int):
         try:
             resp = requests.get(
                 f"{self.__base_url}/dim_bang_diem_odp",
                 params={
                     "mssv": student_code,
-                    "nk": academic_year,
+                    "nk": f"{academic_year}-{academic_year+1}",
                     "hk": semester,
                 },
                 auth=HTTPBasicAuth(self.__username, self.__password),

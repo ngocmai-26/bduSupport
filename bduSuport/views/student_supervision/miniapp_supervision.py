@@ -46,8 +46,8 @@ class MiniappStudentSupervisionView(viewsets.ViewSet):
         
     @action(methods=["GET"], detail=True, url_path="scores")
     @swagger_auto_schema(manual_parameters=[
-        openapi.Parameter("semester", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
-        openapi.Parameter("academic_year", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
+        openapi.Parameter("semester", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True),
+        openapi.Parameter("academic_year", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True),
     ]) 
     def get_scores(self, request, pk):
         try:
@@ -58,8 +58,8 @@ class MiniappStudentSupervisionView(viewsets.ViewSet):
             
             scores = BduDwService().get_student_scores(
                 student_code=pk,
-                semester=request.query_params.get("semester", ""),
-                academic_year=request.query_params.get("academic_year", "")
+                semester=request.query_params.get("semester", 1),
+                academic_year=request.query_params.get("academic_year", 0)
             )
             result = [asdict(score) for score in scores]
 
