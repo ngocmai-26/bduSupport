@@ -59,7 +59,7 @@ class MiniappStudentSupervisionView(viewsets.ViewSet):
             scores = BduDwService().get_student_scores(
                 student_code=pk,
                 semester=request.query_params.get("semester", 1),
-                academic_year=request.query_params.get("academic_year", 0)
+                academic_year=int(request.query_params.get("academic_year", 0))
             )
             result = [asdict(score) for score in scores]
 

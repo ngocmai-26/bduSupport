@@ -120,7 +120,6 @@ class BduDwService:
                 auth=HTTPBasicAuth(self.__username, self.__password),
                 verify=False
             )
-            print(resp.url)
 
             if not is_2xx(resp.status_code):
                 logging.getLogger().error("BduDwService.get_student_scores status_code not is 2xx student_code=%s, semester=%s, academic_year=%s, content=%s", student_code, semester, academic_year, resp.text)
