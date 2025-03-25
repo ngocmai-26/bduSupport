@@ -58,11 +58,16 @@ class AcademicLevelView(viewsets.ViewSet):
             if not validate.is_valid():
                 return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
+            _data = validate.validated_data
+
+            if "need_evaluation_method" not in request.data:
+                _data.pop("need_evaluation_method")
+
             level = AcademicLevel.objects.get(id=pk)
             old_name = level.name
             old_need_evaluation_method = level.need_evaluation_method
 
-            for k, v in validate.validated_data.items():
+            for k, v in _data.items():
                 setattr(level, k, v)
 
             level.save()

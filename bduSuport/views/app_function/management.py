@@ -84,6 +84,10 @@ class AppFunctionManagementView(viewsets.ViewSet):
                 return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
+
+            if "is_show" not in request.data:
+                _data.pop("is_show")
+
             icon = _data.pop("icon", None)
 
             try:
