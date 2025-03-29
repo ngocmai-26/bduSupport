@@ -16,7 +16,8 @@ class MiniappAppFunctionView(viewsets.ViewSet):
         try:
             funcs = AppFunction.objects.filter(
                 Q(deleted_at=None) &
-                Q(is_show=True)
+                Q(is_show=True) &
+                ~Q(disable_miniapp_user_hidden=False)
             ).distinct().order_by("-order")
 
             data = AppFunctionSerializer(funcs, many=True, context={"user": request.user}).data
@@ -31,6 +32,10 @@ class MiniappAppFunctionView(viewsets.ViewSet):
         try:
             try:
                 app_func = AppFunction.objects.get(id=pk)
+
+                if app_func.disable_miniapp_user_hidden:
+                    return RestResponse(message="Bạn không có quyền thực hiện hành động này!", status=status.HTTP_400_BAD_REQUEST).response
+                
             except AppFunction.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
             
@@ -55,6 +60,9 @@ class MiniappAppFunctionView(viewsets.ViewSet):
         try:
             try:
                 app_func = AppFunction.objects.get(id=pk)
+
+                if app_func.disable_miniapp_user_hidden:
+                    return RestResponse(message="Bạn không có quyền thực hiện hành động này!", status=status.HTTP_400_BAD_REQUEST).response
             except AppFunction.DoesNotExist:
                 return RestResponse(status=status.HTTP_404_NOT_FOUND).response 
             

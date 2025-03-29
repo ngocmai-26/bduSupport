@@ -9,6 +9,7 @@ class AppFunction(models.Model):
     name = models.CharField(max_length=255)
     icon_url = models.URLField(max_length=255)
     is_show = models.BooleanField(default=True)
+    disable_miniapp_user_hidden = models.BooleanField(default=False)
     order = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     direct_to = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)

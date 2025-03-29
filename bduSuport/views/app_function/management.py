@@ -88,6 +88,9 @@ class AppFunctionManagementView(viewsets.ViewSet):
             if "is_show" not in request.data:
                 _data.pop("is_show")
 
+            if "disable_miniapp_user_hidden" not in request.data:
+                _data.pop("disable_miniapp_user_hidden")
+
             icon = _data.pop("icon", None)
 
             try:
