@@ -15,6 +15,7 @@ from bduSuport.serializers.evaluation_method_serializer import EvaluationMethodS
 from bduSuport.serializers.major_serializer import MajorSerializer
 from bduSuport.models.miniapp_role import MiniappRole
 from bduSuport.serializers.training_location import TrainingLocationSerializer
+from bduSuport.const.provinces import vietnam_provinces
 
 class ConstructorView(viewsets.ViewSet):
     @action(methods=["GET"], detail=False, url_path="registration-form")
@@ -74,4 +75,16 @@ class ConstructorView(viewsets.ViewSet):
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
             logging.getLogger().exception("ConstructorView.init_feedback_form exc=%s", e)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    @action(methods=["GET"], detail=False, url_path="reservation-form")
+    def init_reservation_form(self, request):
+        try:
+            data = {
+                "provinces": vietnam_provinces
+            }
+            
+            return RestResponse(data=data, status=status.HTTP_200_OK).response
+        except Exception as e:
+            logging.getLogger().exception("ConstructorView.init_reservation_form exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

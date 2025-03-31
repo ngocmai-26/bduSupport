@@ -48,6 +48,8 @@ from bduSuport.views.training_location.miniapp_training_location import MiniappT
 from bduSuport.views.training_location.training_location_management import TrainingLocationView
 from bduSuport.views.app_function.miniapp import MiniappAppFunctionView
 from bduSuport.views.notification.management import MiniappNotificationManagementView
+from bduSuport.views.reservation.miniapp import MiniappReservationView
+from bduSuport.views.reservation.backoffice import ReservationManagementView
 
 class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
     def get_schema(self, request=None, public=False):
@@ -86,6 +88,7 @@ miniapp_router.register('feedbacks', FeedbackView, basename='miniapp_feedback')
 miniapp_router.register('contacts', ContactView, basename='miniapp_contact')
 miniapp_router.register('handbooks', HandbookView, basename='miniapp_handbook')
 miniapp_router.register('config', MiniAppConfigView, basename='miniapp_config')
+miniapp_router.register('reservation', MiniappReservationView, basename='miniapp_reservation')
 miniapp_router.register('business-recruiments', BusinessRecruimentView, basename='business_recruiments')
 miniapp_router.register('academic-levels', MiniappAcademicLevelView, basename='miniapp_academic_levels')
 miniapp_router.register('miniapp-notification', MiniappNotificationView, basename='miniapp_notification')
@@ -104,6 +107,7 @@ backoffice_router.register('contact', ContactManagementView, basename='contact_m
 backoffice_router.register('handbooks', HandbookManagementView, basename='handbook_management')
 backoffice_router.register('accounts', AccountManagementView, basename='account_management')
 backoffice_router.register('feedbacks', FeedbackManagementView, basename='feedback_management')
+backoffice_router.register('reservations', ReservationManagementView, basename='reservation_management')
 backoffice_router.register('news-types', NewsTypeManagementView, basename='news_type_management')
 backoffice_router.register('admin/accounts', AdminAccountView, basename='backoffice_admin_account')
 backoffice_router.register('academic-levels', AcademicLevelView, basename='academic_level_management')
