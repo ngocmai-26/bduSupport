@@ -14,7 +14,7 @@ class Reservation(models.Model):
     birthday = models.DateTimeField()
     school_name = models.CharField(max_length=255)
     class_name = models.CharField(max_length=50)
-    province = models.CharField(max_length=100, choices=vietnam_provinces)
+    province = models.CharField(max_length=100, choices=[(key, value) for key, value in vietnam_provinces.items()])
     phone_number = models.CharField(max_length=15)
     zalo_phone_number = models.CharField(max_length=15)
     citizen_id_card = models.CharField(max_length=30)
