@@ -17,7 +17,7 @@ class MiniappAppFunctionView(viewsets.ViewSet):
             funcs = AppFunction.objects.filter(
                 Q(deleted_at=None) &
                 Q(is_show=True) &
-                ~Q(disable_miniapp_user_hidden=False)
+                Q(disable_miniapp_user_hidden=False)
             ).distinct().order_by("-order")
 
             data = AppFunctionSerializer(funcs, many=True, context={"user": request.user}).data
