@@ -16,6 +16,21 @@ class MiniappAppFunctionView(viewsets.ViewSet):
         try:
             funcs = AppFunction.objects.filter(
                 Q(deleted_at=None) &
+                Q(is_show=True)
+            ).distinct().order_by("-order")
+
+            data = AppFunctionSerializer(funcs, many=True, context={"user": request.user}).data
+
+            return RestResponse(data=data, status=status.HTTP_200_OK).response
+        except Exception as e:
+            logging.getLogger().exception("MiniappAppFunctionView.list exc=%s", e)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+
+    @action(methods=["GET"], detail=False, url_path="setting")
+    def list_setting(self, request):
+        try:
+            funcs = AppFunction.objects.filter(
+                Q(deleted_at=None) &
                 Q(is_show=True) &
                 Q(disable_miniapp_user_hidden=False)
             ).distinct().order_by("-order")
@@ -24,7 +39,7 @@ class MiniappAppFunctionView(viewsets.ViewSet):
 
             return RestResponse(data=data, status=status.HTTP_200_OK).response
         except Exception as e:
-            logging.getLogger().exception("MiniappAppFunctionView.list exc=%s", e)
+            logging.getLogger().exception("MiniappAppFunctionView.list_setting exc=%s", e)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
         
     @action(methods=["GET"], detail=True, url_path="show-in-home/enable")
