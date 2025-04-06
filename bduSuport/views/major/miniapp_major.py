@@ -20,7 +20,8 @@ class MiniappMajorView(viewsets.ViewSet):
     @swagger_auto_schema(manual_parameters=[
         openapi.Parameter("year", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
         openapi.Parameter("academic_level", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
-        openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
+        openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        openapi.Parameter("open_to_recruitment", in_=openapi.IN_QUERY, type=openapi.TYPE_BOOLEAN)
     ])
     def list(self, request):
         try:
@@ -31,6 +32,10 @@ class MiniappMajorView(viewsets.ViewSet):
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
+
+            if "open_to_recruitment" not in request.query_params:
+                _data.pop("open_to_recruitment", None)
+            
             majors = Major.objects.filter(Q(**_data) & Q(deleted_at=None))
             data = MajorSerializer(majors, many=True).data
             

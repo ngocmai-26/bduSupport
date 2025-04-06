@@ -49,7 +49,8 @@ class MajorView(viewsets.ViewSet):
         openapi.Parameter("size", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
         openapi.Parameter("year", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
         openapi.Parameter("academic_level", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
-        openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
+        openapi.Parameter("training_location", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        openapi.Parameter("open_to_recruitment", in_=openapi.IN_QUERY, type=openapi.TYPE_BOOLEAN)
     ])
     def list(self, request):
         try:
@@ -59,6 +60,10 @@ class MajorView(viewsets.ViewSet):
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Vui lòng kiểm tra lại dữ liệu của bạn!").response
             
             _data = validate.validated_data
+
+            if "open_to_recruitment" not in request.query_params:
+                _data.pop("open_to_recruitment", None)
+                
             queryset = Major.objects.filter(Q(**_data) & Q(deleted_at=None)).order_by("-created_at")
             paginator = CustomPageNumberPagination()
             queryset = paginator.paginate_queryset(queryset, request)
@@ -99,6 +104,10 @@ class MajorView(viewsets.ViewSet):
                     _data = validate.validated_data
                     college_exam_groups = _data.pop("college_exam_groups", None)
                     evaluation_methods = _data.pop("evaluation_methods", None)
+
+                    if "open_to_recruitment" not in request.data:
+                        _data.pop("open_to_recruitment", None)
+
                     code = _data.get("code", None)
                     year = _data.get("year", None)
                     academic_level = _data.get("academic_level", None)

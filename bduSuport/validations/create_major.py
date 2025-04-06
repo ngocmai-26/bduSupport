@@ -38,6 +38,7 @@ class CreateMajorValidator(serializers.Serializer):
     )
     number_of_credits = serializers.IntegerField(min_value=0)
     training_location = serializers.PrimaryKeyRelatedField(queryset=TrainingLocation.objects.filter(deleted_at=None))
+    open_to_recruitment = serializers.BooleanField()
 
     def validate(self, attrs):
         _attrs = super().validate(attrs)

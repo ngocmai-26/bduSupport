@@ -1,6 +1,4 @@
 from django.db import models
-from .academic_level import AcademicLevel
-from .major import Major
 
 class Student(models.Model):
     class Meta:

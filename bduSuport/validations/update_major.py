@@ -31,6 +31,7 @@ class UpdateMajorValidator(serializers.Serializer):
     )
     training_location = serializers.PrimaryKeyRelatedField(required=False, queryset=TrainingLocation.objects.filter(deleted_at=None))
     number_of_credits = serializers.IntegerField(required=False, min_value=0)
+    open_to_recruitment = serializers.BooleanField(required=False)
 
     def validate_benchmark_30(self, value: float):
         s = str(value)

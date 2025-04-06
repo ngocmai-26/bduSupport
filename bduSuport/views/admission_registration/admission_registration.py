@@ -43,6 +43,10 @@ class AdmissionRegistrationView(viewsets.ViewSet):
                 _files = _data.pop("files")
 
                 registration = AdmissionRegistration(**{**_data, "student": student, "user": request.user})
+
+                if not registration.major.open_to_recruitment:
+                    return RestResponse(status=status.HTTP_400_BAD_REQUEST, message=f"Ngành {registration.major.name} hiện chưa tuyển sinh!").response
+
                 registration.save()
 
                 if registration.id is None:

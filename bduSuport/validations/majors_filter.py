@@ -5,6 +5,7 @@ from bduSuport.models.training_location import TrainingLocation
 
 class MajorsFilter(serializers.Serializer):
     year = serializers.IntegerField(required=False)
+    open_to_recruitment = serializers.BooleanField(required=False)
     academic_level = serializers.PrimaryKeyRelatedField(
         required=False,
         queryset=AcademicLevel.objects.filter(deleted_at=None)
