@@ -9,6 +9,7 @@ from bduSuport.helpers.response import RestResponse
 from bduSuport.middlewares.miniapp_authentication import MiniAppAuthentication
 from bduSuport.models.student_supervision_registration import StudentSupervisionRegistration
 from bduSuport.services.bdu_dw.bdu_dw import BduDwService
+from bduSuport.validations.date_filter import DateFilter
 from bduSuport.validations.date_range_filter import DateRangeFilter
 
 class MiniappStudentSupervisionView(viewsets.ViewSet):
@@ -66,4 +67,32 @@ class MiniappStudentSupervisionView(viewsets.ViewSet):
             return RestResponse(result).response
         except Exception as e:
             logging.getLogger().exception("MiniappStudentSupervisionView.get_scores exc=%s, pk=%s, params=%s", e, pk, request.query_params)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+        
+    @action(methods=["GET"], detail=True, url_path="time-tables")
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter("date", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING),
+    ]) 
+    def get_time_tables(self, request, pk):
+        try:
+            logging.getLogger().info("MiniappStudentSupervisionView.get_time_tables pk=%s, params=%s", pk, request.query_params)
+
+            validate = DateFilter(data=request.query_params)
+
+            if not validate.is_valid():
+                return RestResponse(data=validate.errors, status=status.HTTP_400_BAD_REQUEST, message="Bạn chỉ có thể xem dữ liệu trong 30 ngày liên tiếp!").response
+
+            if not StudentSupervisionRegistration.objects.filter(deleted_at=None, miniapp_user=request.user, student_dw_code=pk).exists():
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Bạn không có quyền xem dữ liệu sinh viên này!").response
+            
+            time_tables = BduDwService().get_time_tables(
+                student_code=pk,
+                date=validate.validated_data["date"],
+            )
+            result = [asdict(time_table) for time_table in time_tables]
+            sorted_result = sorted(result, key=lambda x: x["start_period"], reverse=False)
+
+            return RestResponse(sorted_result).response
+        except Exception as e:
+            logging.getLogger().exception("MiniappStudentSupervisionView.get_time_tables exc=%s, pk=%s, params=%s", e, pk, request.query_params)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

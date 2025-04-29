@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime, date
-from typing import Optional
+from typing import List, Optional
 
 @dataclass
 class BduStudentDto:
@@ -87,3 +87,46 @@ class StudentScore:
     def __post_init__(self):
         setattr(self, "created_at", datetime.strptime(self.created_at, "%a, %d %b %Y %H:%M:%S %Z"))
         setattr(self, "updated_at", datetime.strptime(self.updated_at, "%a, %d %b %Y %H:%M:%S %Z"))
+
+@dataclass
+class TimeTable:
+    lesson_number: int = 0
+    student_list: List[int] = field(default_factory=list)
+    lecturer_code: str = ""
+    class_code: str = ""
+    subject_code: str = ""
+    group_code: str = ""
+    room_code: str = ""
+    lesson_date: Optional[date] = field(default=None)
+    group_number: str = ""
+    semester_code: int = 0
+    periods: int = 0
+    lecturer_name: str = ""
+    subject_name: str = ""
+    weekday_number: int = 0
+    start_period: int = 0
+    start_week: int = 0
+
+    def __post_init__(self):
+        if isinstance(self.lesson_date, str):
+            try:
+                self.lesson_date = datetime.strptime(self.lesson_date, "%a, %d %b %Y %H:%M:%S %Z").date()
+            except ValueError:
+                pass
+        
+        if isinstance(self.student_list, str):
+            self.student_list = []
+            return
+        
+            try:
+                self.student_list = eval(self.student_list)
+                if not isinstance(self.student_list, list):
+                    self.student_list = []
+            except Exception:
+                self.student_list = []
+
+        if isinstance(self.start_week, str) and self.start_week.isdigit():
+            self.start_week = int(self.start_week)
+
+        if isinstance(self.lesson_number, str) and self.lesson_number.isdigit():
+            self.lesson_number = int(self.lesson_number)

@@ -68,3 +68,22 @@ score_key_mapping = {
     "created_at": "created_at",
     "updated_at": "updated_at"
 }
+
+time_table_mapping = {
+    "buoi_thu": "lesson_number",
+    "danh_sach_sv": "student_list",
+    "ma_giang_vien": "lecturer_code",
+    "ma_lop": "class_code",
+    "ma_mon_hoc": "subject_code",
+    "ma_nhom": "group_code",
+    "ma_phong": "room_code",
+    "ngay_hoc": "lesson_date",
+    "nhom_hoc": "group_number",
+    "nkhk": "semester_code",
+    "so_tiet": "periods",
+    "ten_giang_vien": "lecturer_name",
+    "ten_mon_hoc": "subject_name",
+    "thu_kieu_so": "weekday_number",
+    "tiet_bat_dau": "start_period",
+    "tuan_bat_dau": "start_week"
+}
