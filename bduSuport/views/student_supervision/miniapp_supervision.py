@@ -96,3 +96,37 @@ class MiniappStudentSupervisionView(viewsets.ViewSet):
         except Exception as e:
             logging.getLogger().exception("MiniappStudentSupervisionView.get_time_tables exc=%s, pk=%s, params=%s", e, pk, request.query_params)
             return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response
+
+    @action(methods=["GET"], detail=True, url_path="events")
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter("start_year", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True),
+        openapi.Parameter("semester", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER, required=True),
+    ])
+    def get_events(self, request, pk):
+        try:
+            logging.getLogger().info("MiniappStudentSupervisionView.get_events pk=%s, params=%s", pk, request.query_params)
+
+            start_year = request.query_params.get("start_year")
+            semester = request.query_params.get("semester")
+            if start_year is None or semester is None:
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Missing start_year or semester").response
+            try:
+                start_year = int(start_year)
+                semester = int(semester)
+            except ValueError:
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="start_year and semester must be integers").response
+
+            nkhkk = int(f"{start_year % 100}{(start_year + 1) % 100}{semester}")
+
+            if not StudentSupervisionRegistration.objects.filter(deleted_at=None, miniapp_user=request.user, student_dw_code=pk).exists():
+                return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Bạn không có quyền xem dữ liệu sinh viên này!").response
+
+            events = BduDwService().get_student_events(
+                student_code=pk,
+                nkhkk=nkhkk
+            )
+            result = [asdict(event) for event in events]
+            return RestResponse(result).response
+        except Exception as e:
+            logging.getLogger().exception("MiniappStudentSupervisionView.get_events exc=%s, pk=%s, params=%s", e, pk, request.query_params)
+            return RestResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR).response

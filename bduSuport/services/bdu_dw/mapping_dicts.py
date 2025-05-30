@@ -87,3 +87,12 @@ time_table_mapping = {
     "tiet_bat_dau": "start_period",
     "tuan_bat_dau": "start_week"
 }
+
+event_key_mapping = {
+    "id": "id",
+    "mssv": "student_code",
+    "ngay_dien_ra": "event_date",
+    "nkhk": "semester_code",
+    "ten_su_kien": "event_name",
+    "ten_sv": "student_name",
+}

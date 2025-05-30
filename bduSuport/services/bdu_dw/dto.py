@@ -130,3 +130,20 @@ class TimeTable:
 
         if isinstance(self.lesson_number, str) and self.lesson_number.isdigit():
             self.lesson_number = int(self.lesson_number)
+
+@dataclass
+class StudentEvent:
+    id: int = 0
+    student_code: str = ""
+    event_date: str = ""
+    semester_code: int = 0
+    event_name: str = ""
+    student_name: str = ""
+
+    def __post_init__(self):
+        if isinstance(self.event_date, str) and self.event_date:
+            try:
+                from datetime import datetime
+                self.event_date = datetime.strptime(self.event_date, "%a, %d %b %Y %H:%M:%S %Z")
+            except Exception:
+                pass
