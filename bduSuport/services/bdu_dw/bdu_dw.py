@@ -177,30 +177,30 @@ class BduDwService:
             logging.getLogger().exception("BduDwService.get_time_tables exc=%s, resp_content=%s", str(e), resp.text)
             return []
 
-    def get_student_events(self, student_code: str, nkhkk: int):
+    def get_student_events(self, student_code: str, nkhk: int):
         try:
             resp = requests.get(
                 f"{self.__base_url}/dim_su_kien_odp",
                 params={
                     "mssv": student_code,
-                    "nhkk": nkhkk,
+                    "nkhk": nkhk,
                 },
                 auth=HTTPBasicAuth(self.__username, self.__password),
                 verify=False
             )
 
             if not is_2xx(resp.status_code):
-                logging.getLogger().error("BduDwService.get_student_events status_code not is 2xx student_code=%s, nkhkk=%s, content=%s", student_code, nkhkk, resp.text)
+                logging.getLogger().error("BduDwService.get_student_events status_code not is 2xx student_code=%s, nkhk=%s, content=%s", student_code, nkhk, resp.text)
                 return []
             
             dataset = resp.json()
 
             if not isinstance(dataset, list):
-                logging.getLogger().error("BduDwService.get_student_events response is not a list student_code=%s, nkhkk=%s, content=%s", student_code, nkhkk, resp.text)
+                logging.getLogger().error("BduDwService.get_student_events response is not a list student_code=%s, nkhk=%s, content=%s", student_code, nkhk, resp.text)
                 return []
             
             if len(dataset) == 0:
-                logging.getLogger().info("BduDwService.get_student_events response is empty student_code=%s, nkhkk=%s, content=%s", student_code, nkhkk, resp.text)
+                logging.getLogger().info("BduDwService.get_student_events response is empty student_code=%s, nkhk=%s, content=%s", student_code, nkhk, resp.text)
                 return []
             
             converted_dataset = convert_list(dataset, event_key_mapping)

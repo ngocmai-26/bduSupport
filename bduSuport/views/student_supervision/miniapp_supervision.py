@@ -116,14 +116,14 @@ class MiniappStudentSupervisionView(viewsets.ViewSet):
             except ValueError:
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="start_year and semester must be integers").response
 
-            nkhkk = int(f"{start_year % 100}{(start_year + 1) % 100}{semester}")
+            nkhk = int(f"{start_year % 100}{(start_year + 1) % 100}{semester}")
 
             if not StudentSupervisionRegistration.objects.filter(deleted_at=None, miniapp_user=request.user, student_dw_code=pk).exists():
                 return RestResponse(status=status.HTTP_400_BAD_REQUEST, message="Bạn không có quyền xem dữ liệu sinh viên này!").response
 
             events = BduDwService().get_student_events(
                 student_code=pk,
-                nkhkk=nkhkk
+                nkhk=nkhk
             )
             result = [asdict(event) for event in events]
             return RestResponse(result).response
