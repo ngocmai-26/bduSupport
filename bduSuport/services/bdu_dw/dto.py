@@ -139,6 +139,7 @@ class StudentEvent:
     semester_code: int = 0
     event_name: str = ""
     student_name: str = ""
+    type: str = ""
 
     def __post_init__(self):
         if isinstance(self.event_date, str) and self.event_date:

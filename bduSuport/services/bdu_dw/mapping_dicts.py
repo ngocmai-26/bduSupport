@@ -95,4 +95,5 @@ event_key_mapping = {
     "nkhk": "semester_code",
     "ten_su_kien": "event_name",
     "ten_sv": "student_name",
+    "loai": "type"
 }
